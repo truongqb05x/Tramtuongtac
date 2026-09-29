@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Minh Anh — Hồ sơ uy tín — TRAODOI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf9f7;
+    --bg-alt: #f4f2ee;
+    --bg-hover: #fcfbf9;
+    --ink: #1e1e1e;
+    --ink-soft: #3d3d3d;
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --border: #e3e0da;
+    --border-strong: #d0ccc4;
+    --accent: #1e3a5f;
+    --accent-hover: #162c47;
+    --accent-soft: #e8edf3;
+    --success: #2f6b4f;
+    --success-soft: #e8f0eb;
+    --warning: #8a6a1f;
+    --warning-soft: #f4edda;
+    --danger: #8a2f2f;
+    --danger-soft: #f4e5e5;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    font-weight: 500; font-size: .9375rem; line-height: 1;
+    padding: .75rem 1.5rem; border-radius: 6px;
+    border: 1px solid transparent; cursor: pointer; text-decoration: none;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    white-space: nowrap; font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-primary:active { background: #102135; border-color: #102135; }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+  .btn-secondary:hover { background: var(--bg-alt); border-color: var(--muted); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--ink-soft); padding: .5rem .75rem; }
+  .btn-ghost:hover { background: var(--bg-alt); color: var(--ink); }
+  .btn-sm { padding: .5rem .875rem; font-size: .8125rem; }
+
+  /* ---------- Header ---------- */
+  .top { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .top .wrap { max-width: 1320px; margin: 0 auto; padding: 0 1.5rem; }
+  @media (min-width: 768px) { .top .wrap { padding: 0 2.5rem; } }
+  .nav-link {
+    font-size: .9375rem; font-weight: 450; color: var(--ink-soft);
+    text-decoration: none; padding: .375rem 0; position: relative; transition: color .15s ease;
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.active { color: var(--ink); font-weight: 500; }
+  .nav-link.active::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -22px;
+    height: 2px; background: var(--accent);
+  }
+  @media (max-width: 767px) { .nav-link.active::after { display: none; } }
+  .hamburger {
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+    width: 2.25rem; height: 2.25rem; padding: .375rem;
+    background: transparent; border: 1px solid var(--border-strong);
+    border-radius: 6px; cursor: pointer;
+  }
+  .hamburger span { display: block; height: 1.5px; width: 100%; background: var(--ink-soft); transition: transform .2s ease, opacity .2s ease; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  .mobile-menu { display: none; border-top: 1px solid var(--border); background: var(--bg); }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block; padding: .875rem 1.5rem; font-size: .9375rem;
+    color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:hover { background: var(--bg-alt); color: var(--ink); }
+  .mobile-menu a:last-of-type { border-bottom: none; }
+  .credit-balance {
+    display: inline-flex; align-items: center; gap: .625rem;
+    padding: .5rem .875rem; background: #fff;
+    border: 1px solid var(--border-strong); border-radius: 6px; font-size: .875rem;
+  }
+  .credit-balance .num { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .credit-balance .lbl { color: var(--muted); font-size: .8125rem; }
+
+  /* ---------- Page ---------- */
+  .page { max-width: 1160px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+  @media (min-width: 768px) { .page { padding: 0 2.5rem 5rem; } }
+
+  /* ---------- Profile hero ---------- */
+  .profile-hero {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .profile-cover {
+    height: 100px;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-cover-pattern {
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 24px,
+      rgba(30,58,95,.04) 24px,
+      rgba(30,58,95,.04) 25px
+    );
+  }
+  .profile-body {
+    padding: 0 1.5rem 1.5rem;
+    position: relative;
+  }
+  @media (min-width: 768px) { .profile-body { padding: 0 2rem 2rem; } }
+
+  .profile-avatar {
+    width: 88px; height: 88px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 2rem; font-weight: 500;
+    letter-spacing: -.01em;
+    border: 4px solid #fff;
+    margin-top: -44px;
+    position: relative;
+  }
+  @media (min-width: 768px) { .profile-avatar { width: 108px; height: 108px; font-size: 2.5rem; margin-top: -54px; } }
+
+  .profile-header {
+    display: flex; flex-direction: column; gap: 1.25rem;
+    margin-top: 1rem;
+  }
+  @media (min-width: 768px) {
+    .profile-header { flex-direction: row; align-items: flex-start; justify-content: space-between; }
+  }
+
+  .profile-name {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.625rem; font-weight: 500; line-height: 1.2;
+    letter-spacing: -.015em; margin: 0 0 .375rem;
+    color: var(--ink);
+    display: inline-flex; align-items: center; gap: .625rem; flex-wrap: wrap;
+  }
+  @media (min-width: 768px) { .profile-name { font-size: 1.875rem; } }
+
+  .badge-verified {
+    display: inline-flex; align-items: center; gap: .3125rem;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-soft);
+    padding: .25rem .5rem; border-radius: 4px;
+  }
+
+  .profile-handle {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: .875rem; color: var(--muted);
+    margin: 0 0 .75rem;
+  }
+  .profile-bio {
+    font-size: .9375rem; color: var(--ink-soft); line-height: 1.6;
+    margin: 0 0 1rem; max-width: 560px;
+  }
+
+  .profile-meta {
+    display: flex; flex-wrap: wrap; gap: 1.25rem;
+    font-size: .8125rem; color: var(--muted);
+  }
+  .profile-meta-item {
+    display: inline-flex; align-items: center; gap: .375rem;
+  }
+  .profile-meta-item svg { color: var(--muted-2); flex-shrink: 0; }
+
+  .profile-actions {
+    display: flex; gap: .625rem; flex-wrap: wrap;
+  }
+
+  /* ---------- Trust highlight strip ---------- */
+  .trust-strip {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: 1px solid var(--border);
+    background: var(--bg-alt);
+  }
+  @media (min-width: 640px) { .trust-strip { grid-template-columns: 1.2fr 1fr 1fr 1fr; } }
+  .trust-strip-cell {
+    padding: 1.125rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  @media (min-width: 640px) {
+    .trust-strip-cell {
+      border-bottom: none;
+      border-right: 1px solid var(--border);
+    }
+    .trust-strip-cell:last-child { border-right: none; }
+  }
+  .trust-strip-label {
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .375rem;
+  }
+  .trust-strip-value {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.375rem; font-weight: 500; line-height: 1;
+    color: var(--ink); letter-spacing: -.01em;
+    font-variant-numeric: tabular-nums;
+  }
+  .trust-strip-value small {
+    font-family: 'Inter', sans-serif;
+    font-size: .75rem; color: var(--muted); font-weight: 400;
+    margin-left: .25rem; letter-spacing: 0;
+  }
+  .trust-strip-value.primary { color: var(--accent); }
+  .trust-strip-desc {
+    font-size: .75rem; color: var(--muted); margin-top: .375rem;
+  }
+
+  /* ---------- Main grid ---------- */
+  .profile-grid {
+    display: grid; grid-template-columns: 1fr; gap: 2rem;
+  }
+  @media (min-width: 1024px) {
+    .profile-grid {
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 2.5rem; align-items: start;
+    }
+  }
+
+  /* ---------- Cards ---------- */
+  .card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem;
+  }
+  .card:last-child { margin-bottom: 0; }
+  .card-head {
+    padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+    background: var(--bg-alt);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem;
+  }
+  .card-title { font-size: .9375rem; font-weight: 600; color: var(--ink); margin: 0; }
+  .card-link {
+    font-size: .8125rem; font-weight: 500; color: var(--accent);
+    text-decoration: none;
+  }
+  .card-link:hover { text-decoration: underline; text-underline-offset: 2px; }
+  .card-body { padding: 1.5rem; }
+
+  /* ---------- Trust Score block ---------- */
+  .trust-block {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  @media (min-width: 480px) {
+    .trust-block { grid-template-columns: 180px 1fr; gap: 2rem; }
+  }
+
+  .trust-circle {
+    position: relative;
+    width: 160px; height: 160px;
+    margin: 0 auto;
+  }
+  .trust-circle svg { transform: rotate(-90deg); }
+  .trust-circle-track { stroke: var(--bg-alt); }
+  .trust-circle-progress {
+    stroke: var(--accent);
+    stroke-linecap: round;
+    transition: stroke-dashoffset .6s ease;
+  }
+  .trust-circle-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .trust-big {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 3rem; font-weight: 500; line-height: 1;
+    color: var(--ink); letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .trust-max {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: .75rem; color: var(--muted); margin-top: .25rem;
+    letter-spacing: .04em;
+  }
+  .trust-tier {
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--accent); margin-top: .5rem;
+  }
+
+  .trust-metrics { display: flex; flex-direction: column; gap: 1rem; }
+  .metric-item { display: flex; flex-direction: column; gap: .375rem; }
+  .metric-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: .8125rem;
+  }
+  .metric-head .k { color: var(--muted); }
+  .metric-head .v {
+    color: var(--ink); font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .metric-bar {
+    height: 4px; background: var(--bg-alt); border-radius: 2px;
+    overflow: hidden;
+  }
+  .metric-bar > i {
+    display: block; height: 100%; background: var(--accent); border-radius: 2px;
+  }
+
+  /* ---------- Reputation breakdown ---------- */
+  .breakdown-grid {
+    display: grid; grid-template-columns: 1fr; gap: 1rem;
+  }
+  @media (min-width: 640px) { .breakdown-grid { grid-template-columns: 1fr 1fr; } }
+  .breakdown-item {
+    display: flex; align-items: center; gap: .875rem;
+    padding: .875rem 1rem;
+    background: var(--bg-alt); border-radius: 6px;
+  }
+  .breakdown-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #fff; color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .8125rem; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .breakdown-text { min-width: 0; }
+  .breakdown-title {
+    font-size: .875rem; font-weight: 500; color: var(--ink);
+  }
+  .breakdown-desc {
+    font-size: .75rem; color: var(--muted); margin-top: .125rem;
+  }
+
+  /* ---------- Recent activity ---------- */
+  .activity-list { list-style: none; padding: 0; margin: 0; }
+  .activity-item {
+    display: grid; grid-template-columns: 32px 1fr auto;
+    gap: .875rem; padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .activity-item:first-child { padding-top: 0; }
+
+  .activity-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .activity-icon.success { background: var(--success-soft); color: var(--success); }
+  .activity-icon.accent { background: var(--accent-soft); color: var(--accent); }
+  .activity-icon.neutral { background: var(--bg-alt); color: var(--muted); }
+
+  .activity-text {
+    font-size: .875rem; color: var(--ink-soft);
+    line-height: 1.5; min-width: 0;
+  }
+  .activity-text strong { color: var(--ink); font-weight: 500; }
+  .activity-time {
+    font-size: .75rem; color: var(--muted-2);
+    white-space: nowrap; font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Reviews ---------- */
+  .review-item {
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .review-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .review-item:first-child { padding-top: 0; }
+
+  .review-head {
+    display: flex; align-items: center; gap: .625rem;
+    margin-bottom: .625rem;
+  }
+  .review-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--accent-soft); color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 600; flex-shrink: 0;
+  }
+  .review-meta { flex: 1; min-width: 0; }
+  .review-author { font-size: .875rem; font-weight: 500; color: var(--ink); }
+  .review-time { font-size: .75rem; color: var(--muted); margin-top: .0625rem; }
+  .review-rating { display: flex; gap: 1px; }
+  .review-rating svg { color: #b8860b; }
+  .review-rating .empty { color: var(--border-strong); }
+
+  .review-text {
+    font-size: .875rem; color: var(--ink-soft); line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ---------- Tags / skills ---------- */
+  .tag-row {
+    display: flex; flex-wrap: wrap; gap: .375rem;
+  }
+  .tag {
+    display: inline-flex; align-items: center;
+    font-size: .75rem; font-weight: 500;
+    padding: .3125rem .625rem; border-radius: 4px;
+    background: var(--bg-alt); color: var(--ink-soft);
+    border: 1px solid var(--border);
+  }
+  .tag.accent { background: var(--accent-soft); color: var(--accent); border-color: #d3dde8; }
+
+  /* ---------- Sidebar cards ---------- */
+  .side-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem;
+  }
+  .side-card:last-child { margin-bottom: 0; }
+  .side-head {
+    padding: .875rem 1.25rem; border-bottom: 1px solid var(--border);
+    background: var(--bg-alt);
+    font-size: .8125rem; font-weight: 600; color: var(--ink);
+  }
+  .side-body { padding: 1.25rem; }
+
+  .info-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: .625rem 0; font-size: .875rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .info-row:first-child { padding-top: 0; }
+  .info-row .k { color: var(--muted); }
+  .info-row .v { color: var(--ink); font-weight: 500; text-align: right; font-variant-numeric: tabular-nums; }
+  .info-row .v.good { color: var(--success); }
+  .info-row .v.accent { color: var(--accent); }
+
+  /* ---------- Badges grid ---------- */
+  .badges-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem;
+  }
+  .badge-item {
+    display: flex; flex-direction: column; align-items: center;
+    gap: .375rem; padding: .75rem .5rem;
+    text-align: center;
+  }
+  .badge-icon {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 1rem; font-weight: 600;
+  }
+  .badge-icon.earned { background: var(--accent); color: #fff; }
+  .badge-icon.gold { background: #b8860b; color: #fff; }
+  .badge-icon.locked { background: var(--bg-alt); color: var(--muted-2); }
+  .badge-name {
+    font-size: .6875rem; font-weight: 500; color: var(--ink-soft);
+    line-height: 1.35;
+  }
+  .badge-name.locked { color: var(--muted-2); }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: #fff; font-size: .875rem;
+    padding: .75rem 1.25rem; border-radius: 6px; z-index: 120;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    transition: transform .25s ease;
+    display: flex; align-items: center; gap: .625rem;
+    max-width: calc(100vw - 2rem);
+  }
+  .toast.on { transform: translateX(-50%) translateY(0); }
+  .toast .check {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--success);
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="top">
+  <div class="wrap">
+    <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAODOI trang chủ">
+        <span class="font-serif text-[1.375rem] font-medium tracking-[-.01em]">TRAODOI</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+        <a href="#" class="nav-link">Trang chủ</a>
+        <a href="#" class="nav-link">Khám phá</a>
+        <a href="#" class="nav-link">Nhiệm vụ</a>
+        <a href="#" class="nav-link active">Cộng đồng</a>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-3">
+        <div class="credit-balance">
+          <span class="lbl">Số dư</span>
+          <span class="num">260</span>
+          <span class="lbl">Credits</span>
+        </div>
+        <button class="btn btn-ghost">Đăng nhập</button>
+      </div>
+
+      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu md:hidden" id="mobileMenu">
+    <a href="#">Trang chủ</a>
+    <a href="#">Khám phá</a>
+    <a href="#">Nhiệm vụ</a>
+    <a href="#" style="font-weight:500;color:var(--ink)">Cộng đồng</a>
+    <div class="p-4 flex flex-col gap-2.5">
+      <div class="credit-balance" style="justify-content:center">
+        <span class="lbl">Số dư</span>
+        <span class="num">260</span>
+        <span class="lbl">Credits</span>
+      </div>
+      <button class="btn btn-secondary w-full">Đăng nhập</button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= PAGE ================= -->
+<div class="page">
+
+  <!-- ============ PROFILE HERO ============ -->
+  <section class="profile-hero" aria-label="Hồ sơ người dùng">
+    <div class="profile-cover" aria-hidden="true">
+      <div class="profile-cover-pattern"></div>
+    </div>
+
+    <div class="profile-body">
+      <div class="profile-avatar">MA</div>
+
+      <div class="profile-header">
+        <div>
+          <h1 class="profile-name">
+            Minh Anh
+            <span class="badge-verified">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Verified
+            </span>
+          </h1>
+          <p class="profile-handle">@minhanh.studio</p>
+          <p class="profile-bio">
+            Chủ studio ảnh nhỏ ở Đà Nẵng. Dùng TRAODOI để quảng bá tác phẩm mới và hỗ trợ cộng đồng nhiếp ảnh trẻ.
+          </p>
+          <div class="profile-meta">
+            <span class="profile-meta-item">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6C2.5 9 7 12.5 7 12.5C7 12.5 11.5 9 11.5 6C11.5 3.5 9.5 1.5 7 1.5Z" stroke="currentColor" stroke-width="1.2"/>
+                <circle cx="7" cy="6" r="1.5" stroke="currentColor" stroke-width="1.2"/>
+              </svg>
+              Đà Nẵng, Việt Nam
+            </span>
+            <span class="profile-meta-item">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <rect x="2" y="3" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/>
+                <path d="M2 6H12M5 1.5V4M9 1.5V4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+              Tham gia tháng 3, 2024
+            </span>
+            <span class="profile-meta-item">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/>
+                <path d="M7 4V7L9 8.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+              Hoạt động 2 giờ trước
+            </span>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <button class="btn btn-secondary btn-sm" id="followBtn">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M7 2.5V11.5M2.5 7H11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Theo dõi
+          </button>
+          <button class="btn btn-secondary btn-sm" id="shareBtn">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <circle cx="11" cy="3.5" r="1.75" stroke="currentColor" stroke-width="1.2"/>
+              <circle cx="3" cy="7" r="1.75" stroke="currentColor" stroke-width="1.2"/>
+              <circle cx="11" cy="10.5" r="1.75" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M4.5 6.2L9.5 4.3M4.5 7.8L9.5 9.7" stroke="currentColor" stroke-width="1.2"/>
+            </svg>
+            Chia sẻ
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trust strip -->
+    <div class="trust-strip">
+      <div class="trust-strip-cell">
+        <div class="trust-strip-label">Trust Score</div>
+        <div class="trust-strip-value primary">94<small>/100</small></div>
+        <div class="trust-strip-desc">Reliable participant</div>
+      </div>
+      <div class="trust-strip-cell">
+        <div class="trust-strip-label">Nhiệm vụ đã làm</div>
+        <div class="trust-strip-value">128</div>
+        <div class="trust-strip-desc">Tỷ lệ hoàn thành 98%</div>
+      </div>
+      <div class="trust-strip-cell">
+        <div class="trust-strip-label">Nhiệm vụ đã mở</div>
+        <div class="trust-strip-value">12</div>
+        <div class="trust-strip-desc">Tỷ lệ thanh toán 100%</div>
+      </div>
+      <div class="trust-strip-cell">
+        <div class="trust-strip-label">Đánh giá cộng đồng</div>
+        <div class="trust-strip-value">4.9<small>/5</small></div>
+        <div class="trust-strip-desc">Từ 42 đánh giá</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROFILE GRID ============ -->
+  <div class="profile-grid">
+
+    <!-- ============ LEFT ============ -->
+    <main>
+
+      <!-- Trust Score block -->
+      <section class="card">
+        <div class="card-head">
+          <h2 class="card-title">Chi tiết Trust Score</h2>
+          <a href="#" class="card-link">Cách tính →</a>
+        </div>
+        <div class="card-body">
+          <div class="trust-block">
+            <div class="trust-circle">
+              <svg width="160" height="160" viewBox="0 0 160 160" aria-hidden="true">
+                <circle class="trust-circle-track" cx="80" cy="80" r="70" fill="none" stroke-width="10"/>
+                <circle class="trust-circle-progress" id="trustCircle"
+                        cx="80" cy="80" r="70" fill="none" stroke-width="10"
+                        stroke-dasharray="439.82" stroke-dashoffset="439.82"
+                        data-score="94"/>
+              </svg>
+              <div class="trust-circle-inner">
+                <div class="trust-big">94</div>
+                <div class="trust-max">/100</div>
+                <div class="trust-tier">Excellent</div>
+              </div>
+            </div>
+
+            <div class="trust-metrics">
+              <div class="metric-item">
+                <div class="metric-head">
+                  <span class="k">Tỷ lệ hoàn thành</span>
+                  <span class="v">98%</span>
+                </div>
+                <div class="metric-bar"><i style="width:98%"></i></div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-head">
+                  <span class="k">Phản hồi đúng hạn</span>
+                  <span class="v">94%</span>
+                </div>
+                <div class="metric-bar"><i style="width:94%"></i></div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-head">
+                  <span class="k">Đánh giá cộng đồng</span>
+                  <span class="v">89%</span>
+                </div>
+                <div class="metric-bar"><i style="width:89%"></i></div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-head">
+                  <span class="k">Tuổi tài khoản</span>
+                  <span class="v">96%</span>
+                </div>
+                <div class="metric-bar"><i style="width:96%"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reputation breakdown -->
+      <section class="card">
+        <div class="card-head">
+          <h2 class="card-title">Cấu trúc uy tín</h2>
+        </div>
+        <div class="card-body">
+          <div class="breakdown-grid">
+            <div class="breakdown-item">
+              <span class="breakdown-icon">✓</span>
+              <div class="breakdown-text">
+                <div class="breakdown-title">128 nhiệm vụ hoàn thành</div>
+                <div class="breakdown-desc">Không có tranh chấp nào bị từ chối trong 90 ngày qua</div>
+              </div>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-icon">↻</span>
+              <div class="breakdown-text">
+                <div class="breakdown-title">Phản hồi trung bình 12 phút</div>
+                <div class="breakdown-desc">Nhanh hơn 85% người dùng trong hệ thống</div>
+              </div>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-icon">★</span>
+              <div class="breakdown-text">
+                <div class="breakdown-title">42 đánh giá cộng đồng</div>
+                <div class="breakdown-desc">Điểm trung bình 4.9/5 — chủ yếu từ người tạo nhiệm vụ</div>
+              </div>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-icon">⌛</span>
+              <div class="breakdown-text">
+                <div class="breakdown-title">Hoạt động đều đặn</div>
+                <div class="breakdown-desc">Có mặt trên hệ thống 18 tháng, 4 tháng liên tiếp không gián đoạn</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent activity -->
+      <section class="card">
+        <div class="card-head">
+          <h2 class="card-title">Hoạt động gần đây</h2>
+          <a href="#" class="card-link">Xem tất cả →</a>
+        </div>
+        <div class="card-body" style="padding-top:1.25rem">
+          <ul class="activity-list">
+            <li class="activity-item">
+              <span class="activity-icon success">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <div class="activity-text">
+                <strong>Hoàn thành nhiệm vụ</strong> · Theo dõi trang Facebook doanh nghiệp
+                <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">Từ Minh Anh · +12 Credits</div>
+              </div>
+              <span class="activity-time">2 giờ trước</span>
+            </li>
+            <li class="activity-item">
+              <span class="activity-icon accent">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M7 2V12M2 7H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <div class="activity-text">
+                <strong>Mở nhiệm vụ mới</strong> · Bình luận video TikTok ẩm thực
+                <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">30 suất × 15 Credits</div>
+              </div>
+              <span class="activity-time">1 ngày trước</span>
+            </li>
+            <li class="activity-item">
+              <span class="activity-icon success">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <div class="activity-text">
+                <strong>Hoàn thành nhiệm vụ</strong> · Đăng ký kênh YouTube công nghệ
+                <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">Từ Trọng Nghĩa · +15 Credits</div>
+              </div>
+              <span class="activity-time">2 ngày trước</span>
+            </li>
+            <li class="activity-item">
+              <span class="activity-icon neutral">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M4 3L7 6L10 3M4 11L7 8L10 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <div class="activity-text">
+                <strong>Đánh giá từ cộng đồng</strong> · "Người làm nhiệm vụ cẩn thận, phản hồi nhanh"
+                <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">Từ Quốc Bảo · 5/5 ★</div>
+              </div>
+              <span class="activity-time">3 ngày trước</span>
+            </li>
+            <li class="activity-item">
+              <span class="activity-icon accent">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M7 2V12M2 7H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <div class="activity-text">
+                <strong>Mở nhiệm vụ mới</strong> · Chia sẻ bài viết Facebook công khai
+                <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">20 suất × 20 Credits</div>
+              </div>
+              <span class="activity-time">5 ngày trước</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Reviews -->
+      <section class="card">
+        <div class="card-head">
+          <h2 class="card-title">Đánh giá từ cộng đồng</h2>
+          <span class="mono" style="font-size:.75rem;color:var(--muted)">42 đánh giá · 4.9/5</span>
+        </div>
+        <div class="card-body">
+          <div class="review-item">
+            <div class="review-head">
+              <span class="review-avatar">QB</span>
+              <div class="review-meta">
+                <div class="review-author">Quốc Bảo</div>
+                <div class="review-time">3 ngày trước</div>
+              </div>
+              <div class="review-rating" aria-label="5 trên 5 sao">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+              </div>
+            </div>
+            <p class="review-text">
+              Người làm nhiệm vụ cẩn thận, phản hồi nhanh. Nhiệm vụ tôi mở được xử lý trong vòng vài phút. Sẽ tiếp tục hợp tác.
+            </p>
+          </div>
+
+          <div class="review-item">
+            <div class="review-head">
+              <span class="review-avatar">TN</span>
+              <div class="review-meta">
+                <div class="review-author">Trọng Nghĩa</div>
+                <div class="review-time">1 tuần trước</div>
+              </div>
+              <div class="review-rating" aria-label="5 trên 5 sao">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+              </div>
+            </div>
+            <p class="review-text">
+              Nhiệm vụ của Minh Anh rõ ràng, phần thưởng hợp lý. Tôi đã làm 3 nhiệm vụ và đều được xác minh nhanh chóng.
+            </p>
+          </div>
+
+          <div class="review-item">
+            <div class="review-head">
+              <span class="review-avatar">TV</span>
+              <div class="review-meta">
+                <div class="review-author">Thanh Vân</div>
+                <div class="review-time">2 tuần trước</div>
+              </div>
+              <div class="review-rating" aria-label="4 trên 5 sao">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" class="empty" aria-hidden="true"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z"/></svg>
+              </div>
+            </div>
+            <p class="review-text">
+              Đáng tin cậy, nhưng có một lần nhiệm vụ bị xác minh chậm hơn dự kiến. Vẫn sẽ tiếp tục hợp tác lần sau.
+            </p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ============ RIGHT SIDEBAR ============ -->
+    <aside>
+
+      <!-- Highlights -->
+      <div class="side-card">
+        <div class="side-head">Điểm nổi bật</div>
+        <div class="side-body">
+          <div class="info-row">
+            <span class="k">Huy hiệu</span>
+            <span class="v accent">Top contributor</span>
+          </div>
+          <div class="info-row">
+            <span class="k">Xếp hạng tuần</span>
+            <span class="v">#14 / 12,480</span>
+          </div>
+          <div class="info-row">
+            <span class="k">Tham gia</span>
+            <span class="v">18 tháng</span>
+          </div>
+          <div class="info-row">
+            <span class="k">Tài khoản xác minh</span>
+            <span class="v good">Có</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="side-card">
+        <div class="side-head">Bộ huy hiệu</div>
+        <div class="side-body">
+          <div class="badges-grid">
+            <div class="badge-item">
+              <span class="badge-icon gold">★</span>
+              <span class="badge-name">Top Contributor</span>
+            </div>
+            <div class="badge-item">
+              <span class="badge-icon earned">✓</span>
+              <span class="badge-name">100+ Tasks</span>
+            </div>
+            <div class="badge-item">
+              <span class="badge-icon earned">⚡</span>
+              <span class="badge-name">Fast Reply</span>
+            </div>
+            <div class="badge-item">
+              <span class="badge-icon earned">◆</span>
+              <span class="badge-name">Verified</span>
+            </div>
+            <div class="badge-item">
+              <span class="badge-icon earned">∞</span>
+              <span class="badge-name">Trusted Creator</span>
+            </div>
+            <div class="badge-item">
+              <span class="badge-icon locked">?</span>
+              <span class="badge-name locked">Chưa mở khóa</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills / tags -->
+      <div class="side-card">
+        <div class="side-head">Lĩnh vực hoạt động</div>
+        <div class="side-body">
+          <div class="tag-row">
+            <span class="tag accent">Nhiếp ảnh</span>
+            <span class="tag accent">Thiết kế</span>
+            <span class="tag">Facebook</span>
+            <span class="tag">Instagram</span>
+            <span class="tag">Website</span>
+            <span class="tag">TikTok</span>
+          </div>
+          <p style="font-size:.8125rem;color:var(--muted);margin:.875rem 0 0;line-height:1.55">
+            Chủ yếu mở nhiệm vụ cho nội dung về nhiếp ảnh và thiết kế đồ hoạ.
+          </p>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="side-card">
+        <div class="side-head">Thống kê chi tiết</div>
+        <div class="side-body">
+          <div class="info-row">
+            <span class="k">Nhiệm vụ đã làm</span>
+            <span class="v">128</span>
+          </div>
+          <div class="info-row">
+            <span class="k">Tỷ lệ hoàn thành</span>
+            <span class="v good">98%</span>
+          </div>
+          <div class="info-row">
+            <span class="k">Phản hồi đúng hạn</span>
+            <span class="v good">94%</span>
+          </div>
+          <div class="info-row">
+            <span class="k">Nhiệm vụ đã mở</span>
+            <span class="v">12</span>
+          </div>
+          <div class="info-row">
+            <span class="k">Tỷ lệ thanh toán</span>
+            <span class="v good">100%</span>
+          </div>
+          <div class="info-row">
+            <span class="k">Tranh chấp</span>
+            <span class="v">0</span>
+          </div>
+          <div class="info-row">
+            <span class="k">Đánh giá nhận được</span>
+            <span class="v">42</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Report -->
+      <div class="side-card">
+        <div class="side-body">
+          <p style="font-size:.8125rem;color:var(--muted);margin:0 0 .75rem;line-height:1.55">
+            Phát hiện hành vi bất thường từ tài khoản này?
+          </p>
+          <button class="btn btn-secondary btn-sm" style="width:100%" id="reportBtn">
+            Báo cáo tài khoản
+          </button>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+</div>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Thành công</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ TRUST CIRCLE ANIMATION ============ */
+  const circle = document.getElementById('trustCircle');
+  if (circle) {
+    const score = parseInt(circle.dataset.score, 10) || 0;
+    const circumference = 2 * Math.PI * 70; // r=70
+    const offset = circumference * (1 - score / 100);
+    // Delay một nhịp để animation chạy rõ
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        circle.style.strokeDashoffset = offset;
+      }, 150);
+    });
+  }
+
+  /* ============ FOLLOW BUTTON ============ */
+  const followBtn = document.getElementById('followBtn');
+  if (followBtn) {
+    let following = false;
+    followBtn.addEventListener('click', () => {
+      following = !following;
+      if (following) {
+        followBtn.innerHTML =
+          '<svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">' +
+          '<path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+          ' Đang theo dõi';
+        followBtn.classList.remove('btn-secondary');
+        followBtn.classList.add('btn-primary');
+        showToast('Đã theo dõi Minh Anh. Bạn sẽ nhận thông báo khi họ mở nhiệm vụ mới.');
+      } else {
+        followBtn.innerHTML =
+          '<svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">' +
+          '<path d="M7 2.5V11.5M2.5 7H11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' +
+          ' Theo dõi';
+        followBtn.classList.remove('btn-primary');
+        followBtn.classList.add('btn-secondary');
+        showToast('Đã bỏ theo dõi.');
+      }
+    });
+  }
+
+  /* ============ SHARE BUTTON ============ */
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', () => {
+      const url = window.location.href;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+          showToast('Đã sao chép liên kết hồ sơ.');
+        }).catch(() => {
+          showToast('Đã sao chép liên kết hồ sơ.');
+        });
+      } else {
+        showToast('Đã sao chép liên kết hồ sơ.');
+      }
+    });
+  }
+
+  /* ============ REPORT BUTTON ============ */
+  const reportBtn = document.getElementById('reportBtn');
+  if (reportBtn) {
+    reportBtn.addEventListener('click', () => {
+      showToast('Đã ghi nhận báo cáo. Đội ngũ sẽ xem xét trong 48 giờ.');
+    });
+  }
+
+  /* ============ TOAST ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('on'), 2800);
+  }
+
+  /* ============ HEADER MOBILE MENU ============ */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburgerBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', open);
+    hamburgerBtn.setAttribute('aria-expanded', open);
+  });
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bảng xếp hạng — TRAODOI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf9f7;
+    --bg-alt: #f4f2ee;
+    --bg-hover: #fcfbf9;
+    --ink: #1e1e1e;
+    --ink-soft: #3d3d3d;
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --border: #e3e0da;
+    --border-strong: #d0ccc4;
+    --accent: #1e3a5f;
+    --accent-hover: #162c47;
+    --accent-soft: #e8edf3;
+    --success: #2f6b4f;
+    --success-soft: #e8f0eb;
+    --warning: #8a6a1f;
+    --warning-soft: #f4edda;
+    --danger: #8a2f2f;
+    --danger-soft: #f4e5e5;
+    --gold: #b8860b;
+    --silver: #7a7a7a;
+    --bronze: #9c6b3f;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible, select:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* ---------- Header ---------- */
+  .top { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .top .wrap { max-width: 1320px; margin: 0 auto; padding: 0 1.5rem; }
+  @media (min-width: 768px) { .top .wrap { padding: 0 2.5rem; } }
+  .nav-link {
+    font-size: .9375rem; font-weight: 450; color: var(--ink-soft);
+    text-decoration: none; padding: .375rem 0; position: relative; transition: color .15s ease;
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.active { color: var(--ink); font-weight: 500; }
+  .nav-link.active::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -22px;
+    height: 2px; background: var(--accent);
+  }
+  @media (max-width: 767px) { .nav-link.active::after { display: none; } }
+  .hamburger {
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+    width: 2.25rem; height: 2.25rem; padding: .375rem;
+    background: transparent; border: 1px solid var(--border-strong);
+    border-radius: 6px; cursor: pointer;
+  }
+  .hamburger span { display: block; height: 1.5px; width: 100%; background: var(--ink-soft); transition: transform .2s ease, opacity .2s ease; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  .mobile-menu { display: none; border-top: 1px solid var(--border); background: var(--bg); }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block; padding: .875rem 1.5rem; font-size: .9375rem;
+    color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:hover { background: var(--bg-alt); color: var(--ink); }
+  .mobile-menu a:last-of-type { border-bottom: none; }
+  .avatar-header {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 600; flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* ---------- Page ---------- */
+  .page { max-width: 1160px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+  @media (min-width: 768px) { .page { padding: 0 2.5rem 5rem; } }
+
+  .crumb {
+    display: flex; align-items: center; gap: .5rem;
+    padding: 1.5rem 0 1rem; font-size: .8125rem; color: var(--muted);
+  }
+  .crumb a { color: var(--muted); transition: color .15s ease; }
+  .crumb a:hover { color: var(--ink); }
+  .crumb .sep { color: var(--border-strong); }
+  .crumb .current { color: var(--ink); font-weight: 500; }
+
+  /* ---------- Page head ---------- */
+  .page-head {
+    display: flex; flex-direction: column; gap: 1.25rem;
+    padding-bottom: 1.75rem; margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  @media (min-width: 768px) {
+    .page-head { flex-direction: row; align-items: flex-end; justify-content: space-between; }
+  }
+  .page-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.75rem; font-weight: 500; line-height: 1.2;
+    letter-spacing: -.015em; margin: 0 0 .5rem;
+  }
+  @media (min-width: 768px) { .page-title { font-size: 2rem; } }
+  .page-sub { font-size: .9375rem; color: var(--ink-soft); margin: 0; max-width: 620px; }
+
+  /* ---------- Metric tabs ---------- */
+  .metric-tabs {
+    display: flex; gap: 0;
+    background: var(--bg-alt);
+    border-radius: 8px;
+    padding: .25rem;
+    margin-bottom: 1.25rem;
+    overflow-x: auto;
+  }
+  .metric-tab {
+    flex: 1; min-width: max-content;
+    padding: .625rem 1rem;
+    font-size: .875rem; font-weight: 500;
+    color: var(--muted); background: transparent; border: none;
+    border-radius: 6px; cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  }
+  .metric-tab:hover { color: var(--ink); }
+  .metric-tab.active {
+    background: #fff; color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  }
+
+  /* ---------- Time filter ---------- */
+  .time-filter {
+    display: inline-flex; gap: .125rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+  .time-tab {
+    padding: .625rem 1rem;
+    font-size: .875rem; font-weight: 450;
+    color: var(--muted); background: transparent; border: none;
+    cursor: pointer; position: relative;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    font-family: inherit;
+    transition: color .15s ease, border-color .15s ease;
+    white-space: nowrap;
+  }
+  .time-tab:hover { color: var(--ink-soft); }
+  .time-tab.active { color: var(--ink); font-weight: 500; border-bottom-color: var(--accent); }
+
+  /* ---------- Podium ---------- */
+  .podium-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem 1.5rem 0;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  @media (min-width: 768px) {
+    .podium-section { padding: 2.5rem 2.5rem 0; }
+  }
+
+  .podium-label {
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .podium {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: end;
+  }
+  @media (min-width: 640px) {
+    .podium {
+      grid-template-columns: 1fr 1.15fr 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .podium-card {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    gap: .625rem;
+    padding: 1rem .5rem 0;
+    position: relative;
+    cursor: pointer;
+    transition: transform .15s ease;
+  }
+  .podium-card:hover { transform: translateY(-2px); }
+
+  .podium-card.rank-1 { order: 2; }
+  .podium-card.rank-2 { order: 1; }
+  .podium-card.rank-3 { order: 3; }
+  @media (max-width: 639px) {
+    .podium-card.rank-1 { order: 1; }
+    .podium-card.rank-2 { order: 2; }
+    .podium-card.rank-3 { order: 3; }
+  }
+
+  .podium-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.5rem; font-weight: 500;
+    letter-spacing: -.01em;
+    position: relative;
+  }
+  .podium-card.rank-1 .podium-avatar {
+    width: 96px; height: 96px; font-size: 2rem;
+    background: var(--gold); color: #fff;
+  }
+  .podium-card.rank-2 .podium-avatar { background: var(--silver); }
+  .podium-card.rank-3 .podium-avatar { background: var(--bronze); }
+
+  .rank-badge {
+    position: absolute; bottom: -6px; right: -6px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #fff; border: 2px solid var(--border);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 700;
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .podium-card.rank-1 .rank-badge {
+    background: var(--gold); color: #fff; border-color: var(--gold);
+  }
+  .podium-card.rank-2 .rank-badge {
+    background: var(--silver); color: #fff; border-color: var(--silver);
+  }
+  .podium-card.rank-3 .rank-badge {
+    background: var(--bronze); color: #fff; border-color: var(--bronze);
+  }
+
+  .podium-name {
+    font-size: .9375rem; font-weight: 500;
+    color: var(--ink);
+    margin: 0;
+    max-width: 180px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .podium-handle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem; color: var(--muted);
+    margin: 0;
+  }
+
+  .podium-score {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.5rem; font-weight: 500;
+    color: var(--ink); line-height: 1;
+    letter-spacing: -.01em;
+    font-variant-numeric: tabular-nums;
+    margin-top: .25rem;
+  }
+  .podium-card.rank-1 .podium-score { font-size: 1.875rem; color: var(--gold); }
+  .podium-score small {
+    font-family: 'Inter', sans-serif;
+    font-size: .75rem; font-weight: 400;
+    color: var(--muted); margin-left: .25rem;
+  }
+
+  .podium-metric {
+    font-size: .75rem; color: var(--muted);
+    margin: 0;
+  }
+
+  /* Podium bar (visual height) */
+  .podium-bar {
+    width: 100%;
+    background: var(--bg-alt);
+    border-radius: 6px 6px 0 0;
+    margin-top: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem; font-weight: 600;
+    color: var(--muted);
+    border-top: 3px solid var(--border-strong);
+  }
+  .podium-card.rank-1 .podium-bar {
+    height: 96px;
+    background: var(--warning-soft);
+    border-top-color: var(--gold);
+    color: var(--gold);
+  }
+  .podium-card.rank-2 .podium-bar {
+    height: 64px;
+    border-top-color: var(--silver);
+    color: var(--silver);
+  }
+  .podium-card.rank-3 .podium-bar {
+    height: 48px;
+    border-top-color: var(--bronze);
+    color: var(--bronze);
+  }
+
+  /* ---------- Rank list ---------- */
+  .rank-list {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .rank-row {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) 120px 110px 100px;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    transition: background .12s ease;
+    cursor: pointer;
+  }
+  .rank-row:last-child { border-bottom: none; }
+  .rank-row:hover { background: var(--bg-hover); }
+  .rank-row.me {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding-left: calc(1.25rem - 3px);
+  }
+  .rank-row.me:hover { background: #dde5ee; }
+
+  @media (max-width: 767px) {
+    .rank-row {
+      grid-template-columns: 36px minmax(0, 1fr) auto;
+      gap: .75rem;
+      padding: .875rem 1rem;
+    }
+    .rank-row.me { padding-left: calc(1rem - 3px); }
+    .rank-col-hide-mobile { display: none; }
+  }
+
+  .rank-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .9375rem; font-weight: 500;
+    color: var(--muted); text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .rank-row.top-3 .rank-num { color: var(--ink); font-weight: 600; }
+
+  .rank-user {
+    display: flex; align-items: center; gap: .75rem;
+    min-width: 0;
+  }
+  .rank-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .rank-user-info { min-width: 0; }
+  .rank-name {
+    font-size: .9375rem; font-weight: 500;
+    color: var(--ink);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    display: flex; align-items: center; gap: .375rem;
+  }
+  .rank-name .me-tag {
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    color: var(--accent); background: #fff;
+    padding: .125rem .375rem; border-radius: 3px;
+  }
+  .rank-name .verified-icon { color: var(--accent); flex-shrink: 0; }
+  .rank-handle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem; color: var(--muted);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  .rank-score {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; font-weight: 500;
+    color: var(--ink); letter-spacing: -.005em;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .rank-score small {
+    font-family: 'Inter', sans-serif;
+    font-size: .75rem; color: var(--muted); font-weight: 400;
+    margin-left: .125rem;
+  }
+
+  .rank-metric {
+    font-size: .8125rem; color: var(--ink-soft);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rank-badge-cell { text-align: right; }
+  .rank-badge-pill {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .02em;
+    padding: .25rem .5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .rank-badge-pill.gold { background: var(--warning-soft); color: var(--gold); }
+  .rank-badge-pill.blue { background: var(--accent-soft); color: var(--accent); }
+  .rank-badge-pill.green { background: var(--success-soft); color: var(--success); }
+  .rank-badge-pill.gray { background: var(--bg-alt); color: var(--muted); }
+
+  /* ---------- My rank sticky ---------- */
+  .my-rank-card {
+    margin-top: 2rem;
+    background: var(--accent); color: #fff;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: center;
+  }
+  @media (min-width: 640px) {
+    .my-rank-card { grid-template-columns: auto 1fr auto auto; gap: 1.5rem; }
+  }
+  .my-rank-num {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 2rem; font-weight: 500;
+    line-height: 1; letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .my-rank-info { min-width: 0; }
+  .my-rank-name {
+    font-size: 1rem; font-weight: 500;
+    margin: 0 0 .125rem;
+    display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+  }
+  .my-rank-desc {
+    font-size: .8125rem; color: rgba(255,255,255,.75);
+    margin: 0;
+  }
+  .my-rank-score {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.5rem; font-weight: 500;
+    line-height: 1; letter-spacing: -.01em;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .my-rank-score small {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: .6875rem; font-weight: 400;
+    color: rgba(255,255,255,.6);
+    margin-top: .25rem;
+  }
+  .my-rank-card .btn {
+    background: rgba(255,255,255,.15); color: #fff; border-color: rgba(255,255,255,.25);
+    padding: .5rem .875rem; font-size: .8125rem;
+  }
+  .my-rank-card .btn:hover { background: rgba(255,255,255,.25); border-color: rgba(255,255,255,.4); }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: #fff; font-size: .875rem;
+    padding: .75rem 1.25rem; border-radius: 6px; z-index: 120;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    transition: transform .25s ease;
+    display: flex; align-items: center; gap: .625rem;
+    max-width: calc(100vw - 2rem);
+  }
+  .toast.on { transform: translateX(-50%) translateY(0); }
+  .toast .check {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--success);
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="top">
+  <div class="wrap">
+    <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAODOI trang chủ">
+        <span class="font-serif text-[1.375rem] font-medium tracking-[-.01em]">TRAODOI</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+        <a href="#" class="nav-link">Trang chủ</a>
+        <a href="#" class="nav-link">Khám phá</a>
+        <a href="#" class="nav-link">Nhiệm vụ</a>
+        <a href="#" class="nav-link active">Cộng đồng</a>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-3">
+        <span class="avatar-header" aria-label="Tài khoản của tôi">MA</span>
+      </div>
+
+      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu md:hidden" id="mobileMenu">
+    <a href="#">Trang chủ</a>
+    <a href="#">Khám phá</a>
+    <a href="#">Nhiệm vụ</a>
+    <a href="#" style="font-weight:500;color:var(--ink)">Cộng đồng</a>
+  </div>
+</header>
+
+<!-- ================= PAGE ================= -->
+<div class="page">
+
+  <!-- Breadcrumb -->
+  <nav class="crumb" aria-label="Breadcrumb">
+    <a href="#">Cộng đồng</a>
+    <span class="sep">/</span>
+    <span class="current">Bảng xếp hạng</span>
+  </nav>
+
+  <!-- Page head -->
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Bảng xếp hạng</h1>
+      <p class="page-sub">
+        Những thành viên tích cực nhất trên TRAODOI. Bảng được cập nhật mỗi giờ.
+      </p>
+    </div>
+  </div>
+
+  <!-- Metric tabs -->
+  <div class="metric-tabs" role="tablist">
+    <button class="metric-tab active" data-metric="trust" role="tab" aria-selected="true">
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M7 1.5L8.5 5L12.5 5.5L9.5 8L10.5 12L7 10L3.5 12L4.5 8L1.5 5.5L5.5 5L7 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+      </svg>
+      Trust Score cao nhất
+    </button>
+    <button class="metric-tab" data-metric="completed" role="tab" aria-selected="false">
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Hoàn thành nhiều nhất
+    </button>
+    <button class="metric-tab" data-metric="created" role="tab" aria-selected="false">
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M7 2V12M2 7H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Người tạo uy tín
+    </button>
+    <button class="metric-tab" data-metric="earned" role="tab" aria-selected="false">
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M7 4V7L9 8.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      Credits kiếm được
+    </button>
+  </div>
+
+  <!-- Time filter -->
+  <div class="time-filter" role="tablist">
+    <button class="time-tab active" data-time="week" role="tab" aria-selected="true">Tuần này</button>
+    <button class="time-tab" data-time="month" role="tab" aria-selected="false">Tháng này</button>
+    <button class="time-tab" data-time="all" role="tab" aria-selected="false">Mọi thời đại</button>
+  </div>
+
+  <!-- Podium -->
+  <section class="podium-section">
+    <div class="podium-label" id="podiumLabel">Top 3 · Trust Score · Tuần này</div>
+    <div class="podium" id="podium">
+      <!-- injected by JS -->
+    </div>
+  </section>
+
+  <!-- Rank list -->
+  <div class="rank-list" id="rankList">
+    <!-- injected by JS -->
+  </div>
+
+  <!-- My rank -->
+  <div class="my-rank-card" id="myRankCard">
+    <div class="my-rank-num" id="myRankNum">#14</div>
+    <div class="my-rank-info">
+      <p class="my-rank-name">
+        <span id="myRankName">Minh Anh</span>
+        <svg class="verified-icon" width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="color:rgba(255,255,255,.8)">
+          <path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </p>
+      <p class="my-rank-desc" id="myRankDesc">Bạn đứng thứ 14 trong tổng số 12,480 người dùng</p>
+    </div>
+    <div class="my-rank-score">
+      <span id="myRankScore">94</span>
+      <small id="myRankScoreLabel">Trust Score</small>
+    </div>
+    <a href="#" class="btn">Xem hồ sơ</a>
+  </div>
+
+</div>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Thành công</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ DATA ============ */
+  // Mỗi user có điểm cho 4 metric. Dữ liệu demo — thực tế sẽ tính từ backend.
+  const USERS = [
+    { id: 1, name: 'Trọng Nghĩa',    handle: '@trongnghia.dev',  initials: 'TN', verified: true,  badge: 'gold',  badgeLabel: 'Top Creator',
+      trust: 98, completed: 342, created: 87,  earned: 4820 },
+    { id: 2, name: 'Đức Huy',        handle: '@duchuy.media',     initials: 'DH', verified: true,  badge: 'gold',  badgeLabel: 'Top Creator',
+      trust: 97, completed: 289, created: 102, earned: 3910 },
+    { id: 3, name: 'Mỹ Duyên',       handle: '@myduyen.photo',    initials: 'MD', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 96, completed: 265, created: 74,  earned: 3540 },
+    { id: 4, name: 'Quốc Bảo',       handle: '@quocbao.dev',      initials: 'QB', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 95, completed: 244, created: 68,  earned: 3120 },
+    { id: 5, name: 'Minh Anh',       handle: '@minhanh.studio',   initials: 'MA', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 94, completed: 128, created: 12,  earned: 2860, isMe: true },
+    { id: 6, name: 'Thanh Vân',      handle: '@thanhvan.shop',    initials: 'TV', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 93, completed: 201, created: 45,  earned: 2740 },
+    { id: 7, name: 'Hoàng Nam',      handle: '@hoangnam.chef',    initials: 'HN', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 93, completed: 187, created: 32,  earned: 2610 },
+    { id: 8, name: 'Hà Linh',        handle: '@halinh.beauty',    initials: 'HL', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 92, completed: 176, created: 28,  earned: 2450 },
+    { id: 9, name: 'Việt Hoàng',     handle: '@viethoang.game',   initials: 'VH', verified: false, badge: 'green', badgeLabel: 'Rising',
+      trust: 91, completed: 158, created: 21,  earned: 2180 },
+    { id: 10, name: 'Ngọc Mai',      handle: '@ngocmai.fashion',  initials: 'NM', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 91, completed: 149, created: 38,  earned: 2090 },
+    { id: 11, name: 'Tuấn Kiệt',     handle: '@tuankiet.tech',    initials: 'TK', verified: false, badge: 'green', badgeLabel: 'Rising',
+      trust: 90, completed: 142, created: 15,  earned: 1960 },
+    { id: 12, name: 'Phương Thảo',   handle: '@phuongthao.art',   initials: 'PT', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 90, completed: 138, created: 42,  earned: 1920 },
+    { id: 13, name: 'Bảo Long',      handle: '@baolong.music',    initials: 'BL', verified: false, badge: 'green', badgeLabel: 'Rising',
+      trust: 89, completed: 131, created: 19,  earned: 1830 },
+    { id: 14, name: 'Khánh Vy',      handle: '@khanhvy.books',    initials: 'KV', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 89, completed: 124, created: 33,  earned: 1740 },
+    { id: 15, name: 'Đình Khoa',     handle: '@dinhkhoa.film',    initials: 'DK', verified: false, badge: 'gray',  badgeLabel: 'Member',
+      trust: 88, completed: 118, created: 11,  earned: 1650 },
+    { id: 16, name: 'An Nhiên',      handle: '@annhien.yoga',     initials: 'AN', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 88, completed: 112, created: 26,  earned: 1580 },
+    { id: 17, name: 'Minh Quân',     handle: '@minhquan.games',   initials: 'MQ', verified: false, badge: 'gray',  badgeLabel: 'Member',
+      trust: 87, completed: 105, created: 14,  earned: 1490 },
+    { id: 18, name: 'Linh Chi',      handle: '@linhchi.decor',    initials: 'LC', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 87, completed: 98,  created: 22,  earned: 1400 },
+    { id: 19, name: 'Thế Anh',       handle: '@theanh.sport',     initials: 'TA', verified: false, badge: 'gray',  badgeLabel: 'Member',
+      trust: 86, completed: 92,  created: 9,   earned: 1320 },
+    { id: 20, name: 'Diệu Linh',     handle: '@dieulinh.craft',   initials: 'DL', verified: true,  badge: 'blue',  badgeLabel: 'Verified',
+      trust: 86, completed: 87,  created: 18,  earned: 1250 }
+  ];
+
+  const METRIC_META = {
+    trust:     { label: 'Trust Score',   short: 'Trust',      unit: '',       suffix: '' },
+    completed: { label: 'nhiệm vụ',      short: 'Hoàn thành', unit: '',       suffix: '' },
+    created:   { label: 'nhiệm vụ',      short: 'Đã tạo',     unit: '',       suffix: '' },
+    earned:    { label: 'Credits',       short: 'Credits',    unit: '',       suffix: '' }
+  };
+
+  const TIME_META = {
+    week:  'Tuần này',
+    month: 'Tháng này',
+    all:   'Mọi thời đại'
+  };
+
+  let currentMetric = 'trust';
+  let currentTime = 'week';
+
+  /* ============ HELPERS ============ */
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function getMetricValue(user, metric) {
+    return user[metric] || 0;
+  }
+
+  function formatNumber(n) {
+    return n.toLocaleString('vi-VN');
+  }
+
+  // Sắp xếp user theo metric hiện tại, giảm dần
+  function getSortedUsers() {
+    return USERS.slice().sort((a, b) => getMetricValue(b, currentMetric) - getMetricValue(a, currentMetric));
+  }
+
+  /* ============ RENDER PODIUM ============ */
+  function renderPodium(sorted) {
+    const top3 = sorted.slice(0, 3);
+    const podium = document.getElementById('podium');
+    const meta = METRIC_META[currentMetric];
+
+    // Sắp xếp hiển thị: rank-2 bên trái, rank-1 giữa, rank-3 bên phải
+    // (CSS đã set order: rank-1 order 2, rank-2 order 1, rank-3 order 3)
+    const displayOrder = [top3[1], top3[0], top3[2]]; // [hạng 2, hạng 1, hạng 3]
+
+    podium.innerHTML = displayOrder.map((user, idx) => {
+      if (!user) return '';
+      // rank thực: idx 0 = rank 2, idx 1 = rank 1, idx 2 = rank 3
+      const rank = idx === 0 ? 2 : idx === 1 ? 1 : 3;
+      const value = getMetricValue(user, currentMetric);
+      return `
+        <div class="podium-card rank-${rank}" data-user-id="${user.id}">
+          <div style="position:relative">
+            <div class="podium-avatar">${escapeHtml(user.initials)}</div>
+            <div class="rank-badge">${rank}</div>
+          </div>
+          <p class="podium-name">${escapeHtml(user.name)}</p>
+          <p class="podium-handle">${escapeHtml(user.handle)}</p>
+          <div class="podium-score">${formatNumber(value)}${meta.suffix ? '<small>' + meta.suffix + '</small>' : ''}</div>
+          <p class="podium-metric">${meta.short}</p>
+          <div class="podium-bar">#${rank}</div>
+        </div>
+      `;
+    }).join('');
+
+    // Update label
+    document.getElementById('podiumLabel').textContent =
+      'Top 3 · ' + meta.label + ' · ' + TIME_META[currentTime];
+
+    // Bind clicks
+    podium.querySelectorAll('.podium-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = parseInt(card.dataset.userId, 10);
+        const user = USERS.find(u => u.id === id);
+        if (user) showToast('Đang mở hồ sơ: ' + user.name);
+      });
+    });
+  }
+
+  /* ============ RENDER RANK LIST ============ */
+  function renderRankList(sorted) {
+    const list = document.getElementById('rankList');
+    const meta = METRIC_META[currentMetric];
+
+    list.innerHTML = sorted.map((user, idx) => {
+      const rank = idx + 1;
+      const value = getMetricValue(user, currentMetric);
+      const isTop3 = rank <= 3;
+      const isMe = user.isMe;
+
+      const verifiedIcon = user.verified
+        ? '<svg class="verified-icon" width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        : '';
+
+      const meTag = isMe ? '<span class="me-tag">Bạn</span>' : '';
+
+      // Cột metric phụ — hiển thị chỉ số khác để tạo ngữ cảnh
+      let secondaryMetric = '';
+      if (currentMetric === 'trust') {
+        secondaryMetric = formatNumber(user.completed) + ' nhiệm vụ';
+      } else if (currentMetric === 'completed') {
+        secondaryMetric = 'Trust ' + user.trust;
+      } else if (currentMetric === 'created') {
+        secondaryMetric = 'Trust ' + user.trust;
+      } else if (currentMetric === 'earned') {
+        secondaryMetric = formatNumber(user.completed) + ' nhiệm vụ';
+      }
+
+      return `
+        <div class="rank-row ${isTop3 ? 'top-3' : ''} ${isMe ? 'me' : ''}" data-user-id="${user.id}">
+          <div class="rank-num">${rank}</div>
+
+          <div class="rank-user">
+            <span class="rank-avatar">${escapeHtml(user.initials)}</span>
+            <div class="rank-user-info">
+              <div class="rank-name">${escapeHtml(user.name)} ${meTag} ${verifiedIcon}</div>
+              <div class="rank-handle">${escapeHtml(user.handle)}</div>
+            </div>
+          </div>
+
+          <div class="rank-score rank-col-hide-mobile">
+            ${formatNumber(value)}${meta.suffix ? '<small>' + meta.suffix + '</small>' : ''}
+          </div>
+
+          <div class="rank-metric rank-col-hide-mobile">
+            ${secondaryMetric}
+          </div>
+
+          <div class="rank-badge-cell">
+            <span class="rank-badge-pill ${user.badge}">${escapeHtml(user.badgeLabel)}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Bind click
+    list.querySelectorAll('.rank-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const id = parseInt(row.dataset.userId, 10);
+        const user = USERS.find(u => u.id === id);
+        if (user) showToast('Đang mở hồ sơ: ' + user.name);
+      });
+    });
+  }
+
+  /* ============ RENDER MY RANK ============ */
+  function renderMyRank(sorted) {
+    const me = USERS.find(u => u.isMe);
+    if (!me) return;
+
+    const myIdx = sorted.findIndex(u => u.isMe);
+    const myRank = myIdx >= 0 ? myIdx + 1 : '—';
+    const meta = METRIC_META[currentMetric];
+
+    document.getElementById('myRankNum').textContent = '#' + myRank;
+    document.getElementById('myRankName').textContent = me.name;
+
+    // Description thay đổi theo metric
+    let desc = '';
+    if (currentMetric === 'trust') {
+      desc = `Bạn đứng thứ ${myRank} về Trust Score trong tổng số 12,480 người dùng`;
+    } else if (currentMetric === 'completed') {
+      desc = `Bạn đứng thứ ${myRank} về số nhiệm vụ hoàn thành tuần này`;
+    } else if (currentMetric === 'created') {
+      desc = `Bạn đứng thứ ${myRank} về số nhiệm vụ đã tạo`;
+    } else {
+      desc = `Bạn đứng thứ ${myRank} về Credits kiếm được`;
+    }
+    document.getElementById('myRankDesc').textContent = desc;
+
+    document.getElementById('myRankScore').textContent = formatNumber(getMetricValue(me, currentMetric));
+    document.getElementById('myRankScoreLabel').textContent = meta.label;
+  }
+
+  /* ============ RENDER ALL ============ */
+  function renderAll() {
+    const sorted = getSortedUsers();
+    renderPodium(sorted);
+    renderRankList(sorted);
+    renderMyRank(sorted);
+  }
+
+  /* ============ METRIC TABS ============ */
+  document.querySelectorAll('.metric-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.metric-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      currentMetric = tab.dataset.metric;
+      renderAll();
+    });
+  });
+
+  /* ============ TIME TABS ============ */
+  document.querySelectorAll('.time-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.time-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      currentTime = tab.dataset.time;
+
+      // Demo: thay đổi dữ liệu theo thời gian (nhân hệ số cho demo)
+      // Trong bản thật, đây sẽ là call API với param time range
+      const factor = currentTime === 'week' ? 1 : currentTime === 'month' ? 4 : 18;
+      if (currentTime === 'week') {
+        // Reset về dữ liệu gốc
+        renderAll();
+      } else {
+        // Nhân hệ số cho completed/created/earned
+        const backup = USERS.map(u => ({ completed: u.completed, created: u.created, earned: u.earned }));
+        USERS.forEach((u, i) => {
+          u.completed = backup[i].completed * factor;
+          u.created = backup[i].created * factor;
+          u.earned = backup[i].earned * factor;
+        });
+        renderAll();
+        // Khôi phục để lần sau không nhân chồng
+        USERS.forEach((u, i) => {
+          u.completed = backup[i].completed;
+          u.created = backup[i].created;
+          u.earned = backup[i].earned;
+        });
+      }
+
+      showToast('Đã chuyển sang: ' + TIME_META[currentTime]);
+    });
+  });
+
+  /* ============ TOAST ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('on'), 2400);
+  }
+
+  /* ============ HEADER MOBILE MENU ============ */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburgerBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', open);
+    hamburgerBtn.setAttribute('aria-expanded', open);
+  });
+
+  /* ============ INIT ============ */
+  renderAll();
+
+})();
+</script>
+
+</body>
+</html>

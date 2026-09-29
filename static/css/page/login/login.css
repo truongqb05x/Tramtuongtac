@@ -1,0 +1,250 @@
+  :root {
+    --bg: #faf9f7;
+    --bg-alt: #f4f2ee;
+    --bg-hover: #fcfbf9;
+    --ink: #1e1e1e;
+    --ink-soft: #3d3d3d;
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --border: #e3e0da;
+    --border-strong: #d0ccc4;
+    --accent: #1e3a5f;
+    --accent-hover: #162c47;
+    --accent-soft: #e8edf3;
+    --success: #2f6b4f;
+    --success-soft: #e8f0eb;
+    --warning: #8a6a1f;
+    --danger: #8a2f2f;
+    --danger-soft: #f4e5e5;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* ---------- Centered layout ---------- */
+  .auth-shell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  /* ---------- LEFT: form column ---------- */
+  .auth-form-col {
+    display: flex; flex-direction: column;
+    padding: 1.5rem 1.5rem 2.5rem;
+    background: var(--bg);
+    width: 100%;
+    max-width: 500px;
+  }
+  @media (min-width: 640px) { .auth-form-col { padding: 2.5rem; } }
+
+
+
+  .auth-box {
+    width: 100%; max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .auth-head { margin-bottom: 2rem; }
+  .auth-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.75rem; font-weight: 500;
+    letter-spacing: -.015em; line-height: 1.2;
+    margin: 0 0 .5rem; color: var(--ink);
+  }
+  @media (min-width: 768px) { .auth-title { font-size: 2rem; } }
+  .auth-sub {
+    font-size: .9375rem; color: var(--ink-soft); margin: 0;
+    line-height: 1.55;
+  }
+
+
+
+  /* ---------- OAuth buttons ---------- */
+  .oauth-btn {
+    display: flex; align-items: center; justify-content: center; gap: .75rem;
+    width: 100%; padding: .8125rem 1.5rem;
+    font-size: .9375rem; font-weight: 500; font-family: inherit;
+    background: #fff; color: var(--ink);
+    border: 1px solid var(--border-strong); border-radius: 6px;
+    cursor: pointer; text-decoration: none;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .oauth-btn:hover { background: var(--bg-hover); border-color: var(--muted); }
+  .oauth-btn:active { background: var(--bg-alt); }
+  .oauth-btn svg { flex-shrink: 0; }
+
+  .divider-or {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 1.5rem 0;
+    font-size: .75rem; color: var(--muted);
+    letter-spacing: .06em; text-transform: uppercase;
+  }
+  .divider-or::before, .divider-or::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ---------- Fields ---------- */
+  .field { margin-bottom: 1.125rem; }
+  .field-label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: .8125rem; font-weight: 500; color: var(--ink);
+    margin-bottom: .4375rem;
+  }
+  .field-label .link {
+    font-size: .8125rem; font-weight: 400; color: var(--accent);
+    text-decoration: none;
+  }
+  .field-label .link:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="password"] {
+    width: 100%; padding: .6875rem .875rem;
+    font-size: .9375rem; font-family: inherit; color: var(--ink);
+    border: 1px solid var(--border-strong); border-radius: 6px;
+    background: #fff;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .field input:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.08);
+  }
+  .field input::placeholder { color: var(--muted-2); }
+  .field input.invalid { border-color: var(--danger); }
+
+  .password-wrap { position: relative; }
+  .password-wrap input { padding-right: 3rem; }
+  .toggle-pass {
+    position: absolute; right: .5rem; top: 50%; transform: translateY(-50%);
+    width: 2rem; height: 2rem; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: none; cursor: pointer;
+    color: var(--muted); border-radius: 4px;
+    transition: color .15s ease, background .15s ease;
+  }
+  .toggle-pass:hover { background: var(--bg-alt); color: var(--ink); }
+
+  .field-error {
+    display: none;
+    font-size: .75rem; color: var(--danger);
+    margin-top: .375rem;
+  }
+  .field-error.on { display: block; }
+
+  /* Password strength */
+  .strength {
+    display: flex; gap: .25rem; margin-top: .5rem;
+  }
+  .strength-bar {
+    flex: 1; height: 3px; background: var(--border); border-radius: 2px;
+    transition: background-color .2s ease;
+  }
+  .strength-label {
+    font-size: .75rem; color: var(--muted); margin-top: .375rem;
+    display: flex; justify-content: space-between;
+  }
+
+  /* Checkbox row */
+  .check-row {
+    display: flex; align-items: flex-start; gap: .625rem;
+    margin-bottom: 1.25rem;
+    cursor: pointer; user-select: none;
+  }
+  .check-row input[type="checkbox"] {
+    appearance: none; -webkit-appearance: none;
+    width: 1rem; height: 1rem; margin-top: .25rem; flex-shrink: 0;
+    border: 1px solid var(--border-strong); border-radius: 3px;
+    background: #fff; cursor: pointer; position: relative;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .check-row input:checked { background: var(--accent); border-color: var(--accent); }
+  .check-row input:checked::after {
+    content: ''; position: absolute; left: 4px; top: 1px;
+    width: 5px; height: 9px;
+    border: solid #fff; border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg);
+  }
+  .check-row .cr-text {
+    font-size: .8125rem; color: var(--ink-soft); line-height: 1.5;
+  }
+  .check-row .cr-text a {
+    color: var(--accent); text-decoration: none;
+  }
+  .check-row .cr-text a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+  /* ---------- Submit button ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    font-weight: 500; font-size: .9375rem; line-height: 1;
+    padding: .8125rem 1.5rem; border-radius: 6px;
+    border: 1px solid transparent; cursor: pointer; text-decoration: none;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    white-space: nowrap; font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-primary:active { background: #102135; border-color: #102135; }
+  .btn-primary:disabled { background: var(--border-strong); border-color: var(--border-strong); color: #fff; cursor: not-allowed; }
+  .btn-block { width: 100%; }
+
+  .form-foot {
+    font-size: .875rem; color: var(--muted); text-align: center;
+    margin-top: 1.5rem;
+  }
+  .form-foot button {
+    background: none; border: none; padding: 0;
+    color: var(--accent); font-weight: 500; font-family: inherit;
+    font-size: inherit; cursor: pointer;
+  }
+  .form-foot button:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(150%);
+    opacity: 0;
+    visibility: hidden;
+    background: var(--ink); color: #fff; font-size: .875rem;
+    padding: .75rem 1.25rem; border-radius: 6px; z-index: 120;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    transition: transform .3s cubic-bezier(0.16, 1, 0.3, 1), opacity .3s ease, visibility .3s ease;
+    display: flex; align-items: center; gap: .625rem;
+    max-width: calc(100vw - 2rem);
+  }
+  .toast.on { 
+    transform: translateX(-50%) translateY(0); 
+    opacity: 1;
+    visibility: visible;
+  }
+  .toast .check {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--success);
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  /* ---------- Form visibility ---------- */
+  .pane { display: none; }
+  .pane.active { display: block; }
+
+  /* Fade-in nhẹ */
+  .pane.active { animation: fadeIn .25s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }

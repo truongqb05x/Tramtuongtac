@@ -1,0 +1,2148 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>API Documentation — TRAODOI Developers</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf9f7;
+    --bg-alt: #f4f2ee;
+    --bg-hover: #fcfbf9;
+    --ink: #1e1e1e;
+    --ink-soft: #3d3d3d;
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --border: #e3e0da;
+    --border-strong: #d0ccc4;
+    --accent: #1e3a5f;
+    --accent-hover: #162c47;
+    --accent-soft: #e8edf3;
+    --success: #2f6b4f;
+    --success-soft: #e8f0eb;
+    --warning: #8a6a1f;
+    --warning-soft: #f4edda;
+    --danger: #8a2f2f;
+    --danger-soft: #f4e5e5;
+    --code-bg: #1a1a1a;
+    --code-ink: #e8e6e0;
+    --code-comment: #7a7a72;
+    --code-keyword: #8fa9c9;
+    --code-string: #a8c896;
+    --code-number: #d9a06a;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  .mono { font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    font-weight: 500; font-size: .875rem; line-height: 1;
+    padding: .625rem 1.125rem; border-radius: 6px;
+    border: 1px solid transparent; cursor: pointer; text-decoration: none;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    white-space: nowrap; font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+  .btn-secondary:hover { background: var(--bg-alt); border-color: var(--muted); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--ink-soft); padding: .5rem .75rem; }
+  .btn-ghost:hover { background: var(--bg-alt); color: var(--ink); }
+  .btn-sm { padding: .4375rem .8125rem; font-size: .75rem; }
+
+  /* ---------- Header ---------- */
+  .top { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .top .wrap { max-width: 1440px; margin: 0 auto; padding: 0 1.5rem; }
+  @media (min-width: 768px) { .top .wrap { padding: 0 2.5rem; } }
+  .nav-link {
+    font-size: .875rem; font-weight: 450; color: var(--ink-soft);
+    text-decoration: none; padding: .375rem 0; position: relative; transition: color .15s ease;
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.active { color: var(--ink); font-weight: 500; }
+  .nav-link.active::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -22px;
+    height: 2px; background: var(--accent);
+  }
+  @media (max-width: 767px) { .nav-link.active::after { display: none; } }
+  .hamburger {
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+    width: 2.25rem; height: 2.25rem; padding: .375rem;
+    background: transparent; border: 1px solid var(--border-strong);
+    border-radius: 6px; cursor: pointer;
+  }
+  .hamburger span { display: block; height: 1.5px; width: 100%; background: var(--ink-soft); transition: transform .2s ease, opacity .2s ease; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  .mobile-menu { display: none; border-top: 1px solid var(--border); background: var(--bg); }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block; padding: .875rem 1.5rem; font-size: .875rem;
+    color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:hover { background: var(--bg-alt); color: var(--ink); }
+  .mobile-menu a:last-of-type { border-bottom: none; }
+
+  .api-version {
+    display: inline-flex; align-items: center; gap: .375rem;
+    padding: .25rem .5rem;
+    background: var(--success-soft);
+    color: var(--success);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6875rem; font-weight: 500;
+    letter-spacing: .04em;
+    border-radius: 4px;
+  }
+  .api-version::before {
+    content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor;
+  }
+
+  /* ---------- Doc shell ---------- */
+  .doc-shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  @media (min-width: 1024px) {
+    .doc-shell { grid-template-columns: 260px minmax(0, 1fr) 220px; }
+  }
+
+  /* ---------- Left sidebar (endpoints) ---------- */
+  .doc-sidebar {
+    background: var(--bg-alt);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem 3rem;
+    position: sticky; top: 65px;
+    height: calc(100vh - 65px);
+    overflow-y: auto;
+    align-self: start;
+  }
+  @media (max-width: 1023px) {
+    .doc-sidebar {
+      position: static;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+  }
+
+  .sidebar-group {
+    margin-bottom: 1.5rem;
+  }
+  .sidebar-group-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted-2);
+    padding: 0 .75rem;
+    margin-bottom: .5rem;
+    display: block;
+  }
+  .sidebar-group-list {
+    list-style: none; padding: 0; margin: 0;
+  }
+  .sidebar-link-api {
+    display: flex; align-items: center; gap: .625rem;
+    padding: .4375rem .75rem;
+    font-size: .8125rem;
+    color: var(--ink-soft);
+    border-radius: 6px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    width: 100%; text-align: left;
+    font-family: inherit;
+    transition: background .15s ease, color .15s ease;
+    margin-bottom: .125rem;
+    line-height: 1.35;
+  }
+  .sidebar-link-api:hover {
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .sidebar-link-api.active {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 500;
+  }
+  .method-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .5625rem; font-weight: 700;
+    letter-spacing: .04em;
+    padding: .125rem .3125rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+    min-width: 2.25rem;
+    text-align: center;
+  }
+  .method-tag.get { background: #dbeafe; color: #1e40af; }
+  .method-tag.post { background: #d1fae5; color: #065f46; }
+  .method-tag.put { background: #fef3c7; color: #92400e; }
+  .method-tag.patch { background: #f3e8ff; color: #6b21a8; }
+  .method-tag.delete { background: #fee2e2; color: #991b1b; }
+  .sidebar-link-api.active .method-tag {
+    background: rgba(255,255,255,.2);
+    color: #fff;
+  }
+
+  /* ---------- Main content ---------- */
+  .doc-content {
+    padding: 2rem 1.5rem 4rem;
+    min-width: 0;
+  }
+  @media (min-width: 768px) { .doc-content { padding: 3rem 3rem 5rem; } }
+
+  .doc-hero {
+    padding-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  .doc-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .doc-hero-eyebrow::before {
+    content: ''; width: 20px; height: 1px; background: var(--accent);
+  }
+  .doc-hero-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 2rem; font-weight: 500;
+    line-height: 1.15; letter-spacing: -.02em;
+    color: var(--ink); margin: 0 0 1rem;
+  }
+  @media (min-width: 768px) { .doc-hero-title { font-size: 2.5rem; } }
+  .doc-hero-lede {
+    font-size: 1.0625rem; line-height: 1.65;
+    color: var(--ink-soft); margin: 0 0 1.5rem;
+    max-width: 640px;
+  }
+
+  .base-url-box {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .875rem 1.125rem;
+    background: var(--code-bg);
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .8125rem;
+    color: var(--code-ink);
+    max-width: 560px;
+    position: relative;
+  }
+  .base-url-label {
+    color: var(--code-comment);
+    font-size: .6875rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-right: .25rem;
+  }
+  .base-url-value {
+    color: var(--code-string);
+    flex: 1;
+    word-break: break-all;
+  }
+  .copy-btn {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    color: var(--code-ink);
+    padding: .25rem .5rem;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6875rem;
+    cursor: pointer;
+    transition: background .15s ease;
+    flex-shrink: 0;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,.16); }
+
+  /* ---------- Intro section ---------- */
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  @media (min-width: 640px) {
+    .intro-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .intro-card {
+    padding: 1.25rem 1.375rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .intro-card-icon {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: .75rem;
+  }
+  .intro-card-title {
+    font-size: .875rem; font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 .375rem;
+  }
+  .intro-card-desc {
+    font-size: .8125rem;
+    color: var(--muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* ---------- Endpoint ---------- */
+  .endpoint {
+    margin-bottom: 3.5rem;
+    scroll-margin-top: 96px;
+  }
+  .endpoint:last-child { margin-bottom: 0; }
+
+  .endpoint-head {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: .75rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .endpoint-method {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem; font-weight: 700;
+    letter-spacing: .04em;
+    padding: .375rem .75rem;
+    border-radius: 4px;
+  }
+  .endpoint-method.get { background: #dbeafe; color: #1e40af; }
+  .endpoint-method.post { background: #d1fae5; color: #065f46; }
+  .endpoint-method.put { background: #fef3c7; color: #92400e; }
+  .endpoint-method.patch { background: #f3e8ff; color: #6b21a8; }
+  .endpoint-method.delete { background: #fee2e2; color: #991b1b; }
+  .endpoint-path {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .875rem; font-weight: 500;
+    color: var(--ink);
+    word-break: break-all;
+  }
+  .endpoint-path .param {
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: .125rem .375rem;
+    border-radius: 3px;
+  }
+  .endpoint-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.375rem; font-weight: 500;
+    line-height: 1.25; letter-spacing: -.01em;
+    color: var(--ink);
+    margin: 0 0 .5rem;
+  }
+  @media (min-width: 768px) { .endpoint-title { font-size: 1.5rem; } }
+  .endpoint-desc {
+    font-size: .9375rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+    margin: 0 0 1.5rem;
+    max-width: 680px;
+  }
+  .endpoint-desc strong { color: var(--ink); font-weight: 500; }
+
+  /* ---------- Subsection ---------- */
+  .api-subsection {
+    margin-bottom: 1.75rem;
+  }
+  .api-subsection:last-child { margin-bottom: 0; }
+  .api-subsection-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .75rem;
+    display: block;
+  }
+
+  /* ---------- Params table ---------- */
+  .params-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: .8125rem;
+  }
+  .params-table thead th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted);
+    padding: .625rem .875rem;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border-strong);
+    white-space: nowrap;
+  }
+  .params-table tbody td {
+    padding: .75rem .875rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  .params-table tbody tr:last-child td { border-bottom: none; }
+  .params-table tbody td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .param-req {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .5625rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    padding: .125rem .3125rem;
+    border-radius: 3px;
+    margin-left: .375rem;
+    vertical-align: middle;
+  }
+  .param-req.required { background: var(--danger-soft); color: var(--danger); }
+  .param-req.optional { background: var(--bg-alt); color: var(--muted); }
+  .param-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    color: var(--accent);
+  }
+
+  /* ---------- Code block ---------- */
+  .code-block {
+    background: var(--code-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0;
+  }
+  .code-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .625rem 1rem;
+    background: rgba(255,255,255,.04);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .code-head-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6875rem; font-weight: 500;
+    color: var(--code-comment);
+    letter-spacing: .04em;
+  }
+  .code-tabs {
+    display: flex; gap: .125rem;
+  }
+  .code-tab {
+    background: transparent;
+    border: none;
+    padding: .25rem .625rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6875rem;
+    color: var(--code-comment);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background .15s ease, color .15s ease;
+  }
+  .code-tab:hover { background: rgba(255,255,255,.06); color: var(--code-ink); }
+  .code-tab.active {
+    background: rgba(255,255,255,.1);
+    color: var(--code-ink);
+  }
+  .code-body {
+    padding: 1.125rem 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .8125rem;
+    line-height: 1.7;
+    color: var(--code-ink);
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0;
+  }
+  .code-body .c-comment { color: var(--code-comment); font-style: italic; }
+  .code-body .c-key { color: var(--code-keyword); }
+  .code-body .c-str { color: var(--code-string); }
+  .code-body .c-num { color: var(--code-number); }
+
+  /* ---------- Response example ---------- */
+  .response-example {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 1rem;
+  }
+  .response-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .75rem 1rem;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6875rem;
+    color: var(--muted);
+    letter-spacing: .04em;
+  }
+  .response-status {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-weight: 600;
+    color: var(--success);
+  }
+  .response-status::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+  }
+  .response-status.error { color: var(--danger); }
+  .response-status.warn { color: var(--warning); }
+
+  /* ---------- Auth callout ---------- */
+  .callout {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: .875rem;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+  }
+  .callout.warning { background: var(--warning-soft); border-left-color: var(--warning); }
+  .callout.danger { background: var(--danger-soft); border-left-color: var(--danger); }
+  .callout-icon {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    color: var(--accent);
+    letter-spacing: .06em;
+    padding-top: .1875rem;
+    white-space: nowrap;
+  }
+  .callout.warning .callout-icon { color: var(--warning); }
+  .callout.danger .callout-icon { color: var(--danger); }
+  .callout-body {
+    font-size: .875rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .callout-body strong { color: var(--ink); font-weight: 500; }
+  .callout-body code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .8125rem;
+    background: rgba(0,0,0,.05);
+    padding: .0625rem .375rem;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+
+  /* ---------- Right sidebar (on this page) ---------- */
+  .doc-toc {
+    padding: 1.5rem 1.25rem 3rem;
+    position: sticky; top: 65px;
+    height: calc(100vh - 65px);
+    overflow-y: auto;
+    align-self: start;
+    border-left: 1px solid var(--border);
+  }
+  @media (max-width: 1023px) {
+    .doc-toc { display: none; }
+  }
+  .doc-toc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .75rem;
+    display: block;
+  }
+  .doc-toc-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: .125rem;
+  }
+  .doc-toc-link {
+    display: block;
+    padding: .3125rem .5rem;
+    font-size: .75rem;
+    color: var(--muted);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color .15s ease, background .15s ease;
+    line-height: 1.45;
+    border-left: 2px solid transparent;
+  }
+  .doc-toc-link:hover { color: var(--ink); background: var(--bg-alt); }
+  .doc-toc-link.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 500;
+    background: var(--accent-soft);
+  }
+
+  /* ---------- Error codes ---------- */
+  .error-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .625rem;
+    margin-top: 1rem;
+  }
+  @media (min-width: 640px) {
+    .error-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .error-item {
+    display: flex; gap: .875rem; align-items: flex-start;
+    padding: .875rem 1rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .error-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .8125rem; font-weight: 600;
+    color: var(--danger);
+    flex-shrink: 0;
+    min-width: 2.5rem;
+  }
+  .error-text {
+    font-size: .8125rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .error-text strong { color: var(--ink); font-weight: 500; display: block; margin-bottom: .125rem; }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: #fff; font-size: .875rem;
+    padding: .75rem 1.25rem; border-radius: 6px; z-index: 120;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    transition: transform .25s ease;
+    display: flex; align-items: center; gap: .625rem;
+    max-width: calc(100vw - 2rem);
+  }
+  .toast.on { transform: translateX(-50%) translateY(0); }
+  .toast .check {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--success);
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="top">
+  <div class="wrap">
+    <div class="flex items-center justify-between h-[64px]">
+      <div class="flex items-center gap-3">
+        <a href="#" class="font-serif text-[1.25rem] font-medium tracking-[-.01em]">TRAODOI</a>
+        <span style="color:var(--border-strong)">/</span>
+        <span class="text-[.875rem] font-medium" style="color:var(--ink-soft)">Developers</span>
+        <span class="api-version">v1 · ổn định</span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+        <a href="#" class="nav-link active">API Reference</a>
+        <a href="#" class="nav-link">Hướng dẫn</a>
+        <a href="#" class="nav-link">SDK</a>
+        <a href="#" class="nav-link">Changelog</a>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-2">
+        <button class="btn btn-ghost btn-sm">Đăng nhập</button>
+        <button class="btn btn-primary btn-sm">Lấy API key</button>
+      </div>
+
+      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu md:hidden" id="mobileMenu">
+    <a href="#">API Reference</a>
+    <a href="#">Hướng dẫn</a>
+    <a href="#">SDK</a>
+    <a href="#">Changelog</a>
+    <div class="p-4 flex flex-col gap-2.5">
+      <button class="btn btn-secondary w-full">Đăng nhập</button>
+      <button class="btn btn-primary w-full">Lấy API key</button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= DOC SHELL ================= -->
+<div class="doc-shell">
+
+  <!-- ============ LEFT SIDEBAR ============ -->
+  <aside class="doc-sidebar" aria-label="Danh sách API">
+    <div class="sidebar-group">
+      <span class="sidebar-group-label">Bắt đầu</span>
+      <ul class="sidebar-group-list">
+        <li><button class="sidebar-link-api active" data-target="intro">
+          <span class="method-tag" style="background:var(--accent-soft);color:var(--accent)">—</span>
+          Giới thiệu
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="auth">
+          <span class="method-tag post">POST</span>
+          Xác thực
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="errors">
+          <span class="method-tag" style="background:var(--danger-soft);color:var(--danger)">ERR</span>
+          Mã lỗi
+        </button></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-group">
+      <span class="sidebar-group-label">Nhiệm vụ</span>
+      <ul class="sidebar-group-list">
+        <li><button class="sidebar-link-api" data-target="get-tasks">
+          <span class="method-tag get">GET</span>
+          Danh sách nhiệm vụ
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="get-task-detail">
+          <span class="method-tag get">GET</span>
+          Chi tiết nhiệm vụ
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="accept-task">
+          <span class="method-tag post">POST</span>
+          Nhận nhiệm vụ
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="complete-task">
+          <span class="method-tag post">POST</span>
+          Hoàn thành nhiệm vụ
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="my-tasks">
+          <span class="method-tag get">GET</span>
+          Nhiệm vụ của tôi
+        </button></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-group">
+      <span class="sidebar-group-label">Tạo nhiệm vụ</span>
+      <ul class="sidebar-group-list">
+        <li><button class="sidebar-link-api" data-target="create-task">
+          <span class="method-tag post">POST</span>
+          Tạo nhiệm vụ
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="update-task">
+          <span class="method-tag patch">PATCH</span>
+          Tạm dừng / tiếp tục
+        </button></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-group">
+      <span class="sidebar-group-label">Tài khoản</span>
+      <ul class="sidebar-group-list">
+        <li><button class="sidebar-link-api" data-target="get-me">
+          <span class="method-tag get">GET</span>
+          Thông tin tài khoản
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="get-balance">
+          <span class="method-tag get">GET</span>
+          Số dư Credits
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="get-transactions">
+          <span class="method-tag get">GET</span>
+          Lịch sử giao dịch
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="get-trust">
+          <span class="method-tag get">GET</span>
+          Trust Score
+        </button></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-group">
+      <span class="sidebar-group-label">Cấu hình</span>
+      <ul class="sidebar-group-list">
+        <li><button class="sidebar-link-api" data-target="list-accounts">
+          <span class="method-tag get">GET</span>
+          Tài khoản MXH
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="create-account">
+          <span class="method-tag post">POST</span>
+          Thêm tài khoản MXH
+        </button></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-group">
+      <span class="sidebar-group-label">Tranh chấp</span>
+      <ul class="sidebar-group-list">
+        <li><button class="sidebar-link-api" data-target="create-dispute">
+          <span class="method-tag post">POST</span>
+          Mở tranh chấp
+        </button></li>
+        <li><button class="sidebar-link-api" data-target="list-disputes">
+          <span class="method-tag get">GET</span>
+          Danh sách tranh chấp
+        </button></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="doc-content">
+
+    <!-- ============ INTRO ============ -->
+    <section class="doc-hero" id="intro">
+      <span class="doc-hero-eyebrow">REST API v1</span>
+      <h1 class="doc-hero-title">TRAODOI API Reference</h1>
+      <p class="doc-hero-lede">
+        API REST để tích hợp TRAODOI vào ứng dụng của bạn. Xác thực qua Bearer token, tất cả request và response đều ở định dạng JSON. Endpoint ổn định, không có breaking change trong minor version.
+      </p>
+
+      <div class="base-url-box">
+        <span class="base-url-label">Base URL</span>
+        <span class="base-url-value">https://api.traodoi.app/v1</span>
+        <button class="copy-btn" data-copy="https://api.traodoi.app/v1">Copy</button>
+      </div>
+    </section>
+
+    <!-- Intro cards -->
+    <div class="intro-grid">
+      <div class="intro-card">
+        <span class="intro-card-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M7 1.5L3 3.5V7C3 9.5 4.8 11.7 7 12.5C9.2 11.7 11 9.5 11 7V3.5L7 1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+            <path d="M5.5 7L6.5 8L8.5 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <h3 class="intro-card-title">Xác thực Bearer</h3>
+        <p class="intro-card-desc">
+          Mọi request cần header <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">Authorization: Bearer &lt;token&gt;</code>. Token lấy từ endpoint <strong>/auth/token</strong> hoặc dashboard.
+        </p>
+      </div>
+
+      <div class="intro-card">
+        <span class="intro-card-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M7 4V7L9 8.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <h3 class="intro-card-title">Rate limit</h3>
+        <p class="intro-card-desc">
+          1.000 request / giờ cho mỗi API key. Header <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">X-RateLimit-Remaining</code> trả về số request còn lại.
+        </p>
+      </div>
+
+      <div class="intro-card">
+        <span class="intro-card-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 5L7 2L12 5V11L7 12L2 11V5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <h3 class="intro-card-title">Idempotency</h3>
+        <p class="intro-card-desc">
+          Các endpoint POST quan trọng hỗ trợ header <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">Idempotency-Key</code> để tránh tạo trùng khi retry.
+        </p>
+      </div>
+    </div>
+
+    <!-- ============ AUTH ============ -->
+    <section class="endpoint" id="auth">
+      <div class="endpoint-head">
+        <span class="endpoint-method post">POST</span>
+        <span class="endpoint-path">/auth/token</span>
+      </div>
+      <h2 class="endpoint-title">Lấy access token</h2>
+      <p class="endpoint-desc">
+        Đổi API key và secret lấy access token có thời hạn. Token hết hạn sau <strong>24 giờ</strong>, cần refresh bằng endpoint <code style="font-family:'JetBrains Mono',monospace">/auth/refresh</code> hoặc lấy token mới.
+      </p>
+
+      <div class="callout warning">
+        <span class="callout-icon">CẢNH BÁO</span>
+        <p class="callout-body">
+          Không bao giờ để lộ <code>api_secret</code> ở client-side. Chỉ gọi endpoint này từ server của bạn.
+        </p>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Request body</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Trường</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>api_key<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>API key của ứng dụng</td>
+            </tr>
+            <tr>
+              <td>api_secret<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Secret tương ứng</td>
+            </tr>
+            <tr>
+              <td>scope<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">string[]</span></td>
+              <td>Danh sách quyền cần cấp. Mặc định là toàn bộ quyền của key.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Ví dụ request</span>
+        <div class="code-block">
+          <div class="code-head">
+            <span class="code-head-label">cURL</span>
+            <div class="code-tabs">
+              <button class="code-tab active">cURL</button>
+              <button class="code-tab">JavaScript</button>
+              <button class="code-tab">Python</button>
+            </div>
+          </div>
+          <pre class="code-body"><span class="c-key">curl</span> -X POST https://api.traodoi.app/v1/auth/token \
+  -H <span class="c-str">"Content-Type: application/json"</span> \
+  -d <span class="c-str">'{
+    "api_key": "tk_live_a1b2c3d4e5f6",
+    "api_secret": "sk_live_xxxxxxxxxxxx",
+    "scope": ["tasks:read", "tasks:write", "credits:read"]
+  }'</span></pre>
+        </div>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 200 OK</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">200 OK</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"access_token"</span>: <span class="c-str">"eyJhbGciOiJIUzI1NiIs..."</span>,
+  <span class="c-key">"token_type"</span>: <span class="c-str">"Bearer"</span>,
+  <span class="c-key">"expires_in"</span>: <span class="c-num">86400</span>,
+  <span class="c-key">"scope"</span>: [<span class="c-str">"tasks:read"</span>, <span class="c-str">"tasks:write"</span>, <span class="c-str">"credits:read"</span>]
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GET TASKS ============ -->
+    <section class="endpoint" id="get-tasks">
+      <div class="endpoint-head">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/tasks</span>
+      </div>
+      <h2 class="endpoint-title">Lấy danh sách nhiệm vụ</h2>
+      <p class="endpoint-desc">
+        Trả về danh sách nhiệm vụ đang mở trên marketplace. Hỗ trợ filter theo nền tảng, loại nhiệm vụ, phần thưởng tối thiểu, và Trust Score tối thiểu của người tạo. Kết quả mặc định sắp xếp theo phần thưởng giảm dần.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Query parameters</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Tham số</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>platform<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Lọc theo nền tảng: <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">facebook</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">instagram</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">tiktok</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">youtube</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">website</code></td>
+            </tr>
+            <tr>
+              <td>type<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Loại nhiệm vụ: <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">follow</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">like</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">comment</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">visit</code></td>
+            </tr>
+            <tr>
+              <td>min_reward<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">integer</span></td>
+              <td>Phần thưởng tối thiểu (Credits)</td>
+            </tr>
+            <tr>
+              <td>min_trust<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">integer</span></td>
+              <td>Trust Score tối thiểu của người tạo (0–100)</td>
+            </tr>
+            <tr>
+              <td>sort<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Sắp xếp: <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">reward_desc</code> (mặc định), <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">reward_asc</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">newest</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">ending_soon</code></td>
+            </tr>
+            <tr>
+              <td>page<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">integer</span></td>
+              <td>Trang, bắt đầu từ 1. Mặc định 1.</td>
+            </tr>
+            <tr>
+              <td>per_page<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">integer</span></td>
+              <td>Số item mỗi trang, tối đa 100. Mặc định 20.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Ví dụ request</span>
+        <div class="code-block">
+          <div class="code-head">
+            <span class="code-head-label">cURL</span>
+          </div>
+          <pre class="code-body"><span class="c-key">curl</span> <span class="c-str">"https://api.traodoi.app/v1/tasks?platform=facebook&min_reward=10&sort=reward_desc"</span> \
+  -H <span class="c-str">"Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."</span></pre>
+        </div>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 200 OK</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">200 OK</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"data"</span>: [
+    {
+      <span class="c-key">"id"</span>: <span class="c-str">"T-2101"</span>,
+      <span class="c-key">"platform"</span>: <span class="c-str">"facebook"</span>,
+      <span class="c-key">"type"</span>: <span class="c-str">"follow"</span>,
+      <span class="c-key">"title"</span>: <span class="c-str">"Theo dõi trang Facebook doanh nghiệp"</span>,
+      <span class="c-key">"reward"</span>: <span class="c-num">12</span>,
+      <span class="c-key">"slots_total"</span>: <span class="c-num">50</span>,
+      <span class="c-key">"slots_taken"</span>: <span class="c-num">32</span>,
+      <span class="c-key">"duration_seconds"</span>: <span class="c-num">30</span>,
+      <span class="c-key">"verification"</span>: <span class="c-str">"automatic"</span>,
+      <span class="c-key">"creator"</span>: {
+        <span class="c-key">"id"</span>: <span class="c-str">"U-1024"</span>,
+        <span class="c-key">"name"</span>: <span class="c-str">"Minh Anh"</span>,
+        <span class="c-key">"trust_score"</span>: <span class="c-num">94</span>
+      },
+      <span class="c-key">"expires_at"</span>: <span class="c-str">"2025-10-15T14:22:00Z"</span>,
+      <span class="c-key">"created_at"</span>: <span class="c-str">"2025-10-08T09:15:00Z"</span>
+    }
+  ],
+  <span class="c-key">"pagination"</span>: {
+    <span class="c-key">"page"</span>: <span class="c-num">1</span>,
+    <span class="c-key">"per_page"</span>: <span class="c-num">20</span>,
+    <span class="c-key">"total"</span>: <span class="c-num">127</span>,
+    <span class="c-key">"total_pages"</span>: <span class="c-num">7</span>
+  }
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GET TASK DETAIL ============ -->
+    <section class="endpoint" id="get-task-detail">
+      <div class="endpoint-head">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/tasks/<span class="param">{task_id}</span></span>
+      </div>
+      <h2 class="endpoint-title">Chi tiết nhiệm vụ</h2>
+      <p class="endpoint-desc">
+        Trả về thông tin chi tiết của một nhiệm vụ, bao gồm yêu cầu cụ thể, đường dẫn nội dung, danh sách các bước, và trạng thái xác minh.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Path parameters</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Tham số</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>task_id<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>ID nhiệm vụ, dạng <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">T-XXXX</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 200 OK</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">200 OK</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"id"</span>: <span class="c-str">"T-2101"</span>,
+  <span class="c-key">"platform"</span>: <span class="c-str">"facebook"</span>,
+  <span class="c-key">"type"</span>: <span class="c-str">"follow"</span>,
+  <span class="c-key">"title"</span>: <span class="c-str">"Theo dõi trang Facebook doanh nghiệp"</span>,
+  <span class="c-key">"description"</span>: <span class="c-str">"Nhấn theo dõi trang, giữ trạng thái tối thiểu 30 giây."</span>,
+  <span class="c-key">"content_url"</span>: <span class="c-str">"https://facebook.com/minhanh.studio"</span>,
+  <span class="c-key">"reward"</span>: <span class="c-num">12</span>,
+  <span class="c-key">"slots_total"</span>: <span class="c-num">50</span>,
+  <span class="c-key">"slots_taken"</span>: <span class="c-num">32</span>,
+  <span class="c-key">"duration_seconds"</span>: <span class="c-num">30</span>,
+  <span class="c-key">"verification"</span>: <span class="c-str">"automatic"</span>,
+  <span class="c-key">"steps"</span>: [
+    { <span class="c-key">"order"</span>: <span class="c-num">1</span>, <span class="c-key">"text"</span>: <span class="c-str">"Mở liên kết Facebook"</span> },
+    { <span class="c-key">"order"</span>: <span class="c-num">2</span>, <span class="c-key">"text"</span>: <span class="c-str">"Nhấn theo dõi"</span> },
+    { <span class="c-key">"order"</span>: <span class="c-num">3</span>, <span class="c-key">"text"</span>: <span class="c-str">"Giữ ít nhất 30 giây"</span> }
+  ],
+  <span class="c-key">"notes"</span>: [<span class="c-str">"Không hủy theo dõi trong 24 giờ"</span>],
+  <span class="c-key">"creator"</span>: { <span class="c-key">"id"</span>: <span class="c-str">"U-1024"</span>, <span class="c-key">"name"</span>: <span class="c-str">"Minh Anh"</span>, <span class="c-key">"trust_score"</span>: <span class="c-num">94</span> },
+  <span class="c-key">"expires_at"</span>: <span class="c-str">"2025-10-15T14:22:00Z"</span>,
+  <span class="c-key">"created_at"</span>: <span class="c-str">"2025-10-08T09:15:00Z"</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ACCEPT TASK ============ -->
+    <section class="endpoint" id="accept-task">
+      <div class="endpoint-head">
+        <span class="endpoint-method post">POST</span>
+        <span class="endpoint-path">/tasks/<span class="param">{task_id}</span>/accept</span>
+      </div>
+      <h2 class="endpoint-title">Nhận nhiệm vụ</h2>
+      <p class="endpoint-desc">
+        Nhận một nhiệm vụ và chiếm một suất. Sau khi nhận thành công, hệ thống bắt đầu đếm thời hạn 24 giờ cho user hoàn thành.
+      </p>
+
+      <div class="callout">
+        <span class="callout-icon">GHI CHÚ</span>
+        <p class="callout-body">
+          Endpoint này hỗ trợ header <code>Idempotency-Key</code>. Nếu bạn retry cùng key trong 24 giờ, hệ thống sẽ trả về kết quả của lần gọi đầu tiên thay vì tạo lượt nhận mới.
+        </p>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Request body</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Trường</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>account_id<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>ID tài khoản MXH đã cấu hình dùng để làm nhiệm vụ</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 201 Created</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">201 Created</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"assignment_id"</span>: <span class="c-str">"A-5032"</span>,
+  <span class="c-key">"task_id"</span>: <span class="c-str">"T-2101"</span>,
+  <span class="c-key">"account_id"</span>: <span class="c-str">"ACC-201"</span>,
+  <span class="c-key">"status"</span>: <span class="c-str">"in_progress"</span>,
+  <span class="c-key">"expires_at"</span>: <span class="c-str">"2025-10-09T14:22:00Z"</span>,
+  <span class="c-key">"reward"</span>: <span class="c-num">12</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ COMPLETE TASK ============ -->
+    <section class="endpoint" id="complete-task">
+      <div class="endpoint-head">
+        <span class="endpoint-method post">POST</span>
+        <span class="endpoint-path">/tasks/<span class="param">{task_id}</span>/complete</span>
+      </div>
+      <h2 class="endpoint-title">Hoàn thành nhiệm vụ</h2>
+      <p class="endpoint-desc">
+        Gửi xác nhận đã hoàn thành nhiệm vụ. Hệ thống sẽ xác minh tự động (nếu có thể) hoặc đưa vào hàng đợi xác minh thủ công. Kết quả thường có trong <strong>vài phút</strong> cho xác minh tự động, tối đa <strong>24 giờ</strong> cho xác minh thủ công.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Request body</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Trường</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>assignment_id<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>ID lượt nhận, lấy từ response của <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">/accept</code></td>
+            </tr>
+            <tr>
+              <td>proof_url<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Link ảnh chụp xác minh (nếu xác minh không tự động được)</td>
+            </tr>
+            <tr>
+              <td>note<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Ghi chú thêm cho người tạo nhiệm vụ (tối đa 500 ký tự)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Ví dụ request</span>
+        <div class="code-block">
+          <div class="code-head">
+            <span class="code-head-label">cURL</span>
+          </div>
+          <pre class="code-body"><span class="c-key">curl</span> -X POST https://api.traodoi.app/v1/tasks/T-2101/complete \
+  -H <span class="c-str">"Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."</span> \
+  -H <span class="c-str">"Content-Type: application/json"</span> \
+  -H <span class="c-str">"Idempotency-Key: 6f8a9c2e-4b1d-4a5e-8c7f-9d2e3a1b5c4f"</span> \
+  -d <span class="c-str">'{
+    "assignment_id": "A-5032",
+    "proof_url": "https://imgur.com/abc123",
+    "note": "Đã theo dõi trang và giữ 45 giây"
+  }'</span></pre>
+        </div>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 202 Accepted</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">202 Accepted</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"submission_id"</span>: <span class="c-str">"SUB-8801"</span>,
+  <span class="c-key">"assignment_id"</span>: <span class="c-str">"A-5032"</span>,
+  <span class="c-key">"status"</span>: <span class="c-str">"verifying"</span>,
+  <span class="c-key">"verification_type"</span>: <span class="c-str">"automatic"</span>,
+  <span class="c-key">"estimated_time_seconds"</span>: <span class="c-num">180</span>,
+  <span class="c-key">"reward_pending"</span>: <span class="c-num">12</span>
+}</pre>
+        </div>
+      </div>
+
+      <div class="callout">
+        <span class="callout-icon">GHI CHÚ</span>
+        <p class="callout-body">
+          Trả về <code>202 Accepted</code> vì xác minh là tiến trình bất đồng bộ. Để nhận kết quả, polling endpoint <code>GET /submissions/{submission_id}</code> hoặc đăng ký webhook <code>task.verified</code>.
+        </p>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Polling kết quả</span>
+        <div class="code-block">
+          <div class="code-head">
+            <span class="code-head-label">GET /submissions/SUB-8801</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"submission_id"</span>: <span class="c-str">"SUB-8801"</span>,
+  <span class="c-key">"status"</span>: <span class="c-str">"verified"</span>,
+  <span class="c-key">"verified_at"</span>: <span class="c-str">"2025-10-09T11:30:45Z"</span>,
+  <span class="c-key">"credits_awarded"</span>: <span class="c-num">12</span>,
+  <span class="c-key">"new_balance"</span>: <span class="c-num">272</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MY TASKS ============ -->
+    <section class="endpoint" id="my-tasks">
+      <div class="endpoint-head">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/me/tasks</span>
+      </div>
+      <h2 class="endpoint-title">Nhiệm vụ của tôi</h2>
+      <p class="endpoint-desc">
+        Trả về danh sách nhiệm vụ user đã nhận, chia theo trạng thái: <code style="font-family:'JetBrains Mono',monospace">in_progress</code>, <code style="font-family:'JetBrains Mono',monospace">verifying</code>, <code style="font-family:'JetBrains Mono',monospace">completed</code>, <code style="font-family:'JetBrains Mono',monospace">rejected</code>.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Query parameters</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Tham số</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>status<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Lọc theo trạng thái. Không truyền để lấy tất cả.</td>
+            </tr>
+            <tr>
+              <td>from<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">ISO date</span></td>
+              <td>Lọc từ ngày (VD: <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">2025-10-01</code>)</td>
+            </tr>
+            <tr>
+              <td>to<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">ISO date</span></td>
+              <td>Lọc đến ngày</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 200 OK</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">200 OK</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"data"</span>: [
+    {
+      <span class="c-key">"assignment_id"</span>: <span class="c-str">"A-5032"</span>,
+      <span class="c-key">"task_id"</span>: <span class="c-str">"T-2101"</span>,
+      <span class="c-key">"title"</span>: <span class="c-str">"Theo dõi trang Facebook doanh nghiệp"</span>,
+      <span class="c-key">"platform"</span>: <span class="c-str">"facebook"</span>,
+      <span class="c-key">"reward"</span>: <span class="c-num">12</span>,
+      <span class="c-key">"status"</span>: <span class="c-str">"verifying"</span>,
+      <span class="c-key">"accepted_at"</span>: <span class="c-str">"2025-10-09T11:15:00Z"</span>,
+      <span class="c-key">"completed_at"</span>: <span class="c-str">"2025-10-09T11:28:00Z"</span>,
+      <span class="c-key">"expires_at"</span>: <span class="c-str">"2025-10-10T11:15:00Z"</span>
+    }
+  ],
+  <span class="c-key">"summary"</span>: {
+    <span class="c-key">"in_progress"</span>: <span class="c-num">3</span>,
+    <span class="c-key">"verifying"</span>: <span class="c-num">2</span>,
+    <span class="c-key">"completed"</span>: <span class="c-num">48</span>,
+    <span class="c-key">"rejected"</span>: <span class="c-num">1</span>
+  }
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CREATE TASK ============ -->
+    <section class="endpoint" id="create-task">
+      <div class="endpoint-head">
+        <span class="endpoint-method post">POST</span>
+        <span class="endpoint-path">/tasks</span>
+      </div>
+      <h2 class="endpoint-title">Tạo nhiệm vụ mới</h2>
+      <p class="endpoint-desc">
+        Mở một nhiệm vụ mới cho nội dung của bạn. Credits sẽ bị trừ ngay khi nhiệm vụ được tạo. Suất chưa làm sẽ được hoàn lại khi nhiệm vụ hết hạn.
+      </p>
+
+      <div class="callout warning">
+        <span class="callout-icon">LƯU Ý</span>
+        <p class="callout-body">
+          Tổng chi phí = <code>slots × reward + phí nền tảng 2%</code>. Bạn cần có đủ Credits trong số dư. Kiểm tra số dư qua endpoint <code>GET /me/balance</code> trước khi tạo.
+        </p>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Request body</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Trường</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>platform<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Nền tảng: <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">facebook</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">instagram</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">tiktok</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">youtube</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">website</code></td>
+            </tr>
+            <tr>
+              <td>type<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Loại nhiệm vụ: <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">follow</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">like</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">comment</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">visit</code></td>
+            </tr>
+            <tr>
+              <td>content_url<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Đường dẫn nội dung cần tương tác</td>
+            </tr>
+            <tr>
+              <td>title<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Tiêu đề nhiệm vụ (tối đa 80 ký tự)</td>
+            </tr>
+            <tr>
+              <td>description<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Mô tả chi tiết yêu cầu (tối đa 300 ký tự)</td>
+            </tr>
+            <tr>
+              <td>slots<span class="param-req required">required</span></td>
+              <td><span class="param-type">integer</span></td>
+              <td>Số suất, từ 1 đến 500</td>
+            </tr>
+            <tr>
+              <td>reward<span class="param-req required">required</span></td>
+              <td><span class="param-type">integer</span></td>
+              <td>Credits cho mỗi suất, từ 1 đến 100</td>
+            </tr>
+            <tr>
+              <td>duration_days<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">integer</span></td>
+              <td>Thời hạn nhiệm vụ (3, 7, 14, 30). Mặc định 7.</td>
+            </tr>
+            <tr>
+              <td>min_trust<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">integer</span></td>
+              <td>Trust Score tối thiểu của người nhận (mặc định 0)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 201 Created</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">201 Created</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"id"</span>: <span class="c-str">"T-2150"</span>,
+  <span class="c-key">"status"</span>: <span class="c-str">"active"</span>,
+  <span class="c-key">"slots_total"</span>: <span class="c-num">20</span>,
+  <span class="c-key">"reward"</span>: <span class="c-num">8</span>,
+  <span class="c-key">"cost"</span>: {
+    <span class="c-key">"subtotal"</span>: <span class="c-num">160</span>,
+    <span class="c-key">"platform_fee"</span>: <span class="c-num">3</span>,
+    <span class="c-key">"total"</span>: <span class="c-num">163</span>
+  },
+  <span class="c-key">"new_balance"</span>: <span class="c-num">97</span>,
+  <span class="c-key">"expires_at"</span>: <span class="c-str">"2025-10-16T11:00:00Z"</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ UPDATE TASK ============ -->
+    <section class="endpoint" id="update-task">
+      <div class="endpoint-head">
+        <span class="endpoint-method patch">PATCH</span>
+        <span class="endpoint-path">/tasks/<span class="param">{task_id}</span></span>
+      </div>
+      <h2 class="endpoint-title">Tạm dừng hoặc tiếp tục nhiệm vụ</h2>
+      <p class="endpoint-desc">
+        Tạm dừng nhiệm vụ đang hoạt động hoặc tiếp tục nhiệm vụ đã tạm dừng. Không thể sửa các thông tin khác như tiêu đề, phần thưởng, số suất sau khi tạo.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Request body</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Trường</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>status<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td><code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">paused</code> hoặc <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">active</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 200 OK</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">200 OK</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"id"</span>: <span class="c-str">"T-2150"</span>,
+  <span class="c-key">"status"</span>: <span class="c-str">"paused"</span>,
+  <span class="c-key">"updated_at"</span>: <span class="c-str">"2025-10-09T11:45:00Z"</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GET ME ============ -->
+    <section class="endpoint" id="get-me">
+      <div class="endpoint-head">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/me</span>
+      </div>
+      <h2 class="endpoint-title">Thông tin tài khoản hiện tại</h2>
+      <p class="endpoint-desc">
+        Trả về thông tin user của access token hiện tại, bao gồm Trust Score, huy hiệu, và các chỉ số tổng hợp.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 200 OK</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">200 OK</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"id"</span>: <span class="c-str">"U-1024"</span>,
+  <span class="c-key">"handle"</span>: <span class="c-str">"minhanh.studio"</span>,
+  <span class="c-key">"display_name"</span>: <span class="c-str">"Minh Anh"</span>,
+  <span class="c-key">"email"</span>: <span class="c-str">"minhanh.studio@gmail.com"</span>,
+  <span class="c-key">"email_verified"</span>: <span class="c-bool">true</span>,
+  <span class="c-key">"trust_score"</span>: <span class="c-num">94</span>,
+  <span class="c-key">"trust_tier"</span>: <span class="c-str">"excellent"</span>,
+  <span class="c-key">"balance"</span>: <span class="c-num">260</span>,
+  <span class="c-key">"stats"</span>: {
+    <span class="c-key">"tasks_completed"</span>: <span class="c-num">128</span>,
+    <span class="c-key">"tasks_created"</span>: <span class="c-num">12</span>,
+    <span class="c-key">"completion_rate"</span>: <span class="c-num">0.98</span>
+  },
+  <span class="c-key">"badges"</span>: [<span class="c-str">"top_contributor"</span>, <span class="c-str">"verified"</span>],
+  <span class="c-key">"created_at"</span>: <span class="c-str">"2024-03-15T08:00:00Z"</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GET BALANCE ============ -->
+    <section class="endpoint" id="get-balance">
+      <div class="endpoint-head">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/me/balance</span>
+      </div>
+      <h2 class="endpoint-title">Số dư Credits</h2>
+      <p class="endpoint-desc">
+        Trả về số dư Credits hiện tại, chia thành ba loại: khả dụng, đang giữ (từ nhiệm vụ chưa hoàn thành), và đang chờ xác minh.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 200 OK</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">200 OK</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"available"</span>: <span class="c-num">260</span>,
+  <span class="c-key">"held"</span>: <span class="c-num">163</span>,
+  <span class="c-key">"pending"</span>: <span class="c-num">24</span>,
+  <span class="c-key">"total"</span>: <span class="c-num">447</span>,
+  <span class="c-key">"updated_at"</span>: <span class="c-str">"2025-10-09T11:00:00Z"</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GET TRANSACTIONS ============ -->
+    <section class="endpoint" id="get-transactions">
+      <div class="endpoint-head">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/me/transactions</span>
+      </div>
+      <h2 class="endpoint-title">Lịch sử giao dịch Credits</h2>
+      <p class="endpoint-desc">
+        Trả về danh sách giao dịch Credits: kiếm được từ nhiệm vụ, chi để tạo nhiệm vụ, hoàn tiền, nạp.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Query parameters</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Tham số</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>type<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">string</span></td>
+              <td><code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">earn</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">spend</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">refund</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">topup</code></td>
+            </tr>
+            <tr>
+              <td>from<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">ISO date</span></td>
+              <td>Lọc từ ngày</td>
+            </tr>
+            <tr>
+              <td>to<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">ISO date</span></td>
+              <td>Lọc đến ngày</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 200 OK</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">200 OK</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"data"</span>: [
+    {
+      <span class="c-key">"id"</span>: <span class="c-str">"TXN-9001"</span>,
+      <span class="c-key">"type"</span>: <span class="c-str">"earn"</span>,
+      <span class="c-key">"amount"</span>: <span class="c-num">12</span>,
+      <span class="c-key">"description"</span>: <span class="c-str">"Hoàn thành nhiệm vụ T-2101"</span>,
+      <span class="c-key">"created_at"</span>: <span class="c-str">"2025-10-09T11:30:00Z"</span>
+    },
+    {
+      <span class="c-key">"id"</span>: <span class="c-str">"TXN-9000"</span>,
+      <span class="c-key">"type"</span>: <span class="c-str">"spend"</span>,
+      <span class="c-key">"amount"</span>: <span class="c-num">-163</span>,
+      <span class="c-key">"description"</span>: <span class="c-str">"Tạo nhiệm vụ T-2150 (20 suất × 8 Credits)"</span>,
+      <span class="c-key">"created_at"</span>: <span class="c-str">"2025-10-09T11:00:00Z"</span>
+    }
+  ],
+  <span class="c-key">"pagination"</span>: {
+    <span class="c-key">"page"</span>: <span class="c-num">1</span>,
+    <span class="c-key">"per_page"</span>: <span class="c-num">20</span>,
+    <span class="c-key">"total"</span>: <span class="c-num">127</span>
+  }
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GET TRUST ============ -->
+    <section class="endpoint" id="get-trust">
+      <div class="endpoint-head">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/me/trust-score</span>
+      </div>
+      <h2 class="endpoint-title">Trust Score chi tiết</h2>
+      <p class="endpoint-desc">
+        Trả về Trust Score tổng hợp và chi tiết 5 yếu tố cấu thành.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 200 OK</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">200 OK</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"score"</span>: <span class="c-num">94</span>,
+  <span class="c-key">"tier"</span>: <span class="c-str">"excellent"</span>,
+  <span class="c-key">"factors"</span>: {
+    <span class="c-key">"completion_rate"</span>: <span class="c-num">98</span>,
+    <span class="c-key">"on_time_response"</span>: <span class="c-num">94</span>,
+    <span class="c-key">"community_rating"</span>: <span class="c-num">89</span>,
+    <span class="c-key">"account_age"</span>: <span class="c-num">96</span>,
+    <span class="c-key">"dispute_history"</span>: <span class="c-num">100</span>
+  },
+  <span class="c-key">"trend_30d"</span>: <span class="c-num">+2</span>,
+  <span class="c-key">"updated_at"</span>: <span class="c-str">"2025-10-09T11:00:00Z"</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LIST ACCOUNTS ============ -->
+    <section class="endpoint" id="list-accounts">
+      <div class="endpoint-head">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/me/accounts</span>
+      </div>
+      <h2 class="endpoint-title">Danh sách tài khoản mạng xã hội đã cấu hình</h2>
+      <p class="endpoint-desc">
+        Trả về danh sách các tài khoản mạng xã hội đã khai báo, kèm trạng thái xác minh và cờ active (dùng để làm nhiệm vụ).
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 200 OK</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">200 OK</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"data"</span>: [
+    {
+      <span class="c-key">"id"</span>: <span class="c-str">"ACC-201"</span>,
+      <span class="c-key">"platform"</span>: <span class="c-str">"facebook"</span>,
+      <span class="c-key">"profile_url"</span>: <span class="c-str">"https://facebook.com/minhanh.studio"</span>,
+      <span class="c-key">"display_name"</span>: <span class="c-str">"Minh Anh Studio"</span>,
+      <span class="c-key">"verified"</span>: <span class="c-bool">true</span>,
+      <span class="c-key">"active"</span>: <span class="c-bool">true</span>,
+      <span class="c-key">"added_at"</span>: <span class="c-str">"2025-08-15T10:00:00Z"</span>
+    }
+  ]
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CREATE ACCOUNT ============ -->
+    <section class="endpoint" id="create-account">
+      <div class="endpoint-head">
+        <span class="endpoint-method post">POST</span>
+        <span class="endpoint-path">/me/accounts</span>
+      </div>
+      <h2 class="endpoint-title">Thêm tài khoản mạng xã hội</h2>
+      <p class="endpoint-desc">
+        Khai báo một tài khoản mạng xã hội mới để dùng khi làm nhiệm vụ. Chỉ cần đường dẫn công khai và tên hiển thị — không bao giờ cần mật khẩu.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Request body</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Trường</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>platform<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Nền tảng: <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">facebook</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">instagram</code>, ...</td>
+            </tr>
+            <tr>
+              <td>profile_url<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Đường dẫn hồ sơ công khai</td>
+            </tr>
+            <tr>
+              <td>display_name<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Tên hiển thị trên nền tảng đó</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 201 Created</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">201 Created</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"id"</span>: <span class="c-str">"ACC-205"</span>,
+  <span class="c-key">"platform"</span>: <span class="c-str">"instagram"</span>,
+  <span class="c-key">"profile_url"</span>: <span class="c-str">"https://instagram.com/minhanh.photo"</span>,
+  <span class="c-key">"display_name"</span>: <span class="c-str">"minhanh.photo"</span>,
+  <span class="c-key">"verified"</span>: <span class="c-bool">false</span>,
+  <span class="c-key">"verification_status"</span>: <span class="c-str">"pending"</span>,
+  <span class="c-key">"created_at"</span>: <span class="c-str">"2025-10-09T12:00:00Z"</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CREATE DISPUTE ============ -->
+    <section class="endpoint" id="create-dispute">
+      <div class="endpoint-head">
+        <span class="endpoint-method post">POST</span>
+        <span class="endpoint-path">/disputes</span>
+      </div>
+      <h2 class="endpoint-title">Mở tranh chấp</h2>
+      <p class="endpoint-desc">
+        Mở tranh chấp cho một nhiệm vụ bị từ chối oan, người tạo không phản hồi, hoặc nghi ngờ gian lận. Phải mở trong vòng <strong>72 giờ</strong> kể từ khi nhiệm vụ kết thúc.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Request body</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Trường</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>task_id<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>ID nhiệm vụ liên quan</td>
+            </tr>
+            <tr>
+              <td>reason<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td><code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">rejected_unfairly</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">creator_unresponsive</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">worker_not_completed</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">fraud_suspected</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">other</code></td>
+            </tr>
+            <tr>
+              <td>description<span class="param-req required">required</span></td>
+              <td><span class="param-type">string</span></td>
+              <td>Mô tả chi tiết (tối thiểu 30, tối đa 1000 ký tự)</td>
+            </tr>
+            <tr>
+              <td>evidence_urls<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">string[]</span></td>
+              <td>Danh sách link ảnh bằng chứng (tối đa 5)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 201 Created</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">201 Created</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"id"</span>: <span class="c-str">"DC-2100"</span>,
+  <span class="c-key">"task_id"</span>: <span class="c-str">"T-2015"</span>,
+  <span class="c-key">"status"</span>: <span class="c-str">"pending"</span>,
+  <span class="c-key">"estimated_resolution_days"</span>: <span class="c-num">7</span>,
+  <span class="c-key">"created_at"</span>: <span class="c-str">"2025-10-09T12:05:00Z"</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LIST DISPUTES ============ -->
+    <section class="endpoint" id="list-disputes">
+      <div class="endpoint-head">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/disputes</span>
+      </div>
+      <h2 class="endpoint-title">Danh sách tranh chấp</h2>
+      <p class="endpoint-desc">
+        Trả về danh sách tranh chấp user đã mở hoặc bị liên quan, kèm trạng thái và kết quả xử lý.
+      </p>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Query parameters</span>
+        <table class="params-table">
+          <thead>
+            <tr>
+              <th>Tham số</th>
+              <th>Kiểu</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>status<span class="param-req optional">optional</span></td>
+              <td><span class="param-type">string</span></td>
+              <td><code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">pending</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">reviewing</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">resolved</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">rejected</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="api-subsection">
+        <span class="api-subsection-title">Response 200 OK</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status">200 OK</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"data"</span>: [
+    {
+      <span class="c-key">"id"</span>: <span class="c-str">"DC-2041"</span>,
+      <span class="c-key">"task_id"</span>: <span class="c-str">"T-2015"</span>,
+      <span class="c-key">"reason"</span>: <span class="c-str">"rejected_unfairly"</span>,
+      <span class="c-key">"status"</span>: <span class="c-str">"reviewing"</span>,
+      <span class="c-key">"opened_at"</span>: <span class="c-str">"2025-10-07T14:22:00Z"</span>,
+      <span class="c-key">"estimated_resolution_at"</span>: <span class="c-str">"2025-10-14T14:22:00Z"</span>
+    }
+  ],
+  <span class="c-key">"summary"</span>: {
+    <span class="c-key">"pending"</span>: <span class="c-num">1</span>,
+    <span class="c-key">"reviewing"</span>: <span class="c-num">1</span>,
+    <span class="c-key">"resolved"</span>: <span class="c-num">5</span>,
+    <span class="c-key">"rejected"</span>: <span class="c-num">1</span>
+  }
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ERRORS ============ -->
+    <section class="endpoint" id="errors">
+      <div class="endpoint-head">
+        <span class="endpoint-method" style="background:var(--danger-soft);color:var(--danger)">ERR</span>
+        <span class="endpoint-path">Mã lỗi</span>
+      </div>
+      <h2 class="endpoint-title">Mã lỗi HTTP</h2>
+      <p class="endpoint-desc">
+        Mọi response lỗi đều có cấu trúc JSON: <code style="font-family:'JetBrains Mono',monospace;font-size:.8125rem">{ "error": { "code": "...", "message": "..." } }</code>. Dưới đây là các mã lỗi phổ biến nhất.
+      </p>
+
+      <div class="error-grid">
+        <div class="error-item">
+          <span class="error-code">400</span>
+          <div class="error-text">
+            <strong>Bad Request</strong>
+            Tham số không hợp lệ hoặc thiếu trường bắt buộc.
+          </div>
+        </div>
+        <div class="error-item">
+          <span class="error-code">401</span>
+          <div class="error-text">
+            <strong>Unauthorized</strong>
+            Token hết hạn, sai, hoặc thiếu header Authorization.
+          </div>
+        </div>
+        <div class="error-item">
+          <span class="error-code">403</span>
+          <div class="error-text">
+            <strong>Forbidden</strong>
+            Token không có quyền truy cập tài nguyên này.
+          </div>
+        </div>
+        <div class="error-item">
+          <span class="error-code">404</span>
+          <div class="error-text">
+            <strong>Not Found</strong>
+            Tài nguyên không tồn tại hoặc đã bị xoá.
+          </div>
+        </div>
+        <div class="error-item">
+          <span class="error-code">409</span>
+          <div class="error-text">
+            <strong>Conflict</strong>
+            Xung đột trạng thái, ví dụ nhiệm vụ đã hết suất hoặc đã nhận trước đó.
+          </div>
+        </div>
+        <div class="error-item">
+          <span class="error-code">422</span>
+          <div class="error-text">
+            <strong>Unprocessable Entity</strong>
+            Request đúng định dạng nhưng vi phạm business rule (VD: không đủ Credits).
+          </div>
+        </div>
+        <div class="error-item">
+          <span class="error-code">429</span>
+          <div class="error-text">
+            <strong>Too Many Requests</strong>
+            Vượt rate limit. Chờ theo header <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem">Retry-After</code>.
+          </div>
+        </div>
+        <div class="error-item">
+          <span class="error-code">500</span>
+          <div class="error-text">
+            <strong>Internal Server Error</strong>
+            Lỗi hệ thống. Vui lòng retry sau vài giây.
+          </div>
+        </div>
+      </div>
+
+      <div class="api-subsection" style="margin-top:1.5rem">
+        <span class="api-subsection-title">Ví dụ response lỗi</span>
+        <div class="response-example">
+          <div class="response-head">
+            <span>application/json</span>
+            <span class="response-status error">422 Unprocessable Entity</span>
+          </div>
+          <pre class="code-body">{
+  <span class="c-key">"error"</span>: {
+    <span class="c-key">"code"</span>: <span class="c-str">"insufficient_balance"</span>,
+    <span class="c-key">"message"</span>: <span class="c-str">"Số dư không đủ để tạo nhiệm vụ. Cần 163 Credits, hiện có 97."</span>,
+    <span class="c-key">"details"</span>: {
+      <span class="c-key">"required"</span>: <span class="c-num">163</span>,
+      <span class="c-key">"available"</span>: <span class="c-num">97</span>
+    }
+  }
+}</pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ RIGHT SIDEBAR (TOC) ============ -->
+  <aside class="doc-toc" aria-label="Mục lục trang">
+    <span class="doc-toc-label">Trên trang này</span>
+    <ul class="doc-toc-list" id="tocList">
+      <li><a class="doc-toc-link active" data-target="intro">Giới thiệu</a></li>
+      <li><a class="doc-toc-link" data-target="auth">Xác thực</a></li>
+      <li><a class="doc-toc-link" data-target="get-tasks">Danh sách nhiệm vụ</a></li>
+      <li><a class="doc-toc-link" data-target="get-task-detail">Chi tiết nhiệm vụ</a></li>
+      <li><a class="doc-toc-link" data-target="accept-task">Nhận nhiệm vụ</a></li>
+      <li><a class="doc-toc-link" data-target="complete-task">Hoàn thành nhiệm vụ</a></li>
+      <li><a class="doc-toc-link" data-target="my-tasks">Nhiệm vụ của tôi</a></li>
+      <li><a class="doc-toc-link" data-target="create-task">Tạo nhiệm vụ</a></li>
+      <li><a class="doc-toc-link" data-target="update-task">Tạm dừng / tiếp tục</a></li>
+      <li><a class="doc-toc-link" data-target="get-me">Thông tin tài khoản</a></li>
+      <li><a class="doc-toc-link" data-target="get-balance">Số dư Credits</a></li>
+      <li><a class="doc-toc-link" data-target="get-transactions">Lịch sử giao dịch</a></li>
+      <li><a class="doc-toc-link" data-target="get-trust">Trust Score</a></li>
+      <li><a class="doc-toc-link" data-target="list-accounts">Tài khoản MXH</a></li>
+      <li><a class="doc-toc-link" data-target="create-account">Thêm tài khoản MXH</a></li>
+      <li><a class="doc-toc-link" data-target="create-dispute">Mở tranh chấp</a></li>
+      <li><a class="doc-toc-link" data-target="list-disputes">Danh sách tranh chấp</a></li>
+      <li><a class="doc-toc-link" data-target="errors">Mã lỗi</a></li>
+    </ul>
+  </aside>
+
+</div>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Thành công</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ COPY BUTTONS ============ */
+  document.querySelectorAll('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.dataset.copy;
+      const original = btn.textContent;
+
+      const done = () => {
+        btn.textContent = 'Đã copy';
+        setTimeout(() => { btn.textContent = original; }, 1400);
+        showToast('Đã sao chép vào clipboard.');
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(done);
+      } else {
+        done();
+      }
+    });
+  });
+
+  /* ============ CODE TABS (demo) ============ */
+  document.querySelectorAll('.code-tabs').forEach(group => {
+    const tabs = group.querySelectorAll('.code-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        showToast('Đã chuyển sang ví dụ ' + tab.textContent + '.');
+      });
+    });
+  });
+
+  /* ============ SIDEBAR NAVIGATION ============ */
+  const sidebarLinks = document.querySelectorAll('.sidebar-link-api');
+  const tocLinks = document.querySelectorAll('.doc-toc-link');
+  const sections = document.querySelectorAll('.endpoint, .doc-hero[id]');
+
+  function scrollToSection(id) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const offset = 80;
+    const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  sidebarLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      sidebarLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      scrollToSection(link.dataset.target);
+    });
+  });
+
+  tocLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      scrollToSection(link.dataset.target);
+    });
+  });
+
+  /* ============ SCROLL SPY ============ */
+  function updateActive() {
+    const scrollY = window.pageYOffset + 120;
+    let current = sections[0]?.id;
+
+    sections.forEach(s => {
+      if (s.offsetTop <= scrollY) current = s.id;
+    });
+
+    sidebarLinks.forEach(l => {
+      l.classList.toggle('active', l.dataset.target === current);
+    });
+    tocLinks.forEach(l => {
+      l.classList.toggle('active', l.dataset.target === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+
+  /* ============ TOAST ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('on'), 2200);
+  }
+
+  /* ============ HEADER MOBILE MENU ============ */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if (hamburgerBtn && mobileMenu) {
+    hamburgerBtn.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      hamburgerBtn.classList.toggle('open', open);
+      hamburgerBtn.setAttribute('aria-expanded', open);
+    });
+  }
+
+})();
+</script>
+
+</body>
+</html>

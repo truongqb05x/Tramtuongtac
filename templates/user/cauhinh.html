@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cấu hình tài khoản — TRAODOI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../static/css/layout/base.css" />
+<link rel="stylesheet" href="../../static/css/layout/header.css" />
+<link rel="stylesheet" href="../../static/css/layout/notice.css" />
+<style>
+
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  a { color: inherit; }
+  select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  
+  .btn-danger { background: transparent; color: var(--danger); border-color: var(--border-strong); }
+  .btn-danger:hover { background: var(--danger-soft); border-color: var(--danger); }
+  .btn-sm { padding: .4375rem .875rem; font-size: .8125rem; border-radius: 6px; }
+
+
+
+  /* ---------- Page layout ---------- */
+  .page { max-width: 1160px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  @media (min-width: 768px) { .page { padding: 2.5rem 2.5rem 5rem; } }
+
+
+
+  /* ---------- Page head ---------- */
+  .page-head {
+    padding-bottom: 1.75rem; margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.75rem; font-weight: 500; line-height: 1.2;
+    letter-spacing: -.015em; margin: 0 0 .5rem;
+  }
+  @media (min-width: 768px) { .page-title { font-size: 2rem; } }
+  .page-sub { font-size: .9375rem; color: var(--ink-soft); margin: 0; max-width: 620px; }
+
+
+  /* ---------- Two-column layout ---------- */
+  .setup {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  @media (min-width: 1024px) {
+    .setup {
+      grid-template-columns: 380px minmax(0, 1fr);
+      gap: 3.5rem;
+      align-items: start;
+    }
+  }
+
+  /* ---------- Form card ---------- */
+  .form-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  @media (min-width: 1024px) {
+    .form-card { position: sticky; top: 96px; }
+  }
+  .form-head {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-alt);
+  }
+  .form-head-title {
+    font-size: .9375rem; font-weight: 600; color: var(--ink);
+    margin: 0 0 .25rem;
+  }
+  .form-head-desc { font-size: .8125rem; color: var(--muted); margin: 0; line-height: 1.5; }
+  .form-body { padding: 1.5rem; }
+
+  .field { margin-bottom: 1.25rem; }
+  .field:last-of-type { margin-bottom: 1.5rem; }
+  .field-label {
+    display: block; font-size: .8125rem; font-weight: 500;
+    color: var(--ink); margin-bottom: .4375rem;
+  }
+  .field-hint {
+    font-size: .75rem; color: var(--muted); margin-top: .375rem; line-height: 1.5;
+  }
+  .field input[type="text"],
+  .field input[type="url"],
+  .field input[type="tel"],
+  .field select {
+    width: 100%; padding: .625rem .75rem;
+    font-size: .9375rem; font-family: inherit; color: var(--ink);
+    border: 1px solid var(--border-strong); border-radius: 6px;
+    background: #fff;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .field input:focus,
+  .field select:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.08);
+  }
+  .field input::placeholder { color: var(--muted-2); }
+
+  /* Custom select with platform mark */
+  .select-wrap { position: relative; }
+  .select-wrap select {
+    appearance: none; -webkit-appearance: none;
+    padding-right: 2.5rem; cursor: pointer;
+  }
+  .select-arrow {
+    position: absolute; right: .875rem; top: 50%; transform: translateY(-50%);
+    pointer-events: none; color: var(--muted);
+  }
+
+  .platform-mark {
+    width: 26px; height: 26px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .6875rem; font-weight: 600; letter-spacing: .02em;
+    color: var(--accent); background: var(--accent-soft);
+    border-radius: 6px;
+  }
+  .platform-mark svg { width: 14px; height: 14px; }
+
+  /* ---------- Account list ---------- */
+  .list-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;
+  }
+  .list-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.25rem; font-weight: 500; letter-spacing: -.01em;
+    margin: 0;
+  }
+  .list-count {
+    font-size: .8125rem; color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .account-list {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+  }
+  .account-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .625rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    transition: background-color .15s ease;
+  }
+  .account-row:last-child { border-bottom: none; }
+  .account-row:hover { background: var(--bg-hover); }
+  .account-row.active { background: var(--accent-soft); }
+
+  @media (min-width: 768px) {
+    .account-row {
+      grid-template-columns: 44px minmax(0, 1fr) 130px auto;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem 1.25rem;
+    }
+  }
+
+  /* Checkbox cell */
+  .check-cell { display: flex; align-items: center; }
+  .check {
+    appearance: none; width: 1.125rem; height: 1.125rem;
+    border: 1px solid var(--border-strong); border-radius: 4px;
+    background: #fff; cursor: pointer; position: relative;
+    transition: background-color .15s ease, border-color .15s ease;
+    flex-shrink: 0;
+  }
+  .check:hover { border-color: var(--accent); }
+  .check:checked { background: var(--accent); border-color: var(--accent); }
+  .check:checked::after {
+    content: ''; position: absolute; left: 5px; top: 1px;
+    width: 5px; height: 10px;
+    border: solid #fff; border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  @media (max-width: 767px) {
+    .check-cell {
+      gap: .625rem;
+      padding-bottom: .25rem;
+    }
+    .check-cell::after {
+      content: attr(data-label);
+      font-size: .75rem; font-weight: 500; color: var(--muted);
+      letter-spacing: .04em; text-transform: uppercase;
+    }
+  }
+
+  /* Account info cell */
+  .acc-info { display: flex; align-items: center; gap: .75rem; min-width: 0; }
+  .acc-info .platform-mark { width: 32px; height: 32px; font-size: .75rem; }
+  .acc-info .platform-mark svg { width: 18px; height: 18px; }
+  .acc-info-text { min-width: 0; }
+  .acc-name {
+    font-size: .9375rem; font-weight: 500; color: var(--ink);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  /* Mobile labels for other cells */
+  @media (max-width: 767px) {
+    .acc-info { padding-left: 0; }
+    .meta-cell {
+      display: flex; justify-content: space-between;
+      align-items: baseline; gap: 1rem;
+    }
+    .meta-cell::before {
+      content: attr(data-label);
+      font-size: .6875rem; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--muted);
+      flex-shrink: 0;
+    }
+  }
+  @media (min-width: 768px) {
+    .meta-cell::before { content: none; }
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-size: .75rem; font-weight: 500;
+    padding: .25rem .5rem; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge-verified { color: var(--success); background: var(--success-soft); }
+  .badge-pending { color: var(--warning); background: var(--warning-soft); }
+  .badge-active { color: var(--accent); background: var(--accent-soft); }
+  .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+  /* Actions */
+  .row-actions {
+    display: flex; gap: .375rem; justify-content: flex-end;
+  }
+  @media (max-width: 767px) {
+    .row-actions { padding-top: .25rem; }
+    .row-actions .btn { flex: 1; }
+  }
+  .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: .375rem;
+    min-width: 2rem; height: 2rem; padding: 0 .625rem;
+    font-size: .8125rem; font-weight: 500;
+    border: 1px solid var(--border-strong); border-radius: 6px;
+    background: #fff; color: var(--ink-soft);
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .icon-btn:hover { background: var(--bg-alt); color: var(--ink); border-color: var(--muted); }
+  .icon-btn.danger:hover { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+
+  /* Empty state */
+  .empty {
+    padding: 3rem 1.5rem; text-align: center;
+    color: var(--muted); font-size: .875rem;
+  }
+  .empty-title {
+    font-size: .9375rem; font-weight: 500; color: var(--ink);
+    margin-bottom: .375rem;
+  }
+  .empty-desc { color: var(--muted); line-height: 1.55; max-width: 360px; margin: 0 auto; }
+
+  /* ---------- Modal ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(30,30,30,.5);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 1rem;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 10px; width: 100%; max-width: 440px;
+    padding: 2rem; position: relative;
+  }
+  .modal-box h3 {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.375rem; font-weight: 500; margin: 0 0 .5rem;
+    color: var(--ink); letter-spacing: -.01em;
+  }
+  .modal-box p { font-size: .875rem; color: var(--muted); margin: 0 0 1.5rem; line-height: 1.6; }
+  .modal-summary {
+    background: var(--bg-alt); border-radius: 6px;
+    padding: .875rem 1rem; margin-bottom: 1.5rem;
+    display: flex; flex-direction: column; gap: .5rem;
+  }
+  .modal-summary-row {
+    display: flex; justify-content: space-between; gap: 1rem;
+    font-size: .875rem;
+  }
+  .modal-summary-row .k { color: var(--muted); flex-shrink: 0; }
+  .modal-summary-row .v {
+    color: var(--ink); font-weight: 500;
+    text-align: right; word-break: break-all;
+  }
+  .modal-actions { display: flex; gap: .625rem; }
+  .modal-actions .btn { flex: 1; }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;
+    background: transparent; border: none; color: var(--muted);
+    font-size: 1.25rem; cursor: pointer; border-radius: 4px;
+  }
+  .modal-close:hover { background: var(--bg-alt); color: var(--ink); }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: #fff; font-size: .875rem;
+    padding: .75rem 1.25rem; border-radius: 6px; z-index: 120;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    transition: transform .25s ease;
+    display: flex; align-items: center; gap: .625rem;
+    max-width: calc(100vw - 2rem);
+  }
+  .toast.on { transform: translateX(-50%) translateY(0); }
+  .toast .check {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--success);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="top">
+  <div class="wrap">
+    <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
+        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]" style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+        <a href="#" class="nav-link active">Cấu hình</a>
+        <a href="#" class="nav-link">Làm Nhiệm Vụ</a>
+        <a href="#" class="nav-link">Tạo Tương Tác</a>
+        <a href="#" class="nav-link">Khám Phá</a>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-3">
+        <div class="user-dropdown-wrap">
+          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
+            <img src="https://ui-avatars.com/api/?name=User&background=1e3a5f&color=fff" alt="Avatar" />
+          </button>
+          <div class="user-dropdown-menu" id="userDropdownMenu">
+            <a href="#">Hồ sơ</a>
+            <a href="#">Cài đặt</a>
+            <div class="divider"></div>
+            <a href="#" class="text-danger">Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+
+      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu md:hidden" id="mobileMenu">
+    <a href="#" style="font-weight:500;color:var(--ink)">Cấu hình</a>
+    <a href="#">Làm Nhiệm Vụ</a>
+    <a href="#">Tạo Tương Tác</a>
+    <a href="#">Khám Phá</a>
+    <div class="p-4 flex flex-col gap-2.5">
+      <a href="#" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= PAGE ================= -->
+<div class="page">
+
+  <!-- Page head -->
+  <div class="page-head">
+    <h1 class="page-title">Cấu hình tài khoản</h1>
+    <p class="page-sub">
+      Khai báo các tài khoản mạng xã hội bạn dùng để thực hiện nhiệm vụ. Hệ thống dùng thông tin này để đối chiếu và xác minh tương tác.
+    </p>
+  </div>
+
+  <!-- Notice -->
+  <div class="notice">
+    <span class="notice-icon" aria-hidden="true">!</span>
+    <div>
+      <p class="notice-title">Không nhập mật khẩu hoặc mã xác thực</p>
+      <p class="notice-body">
+        TRAODOI chỉ cần <strong>đường dẫn hồ sơ công khai</strong> và <strong>tên hiển thị</strong>. Chúng tôi không bao giờ yêu cầu mật khẩu, mã OTP hay quyền truy cập vào tài khoản của bạn. <a href="#">Tìm hiểu thêm</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Setup grid -->
+  <div class="setup">
+
+    <!-- ---------- LEFT: FORM ---------- -->
+    <section class="form-card" aria-labelledby="formTitle">
+      <div class="form-head">
+        <h2 class="form-head-title" id="formTitle">Thêm tài khoản mới</h2>
+        <p class="form-head-desc">Chọn nền tảng và dán đường dẫn hồ sơ công khai.</p>
+      </div>
+
+      <form class="form-body" id="addForm" novalidate>
+        <div class="field">
+          <label class="field-label" for="platformSelect">Nền tảng</label>
+          <div class="select-wrap">
+            <select id="platformSelect" required>
+              <option value="">— Chọn nền tảng —</option>
+              <option value="facebook" data-mark="FB" data-domain="facebook.com">Facebook</option>
+              <option value="instagram" data-mark="IG" data-domain="instagram.com">Instagram</option>
+              <option value="tiktok" data-mark="TT" data-domain="tiktok.com">TikTok</option>
+              <option value="youtube" data-mark="YT" data-domain="youtube.com">YouTube</option>
+              <option value="website" data-mark="WEB" data-domain="">Website</option>
+            </select>
+            <svg class="select-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="profileUrl">Đường dẫn hồ sơ</label>
+          <input type="url" id="profileUrl" placeholder="https://..." required />
+          <p class="field-hint" id="urlHint">Dán đường dẫn đầy đủ, bao gồm https://</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%" id="submitBtn">
+          Thêm tài khoản
+        </button>
+      </form>
+    </section>
+
+    <!-- ---------- RIGHT: LIST ---------- -->
+    <section aria-labelledby="listTitle">
+      <div class="list-head">
+        <h2 class="list-title" id="listTitle">Tài khoản đã cấu hình</h2>
+        <span class="list-count" id="listCount">0 tài khoản</span>
+      </div>
+
+      <p style="font-size:.8125rem;color:var(--muted);margin:0 0 1rem;line-height:1.55">
+        Tích vào ô bên trái để chọn tài khoản dùng khi thực hiện nhiệm vụ. Chỉ tài khoản được tích mới hiển thị khi bạn nhận nhiệm vụ trên nền tảng tương ứng.
+      </p>
+
+      <div class="account-list" id="accountList">
+        <!-- Rows injected by JS -->
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-[#f4f2ee] border-t border-[#e3e0da]">
+  <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
+    <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
+      <div>
+        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]" style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+        <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
+          Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
+        </p>
+      </div>
+      <div>
+        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
+        <ul class="space-y-2.5 list-none p-0 m-0">
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Khám phá</a></li>
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Nhiệm vụ</a></li>
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Bảng xếp hạng</a></li>
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trust Score</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
+        <ul class="space-y-2.5 list-none p-0 m-0">
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ giúp</a></li>
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều khoản</a></li>
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách bảo mật</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 pt-6 border-t border-[#e3e0da] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+      <p class="text-[0.8125rem] text-[#6b6b6b]">© 2026 TRAMTUONGTAC. Tất cả các quyền được bảo lưu.</p>
+      <p class="text-[0.8125rem] text-[#6b6b6b]">Made with care in Vietnam</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= MODAL XÓA ================= -->
+<div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+  <div class="modal-box">
+    <button class="modal-close" data-close aria-label="Đóng">×</button>
+    <h3 id="deleteTitle">Xóa tài khoản?</h3>
+    <p>Tài khoản này sẽ bị gỡ khỏi cấu hình. Các nhiệm vụ đang làm dở trên tài khoản này vẫn giữ nguyên, nhưng bạn sẽ không thể nhận nhiệm vụ mới cho đến khi thêm lại.</p>
+    <div class="modal-summary">
+      <div class="modal-summary-row">
+        <span class="k">Nền tảng</span>
+        <span class="v" id="delPlatform">—</span>
+      </div>
+      <div class="modal-summary-row">
+        <span class="k">Đường dẫn</span>
+        <span class="v" id="delUrl">—</span>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" data-close>Hủy</button>
+      <button class="btn btn-danger" id="confirmDelete" style="background:var(--danger);color:#fff;border-color:var(--danger)">Xóa tài khoản</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Đã thêm tài khoản</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ PLATFORM META ============ */
+  const PLATFORM = {
+    facebook:  { name: 'Facebook',  icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>',  domain: 'facebook.com',  hint: 'facebook.com/ten-trang' },
+    instagram: { name: 'Instagram', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>',  domain: 'instagram.com', hint: 'instagram.com/ten-tai-khoan' },
+    tiktok:    { name: 'TikTok',    icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 2.25-1.15 4.34-2.88 5.75-1.74 1.43-4.14 2.1-6.4 1.83-2.18-.27-4.18-1.42-5.48-3.15-1.29-1.72-1.72-4-1.23-6.07.48-2.07 1.83-3.82 3.66-4.8 1.84-.97 4.04-1.22 6.05-.72l.01 4.25c-.97-.24-2.02-.13-2.91.35-.87.48-1.5 1.3-1.7 2.27-.2 1.02.04 2.1.66 2.9.61.79 1.63 1.25 2.64 1.28 1.05.04 2.13-.3 2.83-1.07.72-.78 1.05-1.89 1.02-3 .05-3.92.01-7.85.03-11.78.02-1.4.03-2.8.04-4.2z"/></svg>',  domain: 'tiktok.com',    hint: 'tiktok.com/@ten-tai-khoan' },
+    youtube:   { name: 'YouTube',   icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',  domain: 'youtube.com',   hint: 'youtube.com/@ten-kenh' },
+    website:   { name: 'Website',   icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>', domain: '',              hint: 'example.com/trang' }
+  };
+
+  /* ============ STATE ============ */
+  let accounts = [
+    {
+      id: 1,
+      platform: 'facebook',
+      url: 'https://facebook.com/minhanh.studio',
+      name: 'Minh Anh Studio',
+      verified: true,
+      active: true,
+      addedAt: '2 ngày trước'
+    },
+    {
+      id: 2,
+      platform: 'instagram',
+      url: 'https://instagram.com/minhanh.photo',
+      name: 'minhanh.photo',
+      verified: true,
+      active: false,
+      addedAt: '5 ngày trước'
+    },
+    {
+      id: 3,
+      platform: 'tiktok',
+      url: 'https://tiktok.com/@minhanh.cooks',
+      name: '@minhanh.cooks',
+      verified: false,
+      active: false,
+      addedAt: '1 tuần trước'
+    }
+  ];
+
+  let nextId = 4;
+  let pendingDelete = null;
+
+  /* ============ DOM ============ */
+  const platformSelect = document.getElementById('platformSelect');
+  const profileUrl = document.getElementById('profileUrl');
+  const urlHint = document.getElementById('urlHint');
+  const addForm = document.getElementById('addForm');
+  const accountList = document.getElementById('accountList');
+  const listCount = document.getElementById('listCount');
+  const deleteModal = document.getElementById('deleteModal');
+
+  /* ============ PLATFORM PREVIEW ============ */
+  platformSelect.addEventListener('change', () => {
+    const val = platformSelect.value;
+    if (!val || !PLATFORM[val]) {
+      profileUrl.placeholder = 'https://...';
+      urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';
+      return;
+    }
+    const p = PLATFORM[val];
+    profileUrl.placeholder = 'https://' + p.hint;
+    urlHint.textContent = p.domain
+      ? 'Đường dẫn nên chứa ' + p.domain
+      : 'Dán đường dẫn trang web công khai';
+  });
+
+  /* ============ RENDER LIST ============ */
+  function renderList() {
+    listCount.textContent = accounts.length + ' tài khoản';
+
+    if (!accounts.length) {
+      accountList.innerHTML = `
+        <div class="empty">
+          <div class="empty-title">Chưa có tài khoản nào</div>
+          <p class="empty-desc">Thêm tài khoản đầu tiên ở khung bên trái để bắt đầu nhận nhiệm vụ.</p>
+        </div>
+      `;
+      return;
+    }
+
+    accountList.innerHTML = '';
+    accounts.forEach(acc => {
+      const p = PLATFORM[acc.platform] || { name: acc.platform, icon: '??' };
+      const row = document.createElement('div');
+      row.className = 'account-row' + (acc.active ? ' active' : '');
+      row.dataset.id = acc.id;
+
+      const verifyBadge = acc.verified
+        ? '<span class="badge badge-verified"><span class="badge-dot"></span>Đã xác minh</span>'
+        : '<span class="badge badge-pending"><span class="badge-dot"></span>Chờ xác minh</span>';
+
+      const activeBadge = acc.active
+        ? '<span class="badge badge-active"><span class="badge-dot"></span>Đang dùng</span>'
+        : '<span style="font-size:.75rem;color:var(--muted)">Không dùng</span>';
+
+      row.innerHTML = `
+        <div class="check-cell" data-label="Dùng để làm nhiệm vụ">
+          <input type="checkbox" class="check" ${acc.active ? 'checked' : ''} aria-label="Dùng tài khoản này để làm nhiệm vụ" />
+        </div>
+
+        <div class="acc-info">
+          <span class="platform-mark">${p.icon}</span>
+          <div class="acc-info-text">
+            <div class="acc-name">${escapeHtml(acc.name || 'Đang cập nhật...')}</div>
+            <div style="font-size: .75rem; color: var(--muted); margin-top: .125rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              ${escapeHtml(shortUrl(acc.url))}
+            </div>
+          </div>
+        </div>
+
+        <div class="meta-cell" data-label="Trạng thái">
+          ${verifyBadge}
+        </div>
+
+        <div class="row-actions">
+
+          <button class="icon-btn danger" data-delete title="Xóa tài khoản" aria-label="Xóa">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 3H10M4.5 3V2H7.5V3M3 3L3.5 10H8.5L9 3M5 5V8M7 5V8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Xóa
+          </button>
+        </div>
+      `;
+
+      // checkbox toggle
+      row.querySelector('.check').addEventListener('change', (e) => {
+        const isChecked = e.target.checked;
+        if (isChecked) {
+          accounts.forEach(a => {
+            if (a.id !== acc.id) a.active = false;
+          });
+        }
+        acc.active = isChecked;
+        
+        renderList();
+        showToast(acc.active
+          ? 'Đã chọn tài khoản này để làm nhiệm vụ'
+          : 'Đã bỏ chọn tài khoản khỏi danh sách');
+      });
+
+      // delete
+      row.querySelector('[data-delete]').addEventListener('click', (e) => {
+        e.stopPropagation();
+        openDelete(acc);
+      });
+
+      accountList.appendChild(row);
+    });
+  }
+
+  /* ============ HELPERS ============ */
+  function shortUrl(url) {
+    return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  }
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function isValidUrl(str) {
+    try {
+      const u = new URL(str);
+      return u.protocol === 'http:' || u.protocol === 'https:';
+    } catch { return false; }
+  }
+
+  /* ============ ADD ACCOUNT ============ */
+  addForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const platform = platformSelect.value;
+    const url = profileUrl.value.trim();
+
+    if (!platform) {
+      showToast('Vui lòng chọn nền tảng');
+      platformSelect.focus();
+      return;
+    }
+    if (!url || !isValidUrl(url)) {
+      showToast('Đường dẫn không hợp lệ. Cần bắt đầu bằng http:// hoặc https://');
+      profileUrl.focus();
+      return;
+    }
+
+    accounts.forEach(a => a.active = false);
+
+    accounts.unshift({
+      id: nextId++,
+      platform,
+      url,
+      verified: false,
+      active: true,
+      addedAt: 'vừa xong'
+    });
+
+    addForm.reset();
+    profileUrl.placeholder = 'https://...';
+    urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';
+
+    renderList();
+    showToast('Đã thêm tài khoản. Hệ thống sẽ xác minh trong vài phút.');
+
+    // scroll to list on mobile
+    if (window.innerWidth < 1024) {
+      document.getElementById('listTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+  /* ============ DELETE ACCOUNT ============ */
+  function openDelete(acc) {
+    pendingDelete = acc;
+    const p = PLATFORM[acc.platform] || { name: acc.platform };
+    document.getElementById('delPlatform').textContent = p.name;
+    document.getElementById('delUrl').textContent = shortUrl(acc.url);
+    deleteModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.getElementById('confirmDelete').addEventListener('click', () => {
+    if (!pendingDelete) return;
+    accounts = accounts.filter(a => a.id !== pendingDelete.id);
+    const deletedUrl = shortUrl(pendingDelete.url);
+    pendingDelete = null;
+    closeModal('deleteModal');
+    renderList();
+    showToast('Đã xóa tài khoản: ' + deletedUrl);
+  });
+
+  /* ============ MODAL HELPERS ============ */
+  function closeModal(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+    if (!document.querySelector('.modal-overlay.active')) {
+      document.body.style.overflow = '';
+    }
+  }
+  window.closeModal = closeModal;
+
+  document.querySelectorAll('[data-close]').forEach(b => {
+    b.addEventListener('click', () => {
+      const overlay = b.closest('.modal-overlay');
+      if (overlay) closeModal(overlay.id);
+    });
+  });
+  document.querySelectorAll('.modal-overlay').forEach(o => {
+    o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
+    }
+  });
+
+
+  /* ============ TOAST ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('on'), 2800);
+  }
+
+  /* ============ USER DROPDOWN ============ */
+  const userAvatarBtn = document.getElementById('userAvatarBtn');
+  const userDropdownMenu = document.getElementById('userDropdownMenu');
+  
+  if (userAvatarBtn) {
+    userAvatarBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdownMenu.classList.toggle('show');
+    });
+    document.addEventListener('click', (e) => {
+      if (!userDropdownMenu.contains(e.target) && e.target !== userAvatarBtn) {
+        userDropdownMenu.classList.remove('show');
+      }
+    });
+  }
+
+  /* ============ HEADER MOBILE MENU ============ */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburgerBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', open);
+    hamburgerBtn.setAttribute('aria-expanded', open);
+  });
+
+  /* ============ INIT ============ */
+  renderList();
+
+})();
+</script>
+
+</body>
+</html>

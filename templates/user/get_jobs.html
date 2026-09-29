@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nhận nhiệm vụ — TRAODOI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../static/css/layout/base.css" />
+<link rel="stylesheet" href="../../static/css/layout/header.css" />
+<style>
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  a { color: inherit; }
+
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+  .btn-sm { padding: .5rem .875rem; font-size: .8125rem; border-radius: 6px; }
+
+  /* ---------- Layout: 3 columns (filter | main | detail) ---------- */
+  .page {
+    max-width: 1320px; margin: 0 auto; padding: 0 1.5rem;
+  }
+  @media (min-width: 768px) { .page { padding: 0 2.5rem; } }
+
+  .workspace {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem 0 4rem;
+  }
+  @media (min-width: 1024px) {
+    .workspace {
+      grid-template-columns: 240px minmax(0, 1fr) 340px;
+      gap: 2.5rem;
+      align-items: start;
+    }
+  }
+  @media (min-width: 1280px) {
+    .workspace {
+      grid-template-columns: 260px minmax(0, 1fr) 380px;
+      gap: 3rem;
+    }
+  }
+
+  /* ---------- Filter sidebar ---------- */
+  .filter-group { padding-bottom: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .filter-group:last-of-type { border-bottom: none; }
+  .filter-label {
+    font-size: .75rem; font-weight: 600; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: .75rem;
+    display: block;
+  }
+  .filter-item {
+    display: flex; align-items: center; gap: .625rem;
+    padding: .375rem 0; font-size: .875rem; color: var(--ink-soft);
+    cursor: pointer; user-select: none;
+  }
+  .filter-item input[type="checkbox"] {
+    appearance: none; width: 1rem; height: 1rem;
+    border: 1px solid var(--border-strong); border-radius: 3px;
+    background: #fff; cursor: pointer; position: relative;
+    transition: background-color .15s ease, border-color .15s ease;
+    flex-shrink: 0;
+  }
+  .filter-item input[type="checkbox"]:checked {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .filter-item input[type="checkbox"]:checked::after {
+    content: ''; position: absolute; left: 4px; top: 1px;
+    width: 5px; height: 9px;
+    border: solid #fff; border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg);
+  }
+  .filter-item:hover { color: var(--ink); }
+  .filter-count { margin-left: auto; font-size: .75rem; color: var(--muted-2); }
+
+  /* ---------- Topbar of main column ---------- */
+  .topbar {
+    display: flex; flex-direction: column; gap: 1rem;
+    padding-bottom: 1.25rem; margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  @media (min-width: 640px) {
+    .topbar { flex-direction: row; align-items: center; justify-content: space-between; }
+  }
+  .credit-balance {
+    display: inline-flex; align-items: center; gap: .625rem;
+    padding: .5rem .875rem;
+    background: #fff; border: 1px solid var(--border-strong);
+    border-radius: 6px; font-size: .875rem;
+  }
+  .credit-balance .num { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .credit-balance .lbl { color: var(--muted); font-size: .8125rem; }
+
+  /* ---------- Tabs ---------- */
+  .tabs {
+    display: flex; gap: 1.5rem; border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem; overflow-x: auto;
+  }
+  .tab {
+    padding: .625rem 0; font-size: .875rem; font-weight: 450;
+    color: var(--muted); background: transparent; border: none;
+    cursor: pointer; position: relative; white-space: nowrap;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .tab:hover { color: var(--ink-soft); }
+  .tab.active { color: var(--ink); font-weight: 500; border-bottom-color: var(--accent); }
+  .tab .badge {
+    margin-left: .375rem; font-size: .75rem; color: var(--muted-2);
+    font-weight: 400;
+  }
+
+  /* ---------- Task table ---------- */
+  .table-wrap {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+  }
+  .task-table { width: 100%; border-collapse: collapse; font-size: .9375rem; }
+  .task-table thead th {
+    text-align: left; font-size: .75rem; font-weight: 600;
+    letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+    padding: .875rem 1rem; border-bottom: 1px solid var(--border-strong);
+    background: var(--bg-alt); white-space: nowrap;
+  }
+  .task-table tbody td {
+    padding: 1rem; border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .task-table tbody tr:last-child td { border-bottom: none; }
+  .task-table tbody tr { cursor: pointer; transition: background-color .12s ease; }
+  .task-table tbody tr:hover { background: var(--bg-hover); }
+  .task-table tbody tr.selected { background: var(--accent-soft); }
+  .task-table tbody tr.selected td { border-bottom-color: #d3dde8; }
+
+  .platform-cell { display: flex; align-items: center; gap: .625rem; }
+  .platform-mark {
+    width: 28px; height: 28px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .6875rem; font-weight: 600; letter-spacing: .02em;
+    color: var(--accent); background: var(--accent-soft);
+    border-radius: 6px;
+  }
+  .platform-name { font-weight: 500; color: var(--ink); }
+  .platform-sub { font-size: .75rem; color: var(--muted); }
+
+  .reward { font-weight: 600; color: var(--success); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .status-badge {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-size: .8125rem; font-weight: 500; color: var(--success);
+    white-space: nowrap;
+  }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+  .status-badge.limited { color: var(--warning); }
+  .status-badge.limited .status-dot { background: var(--warning); }
+  .status-badge.hot { color: var(--danger); }
+  .status-badge.hot .status-dot { background: var(--danger); }
+
+  .row-btn {
+    font-size: .8125rem; font-weight: 500;
+    padding: .4375rem .875rem; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: #fff; color: var(--ink);
+    cursor: pointer; transition: background .15s ease, border-color .15s ease, color .15s ease;
+    white-space: nowrap;
+  }
+  .row-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .row-btn.done { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); cursor: default; }
+
+  /* Mobile: table → stacked cards */
+  @media (max-width: 767px) {
+    .task-table thead { display: none; }
+    .task-table, .task-table tbody, .task-table tr, .task-table td { display: block; width: 100%; }
+    .task-table tr {
+      border-bottom: 1px solid var(--border); padding: .75rem 0;
+    }
+    .task-table tr:last-child { border-bottom: none; }
+    .task-table td { border-bottom: none; padding: .375rem 1rem; }
+    .task-table td::before {
+      content: attr(data-label);
+      display: inline-block; width: 5.5rem;
+      font-size: .6875rem; font-weight: 600; letter-spacing: .05em;
+      text-transform: uppercase; color: var(--muted);
+      vertical-align: middle;
+    }
+    .task-table td[data-label=""]::before { content: none; }
+    .task-table td[data-label=""] { padding-top: .625rem; }
+  }
+
+  /* ---------- Pagination ---------- */
+  .pagination {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; margin-top: 1.25rem; flex-wrap: wrap;
+  }
+  .pagination-info { font-size: .8125rem; color: var(--muted); }
+  .pager { display: flex; gap: .25rem; }
+  .pager button {
+    min-width: 2rem; height: 2rem; padding: 0 .5rem;
+    font-size: .8125rem; font-weight: 500;
+    background: #fff; color: var(--ink-soft);
+    border: 1px solid var(--border-strong); border-radius: 6px;
+    cursor: pointer; transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .pager button:hover { background: var(--bg-alt); color: var(--ink); }
+  .pager button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .pager button:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ---------- Detail panel ---------- */
+  .detail-panel {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+    position: sticky; top: 96px;
+  }
+  .detail-empty { padding: 3rem 1.5rem; text-align: center; }
+  .detail-empty-title { font-size: .9375rem; font-weight: 500; color: var(--ink); margin-bottom: .375rem; }
+  .detail-empty-desc { font-size: .8125rem; color: var(--muted); line-height: 1.55; }
+
+  .detail-head {
+    padding: 1.25rem 1.25rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-alt);
+  }
+  .detail-platform {
+    display: flex; align-items: center; gap: .625rem; margin-bottom: .75rem;
+  }
+  .detail-platform .platform-mark { width: 32px; height: 32px; font-size: .75rem; }
+  .detail-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; font-weight: 500; color: var(--ink);
+    line-height: 1.35; letter-spacing: -.005em;
+    margin: 0;
+  }
+  .detail-body { padding: 1.25rem; }
+  .detail-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: .625rem 0; font-size: .875rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-row:last-of-type { border-bottom: none; }
+  .detail-row .k { color: var(--muted); }
+  .detail-row .v { color: var(--ink); font-weight: 500; text-align: right; }
+  .detail-row .v.num { font-variant-numeric: tabular-nums; }
+  .detail-desc {
+    font-size: .875rem; color: var(--ink-soft); line-height: 1.6;
+    margin: 1rem 0 1.25rem; padding: 1rem;
+    background: var(--bg-alt); border-radius: 6px;
+  }
+  .detail-desc strong { color: var(--ink); font-weight: 500; }
+  .creator {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .875rem 0; margin-top: .5rem;
+    border-top: 1px solid var(--border);
+  }
+  .creator-name { font-size: .875rem; font-weight: 500; color: var(--ink); }
+  .creator-trust {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-size: .75rem; font-weight: 600; color: var(--accent);
+    background: var(--accent-soft); padding: .25rem .5rem; border-radius: 4px;
+  }
+  .detail-actions { padding: 1rem 1.25rem 1.25rem; border-top: 1px solid var(--border); }
+  .detail-actions .btn { width: 100%; }
+  .detail-note { font-size: .75rem; color: var(--muted); margin-top: .625rem; text-align: center; line-height: 1.5; }
+
+  /* Mobile: detail panel becomes a bottom sheet */
+  @media (max-width: 1023px) {
+    .detail-panel {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      top: auto; max-height: 85vh; overflow-y: auto;
+      border-radius: 12px 12px 0 0;
+      transform: translateY(100%);
+      transition: transform .25s ease;
+      z-index: 90;
+      box-shadow: 0 -4px 20px rgba(0,0,0,.08);
+    }
+    .detail-panel.open { transform: translateY(0); }
+    .detail-panel.has-content .detail-empty { display: none; }
+    .detail-panel.has-content .detail-head,
+    .detail-panel.has-content .detail-body,
+    .detail-panel.has-content .detail-actions { display: block; }
+    .detail-head, .detail-body, .detail-actions { display: none; }
+
+    .sheet-handle {
+      width: 36px; height: 4px; background: var(--border-strong);
+      border-radius: 2px; margin: .75rem auto .25rem;
+    }
+    .sheet-close {
+      position: absolute; top: .625rem; right: .625rem;
+      width: 2rem; height: 2rem; display: flex; align-items: center;
+      justify-content: center; background: transparent; border: none;
+      font-size: 1.25rem; color: var(--muted); cursor: pointer;
+      border-radius: 6px;
+    }
+    .sheet-close:hover { background: var(--bg-alt); color: var(--ink); }
+  }
+  @media (min-width: 1024px) {
+    .sheet-handle, .sheet-close { display: none; }
+  }
+
+  .sheet-backdrop {
+    display: none; position: fixed; inset: 0;
+    background: rgba(30,30,30,.35); z-index: 80;
+  }
+  .sheet-backdrop.on { display: block; }
+  @media (min-width: 1024px) { .sheet-backdrop { display: none !important; } }
+
+  /* ---------- Modal confirm ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(30,30,30,.5);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 1rem;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 10px; width: 100%; max-width: 440px;
+    padding: 2rem; position: relative;
+  }
+  .modal-box h3 {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.375rem; font-weight: 500; margin: 0 0 .5rem;
+    color: var(--ink); letter-spacing: -.01em;
+  }
+  .modal-box p { font-size: .875rem; color: var(--muted); margin: 0 0 1.25rem; line-height: 1.6; }
+  .modal-summary {
+    background: var(--bg-alt); border-radius: 6px;
+    padding: .875rem 1rem; margin-bottom: 1.25rem;
+    display: flex; flex-direction: column; gap: .375rem;
+  }
+  .modal-summary-row {
+    display: flex; justify-content: space-between;
+    font-size: .875rem;
+  }
+  .modal-summary-row .k { color: var(--muted); }
+  .modal-summary-row .v { color: var(--ink); font-weight: 500; }
+  .modal-actions { display: flex; gap: .625rem; }
+  .modal-actions .btn { flex: 1; }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;
+    background: transparent; border: none; color: var(--muted);
+    font-size: 1.25rem; cursor: pointer; border-radius: 4px;
+  }
+  .modal-close:hover { background: var(--bg-alt); color: var(--ink); }
+
+  /* ---------- Empty state ---------- */
+  .empty-state {
+    padding: 3.5rem 1.5rem; text-align: center;
+    color: var(--muted); font-size: .875rem;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: #fff; font-size: .875rem;
+    padding: .75rem 1.25rem; border-radius: 6px; z-index: 120;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    transition: transform .25s ease;
+    display: flex; align-items: center; gap: .625rem;
+  }
+  .toast.on { transform: translateX(-50%) translateY(0); }
+  .toast .check {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--success); display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="top">
+  <div class="wrap">
+    <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
+        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]" style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+        <a href="#" class="nav-link">Cấu hình</a>
+        <a href="#" class="nav-link active">Làm Nhiệm Vụ</a>
+        <a href="#" class="nav-link">Tạo Tương Tác</a>
+        <a href="#" class="nav-link">Khám Phá</a>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-3">
+        <div class="user-dropdown-wrap">
+          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
+            <img src="https://ui-avatars.com/api/?name=User&background=1e3a5f&color=fff" alt="Avatar" />
+          </button>
+          <div class="user-dropdown-menu" id="userDropdownMenu">
+            <a href="#">Hồ sơ</a>
+            <a href="#">Cài đặt</a>
+            <div class="divider"></div>
+            <a href="#" class="text-danger">Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+
+      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu md:hidden" id="mobileMenu">
+    <a href="#">Cấu hình</a>
+    <a href="#" style="font-weight:500;color:var(--ink)">Làm Nhiệm Vụ</a>
+    <a href="#">Tạo Tương Tác</a>
+    <a href="#">Khám Phá</a>
+    <div class="p-4 flex flex-col gap-2.5">
+      <a href="#" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= MAIN WORKSPACE ================= -->
+<div class="page">
+  <div class="workspace">
+
+    <!-- ---------- LEFT: FILTERS ---------- -->
+    <aside class="hidden lg:block" aria-label="Bộ lọc">
+      <div class="filter-group">
+        <span class="filter-label">Nền tảng</span>
+        <label class="filter-item"><input type="checkbox" checked data-filter="platform" value="facebook" /> Facebook <span class="filter-count">42</span></label>
+        <label class="filter-item"><input type="checkbox" checked data-filter="platform" value="instagram" /> Instagram <span class="filter-count">31</span></label>
+        <label class="filter-item"><input type="checkbox" data-filter="platform" value="tiktok" /> TikTok <span class="filter-count">18</span></label>
+        <label class="filter-item"><input type="checkbox" data-filter="platform" value="youtube" /> YouTube <span class="filter-count">12</span></label>
+        <label class="filter-item"><input type="checkbox" data-filter="platform" value="website" /> Website <span class="filter-count">24</span></label>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Loại nhiệm vụ</span>
+        <label class="filter-item"><input type="checkbox" data-filter="type" value="follow" /> Theo dõi</label>
+        <label class="filter-item"><input type="checkbox" data-filter="type" value="like" /> Tương tác</label>
+        <label class="filter-item"><input type="checkbox" data-filter="type" value="visit" /> Truy cập</label>
+        <label class="filter-item"><input type="checkbox" data-filter="type" value="subscribe" /> Đăng ký</label>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Phần thưởng</span>
+        <label class="filter-item"><input type="radio" name="reward" checked /> Tất cả</label>
+        <label class="filter-item"><input type="radio" name="reward" /> 1 – 10 Credits</label>
+        <label class="filter-item"><input type="radio" name="reward" /> 11 – 20 Credits</label>
+        <label class="filter-item"><input type="radio" name="reward" /> Trên 20 Credits</label>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Trust Score tối thiểu</span>
+        <label class="filter-item"><input type="radio" name="trust" checked /> Bất kỳ</label>
+        <label class="filter-item"><input type="radio" name="trust" /> Từ 70</label>
+        <label class="filter-item"><input type="radio" name="trust" /> Từ 85</label>
+        <label class="filter-item"><input type="radio" name="trust" /> Từ 95</label>
+      </div>
+
+      <button class="btn btn-secondary btn-sm w-full" id="resetFilters">Xóa bộ lọc</button>
+    </aside>
+
+    <!-- ---------- CENTER: MAIN LIST ---------- -->
+    <main>
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <div>
+          <h1 class="font-serif text-[1.5rem] md:text-[1.75rem] font-medium tracking-[-.01em] leading-tight mb-1">
+            Nhận nhiệm vụ
+          </h1>
+          <p class="text-[.875rem] text-[#6b6b6b]">
+            Chọn nhiệm vụ phù hợp, hoàn thành để nhận Credits.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <select id="sortSelect" class="text-[.8125rem] border border-[#d0ccc4] bg-white rounded-md px-3 py-2 text-[#3d3d3d] cursor-pointer" style="font-family:inherit">
+            <option value="reward-desc">Phần thưởng cao → thấp</option>
+            <option value="reward-asc">Phần thưởng thấp → cao</option>
+            <option value="newest">Mới nhất</option>
+            <option value="trust">Người tạo uy tín cao</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="available" role="tab">Đang mở <span class="badge">127</span></button>
+        <button class="tab" data-tab="inprogress" role="tab">Đang làm <span class="badge">3</span></button>
+        <button class="tab" data-tab="completed" role="tab">Đã hoàn thành <span class="badge">48</span></button>
+      </div>
+
+      <!-- Mobile filter toggle -->
+      <div class="lg:hidden mb-4">
+        <button class="btn btn-secondary btn-sm w-full" id="mobileFilterBtn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 3.5H12M3.5 7H10.5M5.5 10.5H8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Bộ lọc
+        </button>
+      </div>
+
+      <!-- Task table -->
+      <div class="table-wrap">
+        <table class="task-table">
+          <thead>
+            <tr>
+              <th scope="col">Nhiệm vụ</th>
+              <th scope="col">Loại</th>
+              <th scope="col">Phần thưởng</th>
+              <th scope="col">Trạng thái</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody id="taskBody">
+            <!-- Rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <div class="pagination-info" id="pageInfo">Hiển thị 1–8 trong 127 nhiệm vụ</div>
+        <div class="pager" id="pager">
+          <button disabled aria-label="Trang trước">‹</button>
+          <button class="active">1</button>
+          <button>2</button>
+          <button>3</button>
+          <button>…</button>
+          <button>16</button>
+          <button aria-label="Trang sau">›</button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ---------- RIGHT: DETAIL PANEL ---------- -->
+    <aside class="detail-panel" id="detailPanel" aria-live="polite">
+      <div class="sheet-handle lg:hidden"></div>
+      <button class="sheet-close lg:hidden" id="sheetClose" aria-label="Đóng">×</button>
+
+      <div class="detail-empty" id="detailEmpty">
+        <div class="detail-empty-title">Chưa chọn nhiệm vụ</div>
+        <div class="detail-empty-desc">
+          Chọn một nhiệm vụ từ danh sách để xem chi tiết yêu cầu, phần thưởng và người tạo.
+        </div>
+      </div>
+
+      <div id="detailContent" style="display:none">
+        <div class="detail-head">
+          <div class="detail-platform">
+            <span class="platform-mark" id="dMark">FB</span>
+            <div>
+              <div style="font-size:.75rem;color:var(--muted)" id="dPlatform">Facebook</div>
+              <div style="font-size:.75rem;color:var(--muted-2)" id="dCategory">Theo dõi trang</div>
+            </div>
+          </div>
+          <h3 class="detail-title" id="dTitle">Theo dõi trang Facebook doanh nghiệp</h3>
+        </div>
+
+        <div class="detail-body">
+          <div class="detail-row"><span class="k">Phần thưởng</span><span class="v num reward" id="dReward">+12 Credits</span></div>
+          <div class="detail-row"><span class="k">Thời gian tối thiểu</span><span class="v" id="dDuration">30 giây</span></div>
+          <div class="detail-row"><span class="k">Xác minh</span><span class="v" id="dVerify">Tự động</span></div>
+          <div class="detail-row"><span class="k">Còn lại</span><span class="v num" id="dSlots">18 / 50 suất</span></div>
+
+          <div class="detail-desc" id="dDesc">
+            <strong>Yêu cầu:</strong> Nhấn theo dõi trang, giữ trạng thái theo dõi tối thiểu 30 giây. Không hủy theo dõi trong 24 giờ.
+          </div>
+
+          <div class="creator">
+            <div>
+              <div style="font-size:.75rem;color:var(--muted);margin-bottom:.125rem">Người tạo</div>
+              <div class="creator-name" id="dCreator">Minh Anh</div>
+            </div>
+            <span class="creator-trust">
+              <span style="width:5px;height:5px;border-radius:50%;background:var(--accent);display:inline-block"></span>
+              Trust <span id="dTrust">94</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-actions">
+          <button class="btn btn-primary" id="acceptBtn">Nhận nhiệm vụ</button>
+          <div class="detail-note">Bằng việc nhận, bạn đồng ý hoàn thành trong vòng 24 giờ.</div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
+
+<!-- ================= MODAL CONFIRM ================= -->
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="modal-box">
+    <button class="modal-close" data-close aria-label="Đóng">×</button>
+    <h3 id="confirmTitle">Xác nhận nhận nhiệm vụ</h3>
+    <p>Bạn sắp nhận nhiệm vụ sau. Vui lòng hoàn thành trong vòng 24 giờ để nhận Credits.</p>
+    <div class="modal-summary">
+      <div class="modal-summary-row"><span class="k">Nhiệm vụ</span><span class="v" id="mTitle">—</span></div>
+      <div class="modal-summary-row"><span class="k">Nền tảng</span><span class="v" id="mPlatform">—</span></div>
+      <div class="modal-summary-row"><span class="k">Phần thưởng</span><span class="v reward" id="mReward">—</span></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" data-close>Hủy</button>
+      <button class="btn btn-primary" id="confirmAccept">Xác nhận</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL LOGIN ================= -->
+<div class="modal-overlay" id="modal-login" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <div class="modal-box">
+    <button class="modal-close" data-close aria-label="Đóng">×</button>
+    <h3 id="loginTitle">Đăng nhập</h3>
+    <p>Chào mừng trở lại. Tiếp tục xây dựng uy tín của bạn.</p>
+    <form onsubmit="event.preventDefault(); alert('Demo: Đăng nhập thành công!'); closeModal('modal-login');">
+      <div style="margin-bottom:1rem">
+        <label for="loginEmail" style="display:block;font-size:.8125rem;font-weight:500;color:var(--ink-soft);margin-bottom:.375rem">Email</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com" required style="width:100%;padding:.625rem .75rem;font-size:.9375rem;font-family:inherit;border:1px solid var(--border-strong);border-radius:6px;background:#fff" />
+      </div>
+      <div style="margin-bottom:1rem">
+        <label for="loginPass" style="display:block;font-size:.8125rem;font-weight:500;color:var(--ink-soft);margin-bottom:.375rem">Mật khẩu</label>
+        <input type="password" id="loginPass" placeholder="••••••••" required style="width:100%;padding:.625rem .75rem;font-size:.9375rem;font-family:inherit;border:1px solid var(--border-strong);border-radius:6px;background:#fff" />
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Đăng nhập</button>
+    </form>
+  </div>
+</div>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Đã nhận nhiệm vụ</span>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-[#f4f2ee] border-t border-[#e3e0da]">
+  <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
+    <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
+      <div>
+        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]" style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+        <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
+          Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
+        </p>
+      </div>
+      <div>
+        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
+        <ul class="space-y-2.5 list-none p-0 m-0">
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Khám phá</a></li>
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Nhiệm vụ</a></li>
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Bảng xếp hạng</a></li>
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trust Score</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
+        <ul class="space-y-2.5 list-none p-0 m-0">
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ giúp</a></li>
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều khoản</a></li>
+          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách bảo mật</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 pt-6 border-t border-[#e3e0da] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+      <p class="text-[0.8125rem] text-[#6b6b6b]">© 2026 TRAMTUONGTAC. Tất cả các quyền được bảo lưu.</p>
+      <p class="text-[0.8125rem] text-[#6b6b6b]">Made with care in Vietnam</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ DATA ============ */
+  const TASKS = [
+    {
+      id: 1, platform: 'Facebook', mark: 'FB', category: 'Theo dõi trang',
+      title: 'Theo dõi trang Facebook doanh nghiệp',
+      reward: 12, duration: '30 giây', verify: 'Tự động',
+      slots: '18 / 50 suất', trust: 94, creator: 'Minh Anh',
+      status: 'Available', statusType: 'ok',
+      desc: '<strong>Yêu cầu:</strong> Nhấn theo dõi trang, giữ trạng thái theo dõi tối thiểu 30 giây. Không hủy theo dõi trong 24 giờ.'
+    },
+    {
+      id: 2, platform: 'Instagram', mark: 'IG', category: 'Tương tác bài viết',
+      title: 'Thả tim và bình luận bài viết mới nhất',
+      reward: 8, duration: '45 giây', verify: 'Tự động',
+      slots: '22 / 40 suất', trust: 91, creator: 'Quốc Bảo',
+      status: 'Available', statusType: 'ok',
+      desc: '<strong>Yêu cầu:</strong> Thả tim bài viết và để lại bình luận tối thiểu 5 từ có nội dung liên quan. Không spam.'
+    },
+    {
+      id: 3, platform: 'TikTok', mark: 'TT', category: 'Xem video',
+      title: 'Xem video 15 giây và thả tim',
+      reward: 6, duration: '15 giây', verify: 'Tự động',
+      slots: '5 / 30 suất', trust: 88, creator: 'Hà Linh',
+      status: 'Sắp hết', statusType: 'limited',
+      desc: '<strong>Yêu cầu:</strong> Xem video tối thiểu 15 giây, thả tim. Không cần bình luận.'
+    },
+    {
+      id: 4, platform: 'YouTube', mark: 'YT', category: 'Đăng ký kênh',
+      title: 'Đăng ký kênh YouTube công nghệ',
+      reward: 15, duration: '20 giây', verify: 'Bán tự động',
+      slots: '8 / 25 suất', trust: 96, creator: 'Trọng Nghĩa',
+      status: 'Available', statusType: 'ok',
+      desc: '<strong>Yêu cầu:</strong> Đăng ký kênh, bật chuông thông báo. Giữ đăng ký tối thiểu 7 ngày.'
+    },
+    {
+      id: 5, platform: 'Website', mark: 'WEB', category: 'Truy cập website',
+      title: 'Truy cập website thời trang trong 30 giây',
+      reward: 5, duration: '30 giây', verify: 'Tự động',
+      slots: '40 / 100 suất', trust: 89, creator: 'Thanh Vân',
+      status: 'Available', statusType: 'ok',
+      desc: '<strong>Yêu cầu:</strong> Truy cập đường link, ở lại tối thiểu 30 giây. Có thể cuộn trang để xác minh.'
+    },
+    {
+      id: 6, platform: 'Facebook', mark: 'FB', category: 'Chia sẻ bài viết',
+      title: 'Chia sẻ bài viết về chế độ công khai',
+      reward: 20, duration: '1 phút', verify: 'Bán tự động',
+      slots: '3 / 20 suất', trust: 97, creator: 'Đức Huy',
+      status: 'Sắp hết', statusType: 'limited',
+      desc: '<strong>Yêu cầu:</strong> Chia sẻ bài viết ở chế độ công khai, giữ tối thiểu 24 giờ. Chụp ảnh xác minh nếu được yêu cầu.'
+    },
+    {
+      id: 7, platform: 'Instagram', mark: 'IG', category: 'Theo dõi',
+      title: 'Theo dõi tài khoản nhiếp ảnh',
+      reward: 7, duration: '15 giây', verify: 'Tự động',
+      slots: '15 / 40 suất', trust: 90, creator: 'Mỹ Duyên',
+      status: 'Available', statusType: 'ok',
+      desc: '<strong>Yêu cầu:</strong> Nhấn theo dõi tài khoản. Không hủy theo dõi trong 48 giờ.'
+    },
+    {
+      id: 8, platform: 'TikTok', mark: 'TT', category: 'Bình luận',
+      title: 'Bình luận có nội dung vào video ẩm thực',
+      reward: 11, duration: '1 phút', verify: 'Bán tự động',
+      slots: '6 / 30 suất', trust: 93, creator: 'Hoàng Nam',
+      status: 'Available', statusType: 'ok',
+      desc: '<strong>Yêu cầu:</strong> Bình luận tối thiểu 8 từ, có nội dung liên quan đến video. Không sao chép bình luận có sẵn.'
+    }
+  ];
+
+  const ACCEPTED = new Set();
+  let selectedTask = null;
+  let pendingTask = null;
+
+  /* ============ RENDER TABLE ============ */
+  const taskBody = document.getElementById('taskBody');
+
+  function renderTasks(list) {
+    taskBody.innerHTML = '';
+    if (!list.length) {
+      taskBody.innerHTML = '<tr><td colspan="5"><div class="empty-state">Không có nhiệm vụ phù hợp với bộ lọc hiện tại.</div></td></tr>';
+      return;
+    }
+    list.forEach(t => {
+      const tr = document.createElement('tr');
+      tr.dataset.id = t.id;
+      if (selectedTask && selectedTask.id === t.id) tr.classList.add('selected');
+      const isAccepted = ACCEPTED.has(t.id);
+
+      tr.innerHTML = `
+        <td data-label="Nhiệm vụ">
+          <div class="platform-cell">
+            <span class="platform-mark">${t.mark}</span>
+            <div>
+              <div class="platform-name">${t.platform}</div>
+              <div class="platform-sub">${t.title}</div>
+            </div>
+          </div>
+        </td>
+        <td data-label="Loại"><span style="color:var(--ink-soft)">${t.category}</span></td>
+        <td data-label="Phần thưởng"><span class="reward">+${t.reward} Credits</span></td>
+        <td data-label="Trạng thái">
+          <span class="status-badge ${t.statusType === 'limited' ? 'limited' : t.statusType === 'hot' ? 'hot' : ''}">
+            <span class="status-dot"></span>${t.status}
+          </span>
+        </td>
+        <td data-label="">
+          <button class="row-btn ${isAccepted ? 'done' : ''}" data-row-btn>
+            ${isAccepted ? 'Đã nhận' : 'Xem'}
+          </button>
+        </td>
+      `;
+      tr.addEventListener('click', (e) => {
+        if (e.target.closest('[data-row-btn]')) return;
+        selectTask(t);
+      });
+      tr.querySelector('[data-row-btn]').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isAccepted) { selectTask(t); return; }
+        selectTask(t);
+        openConfirm(t);
+      });
+      taskBody.appendChild(tr);
+    });
+  }
+
+  /* ============ SELECT TASK ============ */
+  const detailPanel = document.getElementById('detailPanel');
+  const detailEmpty = document.getElementById('detailEmpty');
+  const detailContent = document.getElementById('detailContent');
+  const acceptBtn = document.getElementById('acceptBtn');
+  const sheetBackdrop = document.getElementById('sheetBackdrop');
+
+  function selectTask(t) {
+    selectedTask = t;
+
+    // update row highlight
+    taskBody.querySelectorAll('tr').forEach(tr => {
+      tr.classList.toggle('selected', parseInt(tr.dataset.id, 10) === t.id);
+    });
+
+    // fill panel
+    document.getElementById('dMark').textContent = t.mark;
+    document.getElementById('dPlatform').textContent = t.platform;
+    document.getElementById('dCategory').textContent = t.category;
+    document.getElementById('dTitle').textContent = t.title;
+    document.getElementById('dReward').textContent = '+' + t.reward + ' Credits';
+    document.getElementById('dDuration').textContent = t.duration;
+    document.getElementById('dVerify').textContent = t.verify;
+    document.getElementById('dSlots').textContent = t.slots;
+    document.getElementById('dCreator').textContent = t.creator;
+    document.getElementById('dTrust').textContent = t.trust;
+    document.getElementById('dDesc').innerHTML = t.desc;
+
+    const isAccepted = ACCEPTED.has(t.id);
+    acceptBtn.textContent = isAccepted ? 'Đã nhận nhiệm vụ' : 'Nhận nhiệm vụ';
+    acceptBtn.disabled = isAccepted;
+    acceptBtn.classList.toggle('btn-primary', !isAccepted);
+    acceptBtn.classList.toggle('btn-secondary', isAccepted);
+
+    detailEmpty.style.display = 'none';
+    detailContent.style.display = 'block';
+
+    // Mobile: open bottom sheet
+    if (window.innerWidth < 1024) {
+      detailPanel.classList.add('open', 'has-content');
+      sheetBackdrop.classList.add('on');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeSheet() {
+    detailPanel.classList.remove('open');
+    sheetBackdrop.classList.remove('on');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('sheetClose').addEventListener('click', closeSheet);
+  sheetBackdrop.addEventListener('click', closeSheet);
+
+  /* ============ CONFIRM MODAL ============ */
+  const confirmModal = document.getElementById('confirmModal');
+
+  function openConfirm(t) {
+    pendingTask = t;
+    document.getElementById('mTitle').textContent = t.title;
+    document.getElementById('mPlatform').textContent = t.platform;
+    document.getElementById('mReward').textContent = '+' + t.reward + ' Credits';
+    confirmModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    if (!document.querySelector('.modal-overlay.active') && !detailPanel.classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+  }
+  window.closeModal = closeModal;
+
+  document.querySelectorAll('[data-close]').forEach(b => {
+    b.addEventListener('click', () => {
+      const overlay = b.closest('.modal-overlay');
+      if (overlay) closeModal(overlay.id);
+    });
+  });
+  document.querySelectorAll('.modal-overlay').forEach(o => {
+    o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
+      closeSheet();
+    }
+  });
+
+  document.getElementById('confirmAccept').addEventListener('click', () => {
+    if (!pendingTask) return;
+    const id = pendingTask.id;
+    ACCEPTED.add(id);
+    closeModal('confirmModal');
+    showToast('Đã nhận nhiệm vụ: ' + pendingTask.title);
+    renderTasks(getFiltered());
+    // re-select to update panel state
+    if (selectedTask && selectedTask.id === id) selectTask(pendingTask);
+  });
+
+  /* ============ ACCEPT FROM DETAIL PANEL ============ */
+  acceptBtn.addEventListener('click', () => {
+    if (!selectedTask || ACCEPTED.has(selectedTask.id)) return;
+    openConfirm(selectedTask);
+  });
+
+  /* ============ MODAL LOGIN ============ */
+  document.querySelectorAll('[data-modal="login"]').forEach(b => {
+    b.addEventListener('click', e => {
+      e.preventDefault();
+      document.getElementById('modal-login').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  /* ============ TOAST ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('on'), 2600);
+  }
+
+  /* ============ FILTERS ============ */
+  const filters = { platform: new Set(['facebook', 'instagram']), type: new Set() };
+
+  document.querySelectorAll('[data-filter]').forEach(input => {
+    input.addEventListener('change', () => {
+      const group = input.dataset.filter;
+      const val = input.value;
+      if (input.checked) filters[group].add(val);
+      else filters[group].delete(val);
+      applyFilters();
+    });
+  });
+
+  document.querySelectorAll('input[name="reward"]').forEach(r => r.addEventListener('change', applyFilters));
+  document.querySelectorAll('input[name="trust"]').forEach(r => r.addEventListener('change', applyFilters));
+
+  document.getElementById('sortSelect').addEventListener('change', applyFilters);
+  document.getElementById('resetFilters').addEventListener('click', () => {
+    filters.platform = new Set();
+    filters.type = new Set();
+    document.querySelectorAll('[data-filter]').forEach(i => i.checked = false);
+    document.querySelector('input[name="reward"]').checked = true;
+    document.querySelector('input[name="trust"]').checked = true;
+    applyFilters();
+  });
+
+  const platformKey = { 'Facebook': 'facebook', 'Instagram': 'instagram', 'TikTok': 'tiktok', 'YouTube': 'youtube', 'Website': 'website' };
+  const typeKey = { 'Theo dõi trang': 'follow', 'Tương tác bài viết': 'like', 'Xem video': 'like', 'Đăng ký kênh': 'subscribe', 'Truy cập website': 'visit', 'Chia sẻ bài viết': 'like', 'Theo dõi': 'follow', 'Bình luận': 'like' };
+
+  function getFiltered() {
+    let list = TASKS.slice();
+
+    if (filters.platform.size) {
+      list = list.filter(t => filters.platform.has(platformKey[t.platform]));
+    }
+    if (filters.type.size) {
+      list = list.filter(t => filters.type.has(typeKey[t.category]));
+    }
+
+    const rewardVal = document.querySelector('input[name="reward"]:checked').parentElement.textContent.trim();
+    if (rewardVal === '1 – 10 Credits') list = list.filter(t => t.reward <= 10);
+    else if (rewardVal === '11 – 20 Credits') list = list.filter(t => t.reward > 10 && t.reward <= 20);
+    else if (rewardVal === 'Trên 20 Credits') list = list.filter(t => t.reward > 20);
+
+    const trustVal = document.querySelector('input[name="trust"]:checked').parentElement.textContent.trim();
+    if (trustVal === 'Từ 70') list = list.filter(t => t.trust >= 70);
+    else if (trustVal === 'Từ 85') list = list.filter(t => t.trust >= 85);
+    else if (trustVal === 'Từ 95') list = list.filter(t => t.trust >= 95);
+
+    const sort = document.getElementById('sortSelect').value;
+    if (sort === 'reward-desc') list.sort((a, b) => b.reward - a.reward);
+    else if (sort === 'reward-asc') list.sort((a, b) => a.reward - b.reward);
+    else if (sort === 'newest') list.sort((a, b) => b.id - a.id);
+    else if (sort === 'trust') list.sort((a, b) => b.trust - a.trust);
+
+    return list;
+  }
+
+  function applyFilters() {
+    const list = getFiltered();
+    renderTasks(list);
+    document.getElementById('pageInfo').textContent = `Hiển thị 1–${list.length} trong ${list.length} nhiệm vụ`;
+    if (selectedTask && !list.find(t => t.id === selectedTask.id)) {
+      selectedTask = null;
+      detailContent.style.display = 'none';
+      detailEmpty.style.display = 'block';
+      detailPanel.classList.remove('has-content');
+    }
+  }
+
+  /* ============ MOBILE FILTER (simple toggle) ============ */
+  document.getElementById('mobileFilterBtn').addEventListener('click', () => {
+    showToast('Bộ lọc mobile sẽ sớm có — dùng bản desktop để trải nghiệm đầy đủ.');
+  });
+
+  /* ============ HEADER USER MENU ============ */
+  const userAvatarBtn = document.getElementById('userAvatarBtn');
+  const userDropdownMenu = document.getElementById('userDropdownMenu');
+  if (userAvatarBtn && userDropdownMenu) {
+    userAvatarBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdownMenu.classList.toggle('show');
+    });
+    document.addEventListener('click', (e) => {
+      if (!userDropdownMenu.contains(e.target)) {
+        userDropdownMenu.classList.remove('show');
+      }
+    });
+  }
+
+  /* ============ HEADER MOBILE MENU ============ */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburgerBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', open);
+    hamburgerBtn.setAttribute('aria-expanded', open);
+  });
+
+  /* ============ TABS (demo) ============ */
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const key = tab.dataset.tab;
+      if (key === 'inprogress') showToast('Bạn chưa có nhiệm vụ nào đang làm.');
+      else if (key === 'completed') showToast('Demo: hiển thị lịch sử nhiệm vụ đã hoàn thành.');
+    });
+  });
+
+  /* ============ INIT ============ */
+  renderTasks(getFiltered());
+
+})();
+</script>
+
+</body>
+</html>

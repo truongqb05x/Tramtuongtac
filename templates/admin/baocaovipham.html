@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Báo cáo vi phạm — TRAODOI Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf9f7;
+    --bg-alt: #f4f2ee;
+    --bg-hover: #fcfbf9;
+    --ink: #1e1e1e;
+    --ink-soft: #3d3d3d;
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --border: #e3e0da;
+    --border-strong: #d0ccc4;
+    --accent: #1e3a5f;
+    --accent-hover: #162c47;
+    --accent-soft: #e8edf3;
+    --success: #2f6b4f;
+    --success-soft: #e8f0eb;
+    --warning: #8a6a1f;
+    --warning-soft: #f4edda;
+    --danger: #8a2f2f;
+    --danger-soft: #f4e5e5;
+    --sidebar-w: 220px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    font-weight: 500; font-size: .8125rem; line-height: 1;
+    padding: .5625rem 1rem; border-radius: 6px;
+    border: 1px solid transparent; cursor: pointer; text-decoration: none;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    white-space: nowrap; font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+  .btn-secondary:hover { background: var(--bg-alt); border-color: var(--muted); }
+  .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+  .btn-danger:hover { background: #6b1f1f; border-color: #6b1f1f; }
+  .btn-danger-outline { background: transparent; color: var(--danger); border-color: var(--border-strong); }
+  .btn-danger-outline:hover { background: var(--danger-soft); border-color: var(--danger); }
+  .btn-success { background: var(--success); color: #fff; border-color: var(--success); }
+  .btn-success:hover { background: #1f4b32; border-color: #1f4b32; }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--ink-soft); padding: .4375rem .625rem; }
+  .btn-ghost:hover { background: var(--bg-alt); color: var(--ink); }
+  .btn-xs { padding: .375rem .625rem; font-size: .75rem; }
+
+  /* ---------- Admin shell ---------- */
+  .admin {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 100vh;
+  }
+  @media (min-width: 1024px) {
+    .admin { grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    background: var(--bg-alt);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    position: sticky; top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 30;
+  }
+  @media (max-width: 1023px) {
+    .sidebar {
+      position: fixed; inset: 0 auto 0 0;
+      width: 260px;
+      transform: translateX(-100%);
+      transition: transform .25s ease;
+      box-shadow: 4px 0 20px rgba(0,0,0,.08);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(30,30,30,.4);
+      z-index: 25;
+    }
+    .sidebar-backdrop.on { display: block; }
+  }
+  @media (min-width: 1024px) {
+    .sidebar-backdrop { display: none !important; }
+  }
+
+  .sidebar-brand {
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-brand-name {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; font-weight: 500;
+    letter-spacing: -.01em;
+    color: var(--ink);
+  }
+  .sidebar-brand-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent);
+    margin-top: .25rem;
+  }
+  .sidebar-section { padding: 1rem 1rem; border-bottom: 1px solid var(--border); }
+  .sidebar-section:last-child { border-bottom: none; }
+  .sidebar-section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted-2);
+    padding: .25rem .75rem;
+    margin-bottom: .5rem;
+  }
+  .sidebar-link {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .5rem .75rem;
+    font-size: .8125rem;
+    color: var(--ink-soft);
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    background: transparent;
+    border: none;
+    width: 100%; text-align: left;
+    transition: background .15s ease, color .15s ease;
+    margin-bottom: .125rem;
+  }
+  .sidebar-link:hover { background: var(--bg); color: var(--ink); }
+  .sidebar-link.active {
+    background: var(--accent);
+    color: #fff;
+  }
+  .sidebar-link .link-icon {
+    width: 16px; height: 16px;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    opacity: .8;
+  }
+  .sidebar-link.active .link-icon { opacity: 1; }
+  .sidebar-link .link-badge {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    padding: .125rem .375rem;
+    background: var(--danger); color: #fff;
+    border-radius: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .sidebar-link.active .link-badge {
+    background: rgba(255,255,255,.25);
+  }
+
+  /* ---------- Main ---------- */
+  .main { display: flex; flex-direction: column; min-width: 0; }
+
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 20;
+  }
+  @media (min-width: 1024px) { .topbar { padding: 1rem 2.5rem; } }
+
+  .topbar-left { display: flex; align-items: center; gap: 1rem; min-width: 0; }
+  .menu-toggle {
+    display: flex; align-items: center; justify-content: center;
+    width: 2.25rem; height: 2.25rem;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+  @media (min-width: 1024px) { .menu-toggle { display: none; } }
+
+  .page-title-admin {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.25rem; font-weight: 500;
+    letter-spacing: -.01em;
+    color: var(--ink);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  @media (min-width: 768px) { .page-title-admin { font-size: 1.5rem; } }
+
+  .topbar-right { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
+
+  .status-indicator {
+    display: none;
+    align-items: center; gap: .5rem;
+    padding: .375rem .75rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 500;
+    color: var(--muted);
+    letter-spacing: .04em;
+  }
+  @media (min-width: 768px) { .status-indicator { display: inline-flex; } }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 3px rgba(47,107,79,.15);
+  }
+
+  .admin-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* ---------- Content ---------- */
+  .content { padding: 1.5rem 1.5rem 3rem; }
+  @media (min-width: 1024px) { .content { padding: 2rem 2.5rem 3rem; } }
+
+  /* ---------- KPI strip ---------- */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  @media (min-width: 640px) { .kpi-strip { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1024px) { .kpi-strip { grid-template-columns: repeat(6, 1fr); } }
+
+  .kpi-cell {
+    background: #fff;
+    padding: 1rem 1.125rem;
+  }
+  .kpi-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .375rem;
+  }
+  .kpi-value {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.5rem; font-weight: 500;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -.015em;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-value.danger { color: var(--danger); }
+  .kpi-value.warning { color: var(--warning); }
+  .kpi-value.success { color: var(--success); }
+  .kpi-delta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem;
+    margin-top: .375rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-delta.down { color: var(--danger); }
+  .kpi-delta.up { color: var(--success); }
+
+  /* ---------- Filter bar ---------- */
+  .filter-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+  }
+  .filter-row {
+    display: flex; flex-wrap: wrap; gap: .625rem;
+    padding: .875rem 1.125rem;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .filter-row:last-child { border-bottom: none; }
+  .filter-search {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+  }
+  .filter-search input {
+    width: 100%;
+    padding: .5rem .75rem .5rem 2rem;
+    font-size: .8125rem; font-family: inherit;
+    color: var(--ink);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: #fff;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .filter-search input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.08);
+  }
+  .filter-search input::placeholder { color: var(--muted-2); }
+  .filter-search svg {
+    position: absolute; left: .625rem; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-2); pointer-events: none;
+  }
+  .filter-select {
+    padding: .5rem 1.75rem .5rem .75rem;
+    font-size: .8125rem; font-family: inherit;
+    color: var(--ink);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'><path d='M3 4.5L6 7.5L9 4.5' stroke='%236b6b6b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right .5rem center;
+  }
+  .filter-select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.08);
+  }
+
+  /* Quick filter chips */
+  .quick-filters {
+    display: flex; flex-wrap: wrap; gap: .375rem;
+    padding: .75rem 1.125rem;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+  }
+  .quick-chip {
+    padding: .375rem .75rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: .75rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+    display: inline-flex; align-items: center; gap: .375rem;
+  }
+  .quick-chip:hover { border-color: var(--accent); color: var(--accent); }
+  .quick-chip.active {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+  }
+  .quick-chip .chip-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem;
+    opacity: .7;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Bulk action bar ---------- */
+  .bulk-bar {
+    display: none;
+    align-items: center; gap: .75rem;
+    padding: .625rem 1.125rem;
+    background: var(--accent-soft);
+    border-bottom: 1px solid #d3dde8;
+    font-size: .8125rem;
+    color: var(--accent);
+  }
+  .bulk-bar.on { display: flex; }
+  .bulk-bar .bulk-info {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .02em;
+  }
+  .bulk-bar .bulk-spacer { flex: 1; }
+
+  /* ---------- Table ---------- */
+  .table-wrap {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .reports-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .8125rem;
+  }
+  .reports-table thead th {
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted);
+    padding: .75rem .875rem;
+    border-bottom: 1px solid var(--border-strong);
+    background: var(--bg-alt);
+    white-space: nowrap;
+  }
+  .reports-table thead th.checkbox-col { width: 40px; }
+  .reports-table thead th.actions-col { width: 100px; text-align: right; }
+  .reports-table tbody td {
+    padding: .875rem .875rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    color: var(--ink-soft);
+  }
+  .reports-table tbody tr:last-child td { border-bottom: none; }
+  .reports-table tbody tr {
+    cursor: pointer;
+    transition: background .12s ease;
+  }
+  .reports-table tbody tr:hover { background: var(--bg-hover); }
+  .reports-table tbody tr.selected { background: var(--accent-soft); }
+  .reports-table tbody tr.urgent {
+    border-left: 3px solid var(--danger);
+    padding-left: calc(.875rem - 3px);
+  }
+  .reports-table tbody tr.urgent td:first-child {
+    padding-left: calc(.875rem - 3px);
+  }
+
+  /* Checkbox */
+  .check {
+    appearance: none; -webkit-appearance: none;
+    width: 1rem; height: 1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    background: #fff; cursor: pointer;
+    position: relative;
+    transition: background .15s ease, border-color .15s ease;
+    vertical-align: middle;
+  }
+  .check:hover { border-color: var(--accent); }
+  .check:checked { background: var(--accent); border-color: var(--accent); }
+  .check:checked::after {
+    content: ''; position: absolute;
+    left: 3px; top: 0;
+    width: 5px; height: 9px;
+    border: solid #fff; border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg);
+  }
+
+  /* Cell styles */
+  .cell-id {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem;
+    color: var(--muted);
+    letter-spacing: .02em;
+  }
+  .cell-strong { color: var(--ink); font-weight: 500; }
+
+  .user-cell {
+    display: flex; align-items: center; gap: .625rem;
+    min-width: 0;
+  }
+  .mini-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent-soft); color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .625rem; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .user-cell-info { min-width: 0; }
+  .user-cell-name {
+    font-size: .8125rem; font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .user-cell-handle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; color: var(--muted);
+  }
+
+  .reason-cell {
+    max-width: 260px;
+    font-size: .8125rem;
+    line-height: 1.5;
+  }
+  .reason-category {
+    display: inline-flex; align-items: center; gap: .25rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 500;
+    letter-spacing: .04em;
+    color: var(--muted);
+    margin-bottom: .125rem;
+  }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 500;
+    letter-spacing: .04em;
+    padding: .25rem .5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .status-pill::before {
+    content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor;
+  }
+  .status-pill.ok { color: var(--success); background: var(--success-soft); }
+  .status-pill.warn { color: var(--warning); background: var(--warning-soft); }
+  .status-pill.danger { color: var(--danger); background: var(--danger-soft); }
+  .status-pill.info { color: var(--accent); background: var(--accent-soft); }
+  .status-pill.mute { color: var(--muted); background: var(--bg-alt); }
+
+  .severity-pill {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .04em;
+    padding: .25rem .5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .severity-pill.critical { background: #6b1f1f; color: #fff; }
+  .severity-pill.high { background: var(--danger-soft); color: var(--danger); }
+  .severity-pill.medium { background: var(--warning-soft); color: var(--warning); }
+  .severity-pill.low { background: var(--bg-alt); color: var(--muted); }
+
+  .report-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .report-count strong { color: var(--ink); font-weight: 600; }
+  .report-count.high strong { color: var(--danger); }
+
+  .time-cell {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .time-cell.urgent { color: var(--danger); font-weight: 500; }
+
+  .row-actions {
+    display: flex; gap: .375rem; justify-content: flex-end;
+  }
+
+  /* Mobile card view */
+  @media (max-width: 767px) {
+    .reports-table thead { display: none; }
+    .reports-table, .reports-table tbody, .reports-table tr, .reports-table td {
+      display: block; width: 100%;
+    }
+    .reports-table tr {
+      border-bottom: 1px solid var(--border);
+      padding: .875rem 1rem;
+      position: relative;
+    }
+    .reports-table tr:last-child { border-bottom: none; }
+    .reports-table td {
+      border-bottom: none;
+      padding: .25rem 0;
+    }
+    .reports-table td::before {
+      content: attr(data-label);
+      display: inline-block;
+      width: 5rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .625rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      vertical-align: middle;
+    }
+    .reports-table td.checkbox-cell::before { content: none; }
+    .reports-table td.actions-cell::before { content: none; }
+    .reports-table tr.urgent { border-left: 3px solid var(--danger); padding-left: calc(1rem - 3px); }
+  }
+
+  /* Empty state */
+  .empty-state {
+    padding: 3.5rem 1.5rem; text-align: center;
+  }
+  .empty-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--bg-alt); color: var(--muted);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .empty-title {
+    font-size: .9375rem; font-weight: 500;
+    color: var(--ink); margin: 0 0 .375rem;
+  }
+  .empty-desc {
+    font-size: .875rem; color: var(--muted);
+    line-height: 1.55; max-width: 380px;
+    margin: 0 auto;
+  }
+
+  /* Pagination */
+  .pagination {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; margin-top: 1.25rem; flex-wrap: wrap;
+  }
+  .pagination-info { font-size: .8125rem; color: var(--muted); }
+  .pager { display: flex; gap: .25rem; }
+  .pager button {
+    min-width: 2rem; height: 2rem; padding: 0 .5rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .8125rem; font-weight: 500;
+    background: #fff; color: var(--ink-soft);
+    border: 1px solid var(--border-strong); border-radius: 6px;
+    cursor: pointer; font-family: inherit;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .pager button:hover { background: var(--bg-alt); color: var(--ink); }
+  .pager button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .pager button:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ---------- Drawer ---------- */
+  .drawer-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(30,30,30,.4);
+    z-index: 90;
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  .drawer-backdrop.on { opacity: 1; pointer-events: auto; }
+
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 100%; max-width: 520px;
+    background: #fff;
+    border-left: 1px solid var(--border);
+    z-index: 100;
+    transform: translateX(100%);
+    transition: transform .3s ease;
+    display: flex; flex-direction: column;
+    box-shadow: -4px 0 24px rgba(0,0,0,.08);
+  }
+  .drawer.open { transform: translateX(0); }
+
+  .drawer-head {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 1rem;
+    background: var(--bg-alt);
+  }
+  .drawer-head-info { min-width: 0; }
+  .drawer-id {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem; font-weight: 500;
+    letter-spacing: .04em;
+    color: var(--muted);
+    margin-bottom: .375rem;
+  }
+  .drawer-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; font-weight: 500;
+    letter-spacing: -.005em;
+    color: var(--ink);
+    margin: 0 0 .375rem;
+    line-height: 1.35;
+  }
+  .drawer-sub {
+    font-size: .8125rem;
+    color: var(--muted);
+    display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+  }
+  .drawer-sub .dot { color: var(--border-strong); }
+
+  .drawer-close {
+    width: 2rem; height: 2rem;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: none;
+    color: var(--muted); font-size: 1.25rem;
+    cursor: pointer; border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .drawer-close:hover { background: var(--bg-alt); color: var(--ink); }
+
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+  }
+
+  .drawer-section {
+    margin-bottom: 1.75rem;
+  }
+  .drawer-section:last-child { margin-bottom: 0; }
+  .drawer-section-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .75rem;
+    display: block;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  @media (min-width: 480px) {
+    .info-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .info-cell {
+    background: #fff;
+    padding: .75rem .875rem;
+  }
+  .info-cell-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .25rem;
+  }
+  .info-cell-value {
+    font-size: .875rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .info-cell-value.mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .8125rem;
+    font-weight: 500;
+  }
+
+  .reason-box {
+    padding: 1rem 1.125rem;
+    background: var(--danger-soft);
+    border-left: 3px solid var(--danger);
+    border-radius: 6px;
+    font-size: .875rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+  .reason-box strong {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--danger);
+    margin-bottom: .375rem;
+  }
+
+  .evidence-list {
+    display: flex; flex-direction: column; gap: .5rem;
+  }
+  .evidence-item {
+    display: flex; align-items: center; gap: .625rem;
+    padding: .625rem .875rem;
+    background: var(--bg-alt);
+    border-radius: 6px;
+    font-size: .8125rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .evidence-item:hover { background: var(--accent-soft); }
+  .evidence-item svg { flex-shrink: 0; color: var(--muted); }
+  .evidence-item .evidence-name {
+    flex: 1;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .evidence-item .evidence-size {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 1.625rem; }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 7px; top: 6px; bottom: 6px;
+    width: 1px; background: var(--border);
+  }
+  .timeline-item {
+    position: relative;
+    padding-bottom: 1.125rem;
+  }
+  .timeline-item:last-child { padding-bottom: 0; }
+  .timeline-dot {
+    position: absolute;
+    left: -1.625rem; top: .25rem;
+    width: 15px; height: 15px; border-radius: 50%;
+    background: var(--bg-alt);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px var(--border);
+  }
+  .timeline-dot.done { background: var(--success); box-shadow: 0 0 0 1px var(--success); }
+  .timeline-dot.active { background: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .timeline-dot.pending { background: var(--warning); box-shadow: 0 0 0 1px var(--warning); }
+  .timeline-dot.failed { background: var(--danger); box-shadow: 0 0 0 1px var(--danger); }
+  .timeline-title {
+    font-size: .8125rem; font-weight: 500;
+    color: var(--ink); margin: 0 0 .125rem;
+  }
+  .timeline-desc {
+    font-size: .75rem; color: var(--muted);
+    line-height: 1.5; margin: 0;
+  }
+  .timeline-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem;
+    color: var(--muted-2);
+    margin-top: .25rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drawer-footer {
+    padding: 1rem 1.5rem 1.25rem;
+    border-top: 1px solid var(--border);
+    background: var(--bg-alt);
+    display: flex; gap: .5rem; flex-wrap: wrap;
+  }
+  .drawer-footer .btn { flex: 1; min-width: 140px; }
+
+  /* ---------- Modal ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(30,30,30,.55);
+    display: none; align-items: center; justify-content: center;
+    z-index: 110; padding: 1rem;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    width: 100%; max-width: 520px;
+    padding: 1.75rem;
+    position: relative;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+  .modal-box h3 {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.25rem; font-weight: 500;
+    margin: 0 0 .375rem;
+    color: var(--ink);
+    letter-spacing: -.01em;
+  }
+  .modal-box > p {
+    font-size: .8125rem; color: var(--muted);
+    margin: 0 0 1.25rem;
+    line-height: 1.55;
+  }
+  .modal-close {
+    position: absolute; top: .875rem; right: .875rem;
+    width: 1.875rem; height: 1.875rem;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: none;
+    color: var(--muted); font-size: 1.125rem;
+    cursor: pointer; border-radius: 4px;
+  }
+  .modal-close:hover { background: var(--bg-alt); color: var(--ink); }
+  .modal-actions {
+    display: flex; gap: .5rem; margin-top: 1.5rem;
+    justify-content: flex-end;
+  }
+
+  .field { margin-bottom: 1rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field-label {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .375rem;
+  }
+  .field-label .req { color: var(--danger); }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    padding: .5625rem .75rem;
+    font-size: .875rem; font-family: inherit;
+    color: var(--ink);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: #fff;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .field textarea {
+    resize: vertical; min-height: 90px;
+    line-height: 1.55;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.08);
+  }
+  .field-hint {
+    font-size: .6875rem; color: var(--muted);
+    margin-top: .375rem;
+    line-height: 1.5;
+  }
+
+  /* Action radio cards */
+  .action-grid {
+    display: grid; grid-template-columns: 1fr; gap: .5rem;
+  }
+  .action-opt {
+    position: relative;
+    display: flex; align-items: flex-start; gap: .75rem;
+    padding: .75rem .875rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .action-opt:hover { border-color: var(--muted); background: var(--bg-hover); }
+  .action-opt input {
+    position: absolute; opacity: 0; pointer-events: none;
+  }
+  .action-opt.checked {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .action-opt.danger.checked {
+    border-color: var(--danger);
+    background: var(--danger-soft);
+  }
+  .action-radio {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-strong);
+    background: #fff;
+    flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-top: .125rem;
+  }
+  .action-opt.checked .action-radio {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .action-opt.danger.checked .action-radio {
+    background: var(--danger); border-color: var(--danger);
+  }
+  .action-opt.checked .action-radio::after {
+    content: ''; width: 5px; height: 5px;
+    border-radius: 50%; background: #fff;
+  }
+  .action-text { min-width: 0; }
+  .action-title {
+    font-size: .8125rem; font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 .125rem;
+  }
+  .action-desc {
+    font-size: .6875rem; color: var(--muted);
+    line-height: 1.5; margin: 0;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: #fff; font-size: .875rem;
+    padding: .75rem 1.25rem; border-radius: 6px; z-index: 120;
+    box-shadow: 0 4px 16px rgba(0,0,0,.15);
+    transition: transform .25s ease;
+    display: flex; align-items: center; gap: .625rem;
+    max-width: calc(100vw - 2rem);
+  }
+  .toast.on { transform: translateX(-50%) translateY(0); }
+  .toast .check {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--success);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="admin">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-name">TRAODOI</div>
+      <div class="sidebar-brand-sub">Admin Console · v3.2</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Tổng quan</div>
+      <button class="sidebar-link" data-view="dashboard">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <rect x="2" y="2" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
+            <rect x="7.5" y="2" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
+            <rect x="2" y="7.5" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
+            <rect x="7.5" y="7.5" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
+          </svg>
+        </span>
+        Dashboard
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Kiểm duyệt</div>
+      <button class="sidebar-link active" data-view="reports">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M7 2V7M7 10H7.01M2 7C2 4.2 4.2 2 7 2C9.8 2 12 4.2 12 7C12 9.8 9.8 12 7 12C4.2 12 2 9.8 2 7Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Báo cáo vi phạm
+        <span class="link-badge" id="sidebarReportCount">14</span>
+      </button>
+      <button class="sidebar-link" data-view="disputes">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M7 1.5V7L10 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/>
+          </svg>
+        </span>
+        Tranh chấp
+        <span class="link-badge">8</span>
+      </button>
+      <button class="sidebar-link" data-view="tasks">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        Duyệt nhiệm vụ
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Người dùng</div>
+      <button class="sidebar-link" data-view="users">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="7" cy="4" r="2.5" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M2.5 12C2.5 9.5 4.5 8 7 8C9.5 8 11.5 9.5 11.5 12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Quản lý user
+      </button>
+      <button class="sidebar-link" data-view="sessions">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <rect x="2" y="3" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M2 6H12" stroke="currentColor" stroke-width="1.3"/>
+          </svg>
+        </span>
+        Phiên đăng nhập
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Hệ thống</div>
+      <button class="sidebar-link" data-view="config">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M7 1V2.5M7 11.5V13M1 7H2.5M11.5 7H13M2.5 2.5L3.5 3.5M10.5 10.5L11.5 11.5M11.5 2.5L10.5 3.5M3.5 10.5L2.5 11.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Cấu hình
+      </button>
+      <button class="sidebar-link" data-view="logs">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M3 3H11V11H3Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+            <path d="M5 5.5H9M5 7.5H9M5 9.5H7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Audit log
+      </button>
+    </div>
+  </aside>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle" aria-label="Mở menu">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 3.5H12M2 7H12M2 10.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <h1 class="page-title-admin">Báo cáo vi phạm</h1>
+      </div>
+
+      <div class="topbar-right">
+        <span class="status-indicator">
+          <span class="status-dot"></span>
+          Hệ thống ổn định
+        </span>
+        <button class="btn btn-ghost" id="refreshBtn" title="Làm mới">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M12 7C12 9.8 9.8 12 7 12C4.2 12 2 9.8 2 7C2 4.2 4.2 2 7 2C9 2 10.7 3.1 11.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M12 2V5H9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <span class="admin-avatar" title="Admin">AD</span>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+
+      <!-- KPI strip -->
+      <section class="kpi-strip">
+        <div class="kpi-cell">
+          <div class="kpi-label">Chờ xử lý</div>
+          <div class="kpi-value danger" id="kpiPending">14</div>
+          <div class="kpi-delta down">↑ 3 so hôm qua</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="kpi-label">Đang xem xét</div>
+          <div class="kpi-value warning" id="kpiReviewing">6</div>
+          <div class="kpi-delta">— ổn định</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="kpi-label">Đã xử lý hôm nay</div>
+          <div class="kpi-value success" id="kpiResolved">23</div>
+          <div class="kpi-delta up">↑ 8 so hôm qua</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="kpi-label">Tỷ lệ chấp nhận</div>
+          <div class="kpi-value" id="kpiAcceptRate">68%</div>
+          <div class="kpi-delta">Trong 7 ngày</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="kpi-label">Thời gian xử lý TB</div>
+          <div class="kpi-value" id="kpiAvgTime">4.2h</div>
+          <div class="kpi-delta up">↓ 0.8h so tuần trước</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="kpi-label">Vi phạm lặp lại</div>
+          <div class="kpi-value" id="kpiRepeat">3</div>
+          <div class="kpi-delta down">Cần chú ý</div>
+        </div>
+      </section>
+
+      <!-- Filter card -->
+      <section class="filter-card">
+        <!-- Quick filters -->
+        <div class="quick-filters" id="quickFilters">
+          <button class="quick-chip active" data-quick="all">
+            Tất cả <span class="chip-count" data-count="all">28</span>
+          </button>
+          <button class="quick-chip" data-quick="pending">
+            Chờ xử lý <span class="chip-count" data-count="pending">14</span>
+          </button>
+          <button class="quick-chip" data-quick="reviewing">
+            Đang xem xét <span class="chip-count" data-count="reviewing">6</span>
+          </button>
+          <button class="quick-chip" data-quick="urgent">
+            Khẩn cấp <span class="chip-count" data-count="urgent">5</span>
+          </button>
+          <button class="quick-chip" data-quick="repeat">
+            Vi phạm lặp lại <span class="chip-count" data-count="repeat">3</span>
+          </button>
+          <button class="quick-chip" data-quick="mine">
+            Được gán cho tôi <span class="chip-count" data-count="mine">4</span>
+          </button>
+        </div>
+
+        <!-- Search + selects -->
+        <div class="filter-row">
+          <div class="filter-search">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+            <input type="text" id="searchInput" placeholder="Tìm theo ID, người báo cáo, người bị báo cáo, lý do…" />
+          </div>
+
+          <select class="filter-select" id="severityFilter">
+            <option value="">Tất cả mức độ</option>
+            <option value="critical">Khẩn cấp</option>
+            <option value="high">Nghiêm trọng</option>
+            <option value="medium">Trung bình</option>
+            <option value="low">Nhẹ</option>
+          </select>
+
+          <select class="filter-select" id="categoryFilter">
+            <option value="">Tất cả loại vi phạm</option>
+            <option value="fraud">Gian lận / Bot</option>
+            <option value="harassment">Quấy rối</option>
+            <option value="spam">Spam</option>
+            <option value="content">Nội dung không phù hợp</option>
+            <option value="self-task">Tự làm nhiệm vụ của mình</option>
+            <option value="other">Khác</option>
+          </select>
+
+          <select class="filter-select" id="statusFilter">
+            <option value="">Tất cả trạng thái</option>
+            <option value="pending">Chờ xử lý</option>
+            <option value="reviewing">Đang xem xét</option>
+            <option value="resolved">Đã xử lý</option>
+            <option value="dismissed">Đã bỏ qua</option>
+          </select>
+
+          <select class="filter-select" id="sortFilter">
+            <option value="priority">Ưu tiên</option>
+            <option value="newest">Mới nhất</option>
+            <option value="oldest">Cũ nhất</option>
+            <option value="most-reported">Nhiều báo cáo</option>
+          </select>
+        </div>
+
+        <!-- Bulk action bar -->
+        <div class="bulk-bar" id="bulkBar">
+          <span class="bulk-info"><span id="bulkCount">0</span> báo cáo được chọn</span>
+          <span class="bulk-spacer"></span>
+          <button class="btn btn-secondary btn-xs" data-bulk="assign">Gán cho tôi</button>
+          <button class="btn btn-secondary btn-xs" data-bulk="reviewing">Chuyển sang xem xét</button>
+          <button class="btn btn-danger-outline btn-xs" data-bulk="dismiss">Bỏ qua</button>
+          <button class="btn btn-ghost btn-xs" data-bulk="clear">Bỏ chọn</button>
+        </div>
+      </section>
+
+      <!-- Reports table -->
+      <div class="table-wrap">
+        <table class="reports-table">
+          <thead>
+            <tr>
+              <th class="checkbox-col">
+                <input type="checkbox" class="check" id="selectAll" aria-label="Chọn tất cả" />
+              </th>
+              <th>ID</th>
+              <th>Người bị báo cáo</th>
+              <th>Lý do</th>
+              <th>Mức độ</th>
+              <th>Báo cáo</th>
+              <th>Trạng thái</th>
+              <th>Thời gian</th>
+              <th class="actions-col">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="reportsBody">
+            <!-- injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <div class="pagination-info" id="pageInfo">Hiển thị 1–10 trong 28 báo cáo</div>
+        <div class="pager" id="pager">
+          <!-- injected by JS -->
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ================= DRAWER ================= -->
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+  <div class="drawer-head">
+    <div class="drawer-head-info">
+      <div class="drawer-id" id="drawerId">#R-2841</div>
+      <h2 class="drawer-title" id="drawerTitle">Nghi ngờ bot: 40 nhiệm vụ trong 2 giờ</h2>
+      <div class="drawer-sub" id="drawerSub">
+        <span>Gian lận / Bot</span>
+        <span class="dot">·</span>
+        <span>5 người báo cáo</span>
+        <span class="dot">·</span>
+        <span>Mở 12 phút trước</span>
+      </div>
+    </div>
+    <button class="drawer-close" id="drawerClose" aria-label="Đóng">×</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Info grid -->
+    <section class="drawer-section">
+      <span class="drawer-section-title">Thông tin</span>
+      <div class="info-grid">
+        <div class="info-cell">
+          <div class="info-cell-label">Người bị báo cáo</div>
+          <div class="info-cell-value" id="drawerAccused">Trần Văn A</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Handle</div>
+          <div class="info-cell-value mono" id="drawerHandle">@tranvana</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Trust Score</div>
+          <div class="info-cell-value" id="drawerTrust">42 / 100</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Báo cáo trước đó</div>
+          <div class="info-cell-value" id="drawerPastReports">4 lần</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Mức độ</div>
+          <div class="info-cell-value" id="drawerSeverity">Nghiêm trọng</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Người xử lý</div>
+          <div class="info-cell-value" id="drawerAssignee">Chưa gán</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reason -->
+    <section class="drawer-section">
+      <span class="drawer-section-title">Lý do báo cáo</span>
+      <div class="reason-box" id="drawerReason">
+        <strong>Gian lận / Bot</strong>
+        Tài khoản này nhận 40 nhiệm vụ trong vòng 2 giờ, tất cả đều là nhiệm vụ follow và like. Pattern tương tác giống nhau, cùng IP. Nghi ngờ sử dụng bot hoặc nhiều người dùng chung tài khoản.
+      </div>
+    </section>
+
+    <!-- Evidence -->
+    <section class="drawer-section">
+      <span class="drawer-section-title">Bằng chứng đính kèm</span>
+      <div class="evidence-list" id="drawerEvidence">
+        <!-- injected by JS -->
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="drawer-section">
+      <span class="drawer-section-title">Tiến trình xử lý</span>
+      <div class="timeline" id="drawerTimeline">
+        <!-- injected by JS -->
+      </div>
+    </section>
+
+  </div>
+
+  <div class="drawer-footer">
+    <button class="btn btn-secondary" data-drawer-action="assign">Gán cho tôi</button>
+    <button class="btn btn-primary" data-drawer-action="resolve">Xử lý</button>
+  </div>
+</aside>
+
+<!-- ================= MODAL: ACTION ================= -->
+<div class="modal-overlay" id="actionModal" role="dialog" aria-modal="true" aria-labelledby="actionTitle">
+  <div class="modal-box">
+    <button class="modal-close" data-close aria-label="Đóng">×</button>
+    <h3 id="actionTitle">Xử lý báo cáo <span class="mono" id="actionReportId">#R-2841</span></h3>
+    <p>Chọn hành động xử lý và ghi lý do. Hành động sẽ được ghi vào audit log và thông báo cho cả hai bên liên quan.</p>
+
+    <form id="actionForm" novalidate>
+
+      <div class="field">
+        <label class="field-label">Hành động xử lý <span class="req">*</span></label>
+        <div class="action-grid" id="actionGrid">
+          <label class="action-opt" data-action="dismiss">
+            <input type="radio" name="action" value="dismiss" />
+            <span class="action-radio"></span>
+            <div class="action-text">
+              <p class="action-title">Bỏ qua báo cáo</p>
+              <p class="action-desc">Không có vi phạm. Đóng báo cáo mà không ảnh hưởng đến tài khoản.</p>
+            </div>
+          </label>
+          <label class="action-opt" data-action="warn">
+            <input type="radio" name="action" value="warn" />
+            <span class="action-radio"></span>
+            <div class="action-text">
+              <p class="action-title">Gửi cảnh cáo</p>
+              <p class="action-desc">Mức 1. Gửi thông báo cảnh cáo, không hạn chế tính năng.</p>
+            </div>
+          </label>
+          <label class="action-opt" data-action="restrict-7">
+            <input type="radio" name="action" value="restrict-7" />
+            <span class="action-radio"></span>
+            <div class="action-text">
+              <p class="action-title">Hạn chế 7 ngày</p>
+              <p class="action-desc">Mức 2. Không thể nhận nhiệm vụ mới trong 7 ngày. Trust Score trừ 3 điểm.</p>
+            </div>
+          </label>
+          <label class="action-opt" data-action="restrict-30">
+            <input type="radio" name="action" value="restrict-30" />
+            <span class="action-radio"></span>
+            <div class="action-text">
+              <p class="action-title">Hạn chế 30 ngày</p>
+              <p class="action-desc">Mức 2. Không thể nhận nhiệm vụ mới trong 30 ngày. Trust Score trừ 10 điểm.</p>
+            </div>
+          </label>
+          <label class="action-opt danger" data-action="ban">
+            <input type="radio" name="action" value="ban" />
+            <span class="action-radio"></span>
+            <div class="action-text">
+              <p class="action-title">Khóa vĩnh viễn</p>
+              <p class="action-desc">Mức 3. Khóa tài khoản vĩnh viễn. Xóa toàn bộ dữ liệu theo quy định.</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="actionNote">Lý do xử lý <span class="req">*</span></label>
+        <textarea id="actionNote" placeholder="Mô tả bằng chứng đã xem xét và lý do đưa ra quyết định này. Tối thiểu 20 ký tự." maxlength="500"></textarea>
+        <p class="field-hint" id="noteCounter">0 / 500 ký tự</p>
+      </div>
+
+      <div class="field" id="notifyField">
+        <label class="field-label">Thông báo</label>
+        <label style="display:flex;gap:.625rem;align-items:flex-start;cursor:pointer;font-size:.8125rem;color:var(--ink-soft);line-height:1.5">
+          <input type="checkbox" class="check" id="notifyAccused" checked style="margin-top:.25rem" />
+          <span>Gửi thông báo cho người bị báo cáo</span>
+        </label>
+        <label style="display:flex;gap:.625rem;align-items:flex-start;cursor:pointer;font-size:.8125rem;color:var(--ink-soft);line-height:1.5;margin-top:.5rem">
+          <input type="checkbox" class="check" id="notifyReporter" checked style="margin-top:.25rem" />
+          <span>Gửi thông báo cho người báo cáo</span>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" data-close>Hủy</button>
+        <button type="submit" class="btn btn-primary" id="submitAction" disabled>Áp dụng xử lý</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Thành công</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ DATA ============ */
+  const REPORTS = [
+    {
+      id: 'R-2841', category: 'fraud', categoryLabel: 'Gian lận / Bot',
+      accused: 'Trần Văn A', handle: '@tranvana', initials: 'TA',
+      reason: 'Nghi ngờ bot: 40 nhiệm vụ trong 2 giờ, cùng IP, pattern tương tác giống nhau.',
+      severity: 'critical', severityLabel: 'Khẩn cấp',
+      reports: 5, trust: 42, pastReports: 4,
+      status: 'pending', statusLabel: 'Chờ xử lý',
+      time: '12 phút trước', urgent: true,
+      assignee: null,
+      evidence: [
+        { name: 'pattern-analysis.pdf', size: '142 KB' },
+        { name: 'ip-log.csv', size: '8 KB' }
+      ],
+      timeline: [
+        { title: 'Báo cáo được mở', desc: 'Người dùng Quốc Bảo gửi báo cáo đầu tiên.', time: '12 phút trước', status: 'done' },
+        { title: '3 báo cáo khác được thêm vào', desc: 'Hệ thống tự động gộp các báo cáo cùng đối tượng.', time: '10 phút trước', status: 'done' },
+        { title: 'Đánh dấu khẩn cấp', desc: 'Có dấu hiệu gian lận nghiêm trọng, cần xử lý trong 2 giờ.', time: '10 phút trước', status: 'active' },
+        { title: 'Chờ xử lý', desc: 'Chưa có admin nào nhận xử lý.', time: 'Chưa có', status: 'pending' }
+      ]
+    },
+    {
+      id: 'R-2840', category: 'content', categoryLabel: 'Nội dung không phù hợp',
+      accused: 'Lê Thị B', handle: '@lethib', initials: 'LB',
+      reason: 'Nhiệm vụ chứa nội dung nhạy cảm, không phù hợp với quy tắc cộng đồng.',
+      severity: 'high', severityLabel: 'Nghiêm trọng',
+      reports: 3, trust: 51, pastReports: 2,
+      status: 'reviewing', statusLabel: 'Đang xem xét',
+      time: '5 giờ trước', urgent: false,
+      assignee: 'Admin Hùng',
+      evidence: [
+        { name: 'screenshot-task.png', size: '324 KB' }
+      ],
+      timeline: [
+        { title: 'Báo cáo được mở', desc: 'Người dùng Minh Anh gửi báo cáo.', time: '5 giờ trước', status: 'done' },
+        { title: 'Gán cho Admin Hùng', desc: 'Admin Hùng nhận xử lý báo cáo này.', time: '4 giờ trước', status: 'done' },
+        { title: 'Đang xem xét', desc: 'Đã xem ảnh chụp, đang đối chiếu với quy tắc cộng đồng.', time: '3 giờ trước', status: 'active' }
+      ]
+    },
+    {
+      id: 'R-2839', category: 'self-task', categoryLabel: 'Tự làm nhiệm vụ của mình',
+      accused: 'Phạm Văn C', handle: '@phamvanc', initials: 'PC',
+      reason: 'Nghi ngờ dùng tài khoản phụ để nhận nhiệm vụ do chính mình mở.',
+      severity: 'high', severityLabel: 'Nghiêm trọng',
+      reports: 2, trust: 58, pastReports: 1,
+      status: 'reviewing', statusLabel: 'Đang xem xét',
+      time: '8 giờ trước', urgent: false,
+      assignee: 'Admin Linh',
+      evidence: [
+        { name: 'transaction-log.pdf', size: '96 KB' }
+      ],
+      timeline: [
+        { title: 'Báo cáo được mở', desc: 'Người dùng Đức Huy gửi báo cáo.', time: '8 giờ trước', status: 'done' },
+        { title: 'Gán cho Admin Linh', desc: 'Admin Linh nhận xử lý.', time: '7 giờ trước', status: 'done' },
+        { title: 'Đang xem xét log', desc: 'Đang kiểm tra lịch sử giao dịch và IP của người bị báo cáo.', time: '6 giờ trước', status: 'active' }
+      ]
+    },
+    {
+      id: 'R-2838', category: 'harassment', categoryLabel: 'Quấy rối',
+      accused: 'Nguyễn Thị D', handle: '@nguyenthid', initials: 'ND',
+      reason: 'Gửi tin nhắn quấy rối đến 3 người dùng khác trong 24 giờ.',
+      severity: 'high', severityLabel: 'Nghiêm trọng',
+      reports: 4, trust: 63, pastReports: 0,
+      status: 'pending', statusLabel: 'Chờ xử lý',
+      time: '1 ngày trước', urgent: false,
+      assignee: null,
+      evidence: [
+        { name: 'chat-screenshots.zip', size: '1.2 MB' }
+      ],
+      timeline: [
+        { title: 'Báo cáo được mở', desc: '3 người dùng gửi báo cáo cùng lúc.', time: '1 ngày trước', status: 'done' },
+        { title: 'Chờ xử lý', desc: 'Chưa có admin nào nhận xử lý.', time: 'Chưa có', status: 'pending' }
+      ]
+    },
+    {
+      id: 'R-2837', category: 'spam', categoryLabel: 'Spam',
+      accused: 'Hoàng Văn E', handle: '@hoangvane', initials: 'HE',
+      reason: 'Đăng nhiệm vụ trùng lặp nhiều lần trong thời gian ngắn.',
+      severity: 'medium', severityLabel: 'Trung bình',
+      reports: 2, trust: 67, pastReports: 0,
+      status: 'pending', statusLabel: 'Chờ xử lý',
+      time: '1 ngày trước', urgent: false,
+      assignee: null,
+      evidence: [],
+      timeline: [
+        { title: 'Báo cáo được mở', desc: 'Người dùng Thanh Vân gửi báo cáo.', time: '1 ngày trước', status: 'done' },
+        { title: 'Chờ xử lý', desc: 'Chưa có admin nào nhận xử lý.', time: 'Chưa có', status: 'pending' }
+      ]
+    },
+    {
+      id: 'R-2836', category: 'content', categoryLabel: 'Nội dung không phù hợp',
+      accused: 'Vũ Thị F', handle: '@vuthif', initials: 'VF',
+      reason: 'Nhiệm vụ dẫn đến trang web có dấu hiệu lừa đảo.',
+      severity: 'high', severityLabel: 'Nghiêm trọng',
+      reports: 3, trust: 55, pastReports: 2,
+      status: 'pending', statusLabel: 'Chờ xử lý',
+      time: '2 ngày trước', urgent: true,
+      assignee: null,
+      evidence: [
+        { name: 'url-screenshot.png', size: '208 KB' }
+      ],
+      timeline: [
+        { title: 'Báo cáo được mở', desc: '3 người dùng báo cáo nhiệm vụ chứa link lừa đảo.', time: '2 ngày trước', status: 'done' },
+        { title: 'Đánh dấu khẩn cấp', desc: 'Nguy cơ ảnh hưởng đến nhiều người dùng.', time: '2 ngày trước', status: 'active' },
+        { title: 'Chờ xử lý', desc: 'Chưa có admin nào nhận xử lý.', time: 'Chưa có', status: 'pending' }
+      ]
+    },
+    {
+      id: 'R-2835', category: 'fraud', categoryLabel: 'Gian lận / Bot',
+      accused: 'Đặng Văn G', handle: '@dangvang', initials: 'DG',
+      reason: 'Nghi ngờ dùng nhiều tài khoản để tự tăng Trust Score.',
+      severity: 'high', severityLabel: 'Nghiêm trọng',
+      reports: 6, trust: 48, pastReports: 5,
+      status: 'pending', statusLabel: 'Chờ xử lý',
+      time: '2 ngày trước', urgent: false,
+      assignee: null,
+      evidence: [
+        { name: 'account-graph.pdf', size: '512 KB' },
+        { name: 'ip-history.csv', size: '24 KB' }
+      ],
+      timeline: [
+        { title: 'Báo cáo được mở', desc: '6 người dùng gửi báo cáo trong 12 giờ.', time: '2 ngày trước', status: 'done' },
+        { title: 'Đánh dấu vi phạm lặp lại', desc: 'Tài khoản đã bị báo cáo 5 lần trước đây.', time: '2 ngày trước', status: 'done' },
+        { title: 'Chờ xử lý', desc: 'Cần admin xem xét kỹ do có yếu tố lặp lại.', time: 'Chưa có', status: 'pending' }
+      ]
+    },
+    {
+      id: 'R-2834', category: 'spam', categoryLabel: 'Spam',
+      accused: 'Bùi Văn H', handle: '@buivanh', initials: 'BH',
+      reason: 'Bình luận spam trong nhiều nhiệm vụ khác nhau.',
+      severity: 'low', severityLabel: 'Nhẹ',
+      reports: 1, trust: 72, pastReports: 0,
+      status: 'resolved', statusLabel: 'Đã xử lý',
+      time: '3 ngày trước', urgent: false,
+      assignee: 'Admin Hùng',
+      resolution: 'Đã gửi cảnh cáo. Tài khoản cam kết không tái phạm.',
+      evidence: [],
+      timeline: [
+        { title: 'Báo cáo được mở', desc: 'Người dùng Hà Linh gửi báo cáo.', time: '3 ngày trước', status: 'done' },
+        { title: 'Gán cho Admin Hùng', desc: 'Admin Hùng nhận xử lý.', time: '3 ngày trước', status: 'done' },
+        { title: 'Đã gửi cảnh cáo', desc: 'Kết quả: Mức 1 - Cảnh cáo. Không hạn chế tính năng.', time: '2 ngày trước', status: 'done' }
+      ]
+    },
+    {
+      id: 'R-2833', category: 'harassment', categoryLabel: 'Quấy rối',
+      accused: 'Ngô Thị I', handle: '@ngothii', initials: 'NI',
+      reason: 'Đe dọa người dùng khác qua tin nhắn.',
+      severity: 'high', severityLabel: 'Nghiêm trọng',
+      reports: 2, trust: 45, pastReports: 1,
+      status: 'resolved', statusLabel: 'Đã xử lý',
+      time: '4 ngày trước', urgent: false,
+      assignee: 'Admin Linh',
+      resolution: 'Hạn chế 30 ngày. Trust Score trừ 10 điểm.',
+      evidence: [
+        { name: 'threat-messages.png', size: '180 KB' }
+      ],
+      timeline: [
+        { title: 'Báo cáo được mở', desc: '2 người dùng gửi báo cáo.', time: '4 ngày trước', status: 'done' },
+        { title: 'Gán cho Admin Linh', desc: 'Admin Linh nhận xử lý.', time: '4 ngày trước', status: 'done' },
+        { title: 'Đã hạn chế 30 ngày', desc: 'Kết quả: Mức 2 - Hạn chế. Trust trừ 10 điểm.', time: '3 ngày trước', status: 'done' }
+      ]
+    },
+    {
+      id: 'R-2832', category: 'other', categoryLabel: 'Khác',
+      accused: 'Trịnh Văn K', handle: '@trinhvank', initials: 'TK',
+      reason: 'Báo cáo không đủ bằng chứng, người báo cáo không phản hồi thêm.',
+      severity: 'low', severityLabel: 'Nhẹ',
+      reports: 1, trust: 78, pastReports: 0,
+      status: 'dismissed', statusLabel: 'Đã bỏ qua',
+      time: '5 ngày trước', urgent: false,
+      assignee: 'Admin Hùng',
+      resolution: 'Bỏ qua báo cáo. Không đủ bằng chứng để xác minh vi phạm.',
+      evidence: [],
+      timeline: [
+        { title: 'Báo cáo được mở', desc: 'Người dùng ẩn danh gửi báo cáo.', time: '5 ngày trước', status: 'done' },
+        { title: 'Gán cho Admin Hùng', desc: 'Admin Hùng nhận xử lý.', time: '5 ngày trước', status: 'done' },
+        { title: 'Đã bỏ qua', desc: 'Kết quả: Không đủ bằng chứng. Đóng báo cáo.', time: '5 ngày trước', status: 'failed' }
+      ]
+    }
+  ];
+
+  const SEVERITY_MAP = {
+    critical: { cls: 'critical', label: 'Khẩn cấp' },
+    high: { cls: 'high', label: 'Nghiêm trọng' },
+    medium: { cls: 'medium', label: 'Trung bình' },
+    low: { cls: 'low', label: 'Nhẹ' }
+  };
+
+  const STATUS_MAP = {
+    pending: { cls: 'warn', label: 'Chờ xử lý' },
+    reviewing: { cls: 'info', label: 'Đang xem xét' },
+    resolved: { cls: 'ok', label: 'Đã xử lý' },
+    dismissed: { cls: 'mute', label: 'Đã bỏ qua' }
+  };
+
+  const PAGE_SIZE = 10;
+  let currentPage = 1;
+  let currentQuick = 'all';
+  let selectedIds = new Set();
+  let currentReport = null;
+
+  /* ============ HELPERS ============ */
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function getFiltered() {
+    const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+    const severity = document.getElementById('severityFilter').value;
+    const category = document.getElementById('categoryFilter').value;
+    const status = document.getElementById('statusFilter').value;
+    const sort = document.getElementById('sortFilter').value;
+
+    let list = REPORTS.slice();
+
+    // Quick filter
+    if (currentQuick === 'pending') list = list.filter(r => r.status === 'pending');
+    else if (currentQuick === 'reviewing') list = list.filter(r => r.status === 'reviewing');
+    else if (currentQuick === 'urgent') list = list.filter(r => r.severity === 'critical' || r.urgent);
+    else if (currentQuick === 'repeat') list = list.filter(r => r.pastReports >= 3);
+    else if (currentQuick === 'mine') list = list.filter(r => r.assignee === 'Admin Hùng');
+
+    // Filters
+    if (q) {
+      list = list.filter(r =>
+        r.id.toLowerCase().includes(q) ||
+        r.accused.toLowerCase().includes(q) ||
+        r.handle.toLowerCase().includes(q) ||
+        r.reason.toLowerCase().includes(q) ||
+        r.categoryLabel.toLowerCase().includes(q)
+      );
+    }
+    if (severity) list = list.filter(r => r.severity === severity);
+    if (category) list = list.filter(r => r.category === category);
+    if (status) list = list.filter(r => r.status === status);
+
+    // Sort
+    const sevOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+    if (sort === 'priority') {
+      list.sort((a, b) => {
+        if (a.urgent !== b.urgent) return a.urgent ? -1 : 1;
+        return sevOrder[a.severity] - sevOrder[b.severity];
+      });
+    } else if (sort === 'newest') {
+      // Giữ nguyên thứ tự vì đã sắp xếp theo thời gian mới nhất
+    } else if (sort === 'oldest') {
+      list.reverse();
+    } else if (sort === 'most-reported') {
+      list.sort((a, b) => b.reports - a.reports);
+    }
+
+    return list;
+  }
+
+  /* ============ RENDER TABLE ============ */
+  function renderTable() {
+    const list = getFiltered();
+    const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = list.slice(start, start + PAGE_SIZE);
+    const tbody = document.getElementById('reportsBody');
+
+    if (!pageItems.length) {
+      tbody.innerHTML = `
+        <tr><td colspan="9">
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M14 14L18 18M9 6V9M9 12H9.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="empty-title">Không có báo cáo phù hợp</h3>
+            <p class="empty-desc">Thử thay đổi bộ lọc hoặc từ khoá tìm kiếm để xem các báo cáo khác.</p>
+          </div>
+        </td></tr>
+      `;
+    } else {
+      tbody.innerHTML = pageItems.map(r => {
+        const sev = SEVERITY_MAP[r.severity] || SEVERITY_MAP.low;
+        const st = STATUS_MAP[r.status] || STATUS_MAP.pending;
+        const isSelected = selectedIds.has(r.id);
+        const isUrgent = r.urgent || r.severity === 'critical';
+        const reportsCls = r.reports >= 5 ? 'high' : '';
+
+        return `
+          <tr class="${isSelected ? 'selected' : ''} ${isUrgent ? 'urgent' : ''}" data-report-id="${r.id}">
+            <td class="checkbox-cell">
+              <input type="checkbox" class="check row-check" data-check="${r.id}" ${isSelected ? 'checked' : ''} aria-label="Chọn báo cáo ${r.id}" />
+            </td>
+            <td><span class="cell-id">${escapeHtml(r.id)}</span></td>
+            <td>
+              <div class="user-cell">
+                <span class="mini-avatar">${escapeHtml(r.initials)}</span>
+                <div class="user-cell-info">
+                  <div class="user-cell-name">${escapeHtml(r.accused)}</div>
+                  <div class="user-cell-handle">${escapeHtml(r.handle)}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="reason-cell">
+                <div class="reason-category">
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
+                  ${escapeHtml(r.categoryLabel)}
+                </div>
+                ${escapeHtml(r.reason)}
+              </div>
+            </td>
+            <td><span class="severity-pill ${sev.cls}">${sev.label}</span></td>
+            <td><span class="report-count ${reportsCls}"><strong>${r.reports}</strong> người</span></td>
+            <td><span class="status-pill ${st.cls}">${st.label}</span></td>
+            <td><span class="time-cell ${isUrgent ? 'urgent' : ''}">${escapeHtml(r.time)}</span></td>
+            <td class="actions-cell">
+              <div class="row-actions">
+                <button class="btn btn-secondary btn-xs" data-open="${r.id}">Xem</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Update page info
+    const from = list.length ? start + 1 : 0;
+    const to = Math.min(start + PAGE_SIZE, list.length);
+    document.getElementById('pageInfo').textContent =
+      `Hiển thị ${from}–${to} trong ${list.length} báo cáo`;
+
+    // Update counts on chips
+    updateChipCounts();
+
+    // Update sidebar badge
+    const pending = REPORTS.filter(r => r.status === 'pending').length;
+    document.getElementById('sidebarReportCount').textContent = pending;
+    document.getElementById('kpiPending').textContent = pending;
+    document.getElementById('kpiReviewing').textContent = REPORTS.filter(r => r.status === 'reviewing').length;
+
+    // Bind row clicks
+    tbody.querySelectorAll('tr[data-report-id]').forEach(row => {
+      row.addEventListener('click', (e) => {
+        if (e.target.closest('button') || e.target.closest('input[type="checkbox"]')) return;
+        openDrawer(row.dataset.reportId);
+      });
+    });
+
+    // Bind open buttons
+    tbody.querySelectorAll('[data-open]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openDrawer(btn.dataset.open);
+      });
+    });
+
+    // Bind checkboxes
+    tbody.querySelectorAll('.row-check').forEach(check => {
+      check.addEventListener('click', e => e.stopPropagation());
+      check.addEventListener('change', () => {
+        const id = check.dataset.check;
+        if (check.checked) selectedIds.add(id);
+        else selectedIds.delete(id);
+        check.closest('tr').classList.toggle('selected', check.checked);
+        updateBulkBar();
+        updateSelectAll();
+      });
+    });
+
+    updateBulkBar();
+    updateSelectAll();
+    renderPager(totalPages);
+  }
+
+  /* ============ UPDATE CHIP COUNTS ============ */
+  function updateChipCounts() {
+    const counts = {
+      all: REPORTS.length,
+      pending: REPORTS.filter(r => r.status === 'pending').length,
+      reviewing: REPORTS.filter(r => r.status === 'reviewing').length,
+      urgent: REPORTS.filter(r => r.severity === 'critical' || r.urgent).length,
+      repeat: REPORTS.filter(r => r.pastReports >= 3).length,
+      mine: REPORTS.filter(r => r.assignee === 'Admin Hùng').length
+    };
+    Object.entries(counts).forEach(([k, v]) => {
+      const el = document.querySelector(`[data-count="${k}"]`);
+      if (el) el.textContent = v;
+    });
+  }
+
+  /* ============ PAGINATION ============ */
+  function renderPager(totalPages) {
+    const pager = document.getElementById('pager');
+    pager.innerHTML = '';
+
+    const prev = document.createElement('button');
+    prev.textContent = '‹';
+    prev.setAttribute('aria-label', 'Trang trước');
+    prev.disabled = currentPage === 1;
+    prev.addEventListener('click', () => { currentPage--; renderTable(); });
+    pager.appendChild(prev);
+
+    const maxBtns = 5;
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + maxBtns - 1);
+    if (endPage - startPage + 1 < maxBtns) startPage = Math.max(1, endPage - maxBtns + 1);
+
+    if (startPage > 1) {
+      const b = document.createElement('button');
+      b.textContent = '1';
+      b.addEventListener('click', () => { currentPage = 1; renderTable(); });
+      pager.appendChild(b);
+      if (startPage > 2) {
+        const dots = document.createElement('button');
+        dots.textContent = '…';
+        dots.disabled = true;
+        pager.appendChild(dots);
+      }
+    }
+
+    for (let p = startPage; p <= endPage; p++) {
+      const b = document.createElement('button');
+      b.textContent = String(p);
+      if (p === currentPage) b.classList.add('active');
+      b.addEventListener('click', () => { currentPage = p; renderTable(); });
+      pager.appendChild(b);
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        const dots = document.createElement('button');
+        dots.textContent = '…';
+        dots.disabled = true;
+        pager.appendChild(dots);
+      }
+      const b = document.createElement('button');
+      b.textContent = String(totalPages);
+      b.addEventListener('click', () => { currentPage = totalPages; renderTable(); });
+      pager.appendChild(b);
+    }
+
+    const next = document.createElement('button');
+    next.textContent = '›';
+    next.setAttribute('aria-label', 'Trang sau');
+    next.disabled = currentPage === totalPages;
+    next.addEventListener('click', () => { currentPage++; renderTable(); });
+    pager.appendChild(next);
+  }
+
+  /* ============ SELECT ALL ============ */
+  const selectAllCheck = document.getElementById('selectAll');
+
+  function updateSelectAll() {
+    const visible = document.querySelectorAll('.row-check');
+    const checked = document.querySelectorAll('.row-check:checked');
+    if (visible.length === 0) {
+      selectAllCheck.checked = false;
+      selectAllCheck.indeterminate = false;
+    } else if (checked.length === visible.length) {
+      selectAllCheck.checked = true;
+      selectAllCheck.indeterminate = false;
+    } else if (checked.length > 0) {
+      selectAllCheck.checked = false;
+      selectAllCheck.indeterminate = true;
+    } else {
+      selectAllCheck.checked = false;
+      selectAllCheck.indeterminate = false;
+    }
+  }
+
+  selectAllCheck.addEventListener('change', () => {
+    document.querySelectorAll('.row-check').forEach(check => {
+      check.checked = selectAllCheck.checked;
+      const id = check.dataset.check;
+      if (selectAllCheck.checked) selectedIds.add(id);
+      else selectedIds.delete(id);
+      check.closest('tr').classList.toggle('selected', check.checked);
+    });
+    updateBulkBar();
+  });
+
+  /* ============ BULK BAR ============ */
+  function updateBulkBar() {
+    const bar = document.getElementById('bulkBar');
+    const count = selectedIds.size;
+    if (count > 0) {
+      bar.classList.add('on');
+      document.getElementById('bulkCount').textContent = count;
+    } else {
+      bar.classList.remove('on');
+    }
+  }
+
+  document.querySelectorAll('[data-bulk]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.bulk;
+      if (action === 'clear') {
+        selectedIds.clear();
+        document.querySelectorAll('.row-check').forEach(c => c.checked = false);
+        document.querySelectorAll('tr.selected').forEach(tr => tr.classList.remove('selected'));
+        updateBulkBar();
+        updateSelectAll();
+        return;
+      }
+      if (selectedIds.size === 0) return;
+      const count = selectedIds.size;
+      const actionLabels = {
+        assign: 'gán cho bạn',
+        reviewing: 'chuyển sang đang xem xét',
+        dismiss: 'bỏ qua'
+      };
+      showToast(`Đã ${actionLabels[action] || action} ${count} báo cáo.`);
+      selectedIds.clear();
+      document.querySelectorAll('.row-check').forEach(c => c.checked = false);
+      document.querySelectorAll('tr.selected').forEach(tr => tr.classList.remove('selected'));
+      updateBulkBar();
+      updateSelectAll();
+    });
+  });
+
+  /* ============ DRAWER ============ */
+  const drawer = document.getElementById('drawer');
+  const drawerBackdrop = document.getElementById('drawerBackdrop');
+
+  function openDrawer(reportId) {
+    const r = REPORTS.find(x => x.id === reportId);
+    if (!r) return;
+    currentReport = r;
+
+    const sev = SEVERITY_MAP[r.severity] || SEVERITY_MAP.low;
+    const st = STATUS_MAP[r.status] || STATUS_MAP.pending;
+
+    document.getElementById('drawerId').textContent = '#' + r.id;
+    document.getElementById('drawerTitle').textContent = r.reason.split('.')[0] || r.categoryLabel;
+    document.getElementById('drawerSub').innerHTML = `
+      <span>${escapeHtml(r.categoryLabel)}</span>
+      <span class="dot">·</span>
+      <span>${r.reports} người báo cáo</span>
+      <span class="dot">·</span>
+      <span>Mở ${escapeHtml(r.time)}</span>
+    `;
+
+    document.getElementById('drawerAccused').textContent = r.accused;
+    document.getElementById('drawerHandle').textContent = r.handle;
+    document.getElementById('drawerTrust').textContent = r.trust + ' / 100';
+    document.getElementById('drawerPastReports').textContent = r.pastReports + ' lần';
+    document.getElementById('drawerSeverity').textContent = sev.label;
+    document.getElementById('drawerAssignee').textContent = r.assignee || 'Chưa gán';
+
+    document.getElementById('drawerReason').innerHTML =
+      `<strong>${escapeHtml(r.categoryLabel)}</strong>${escapeHtml(r.reason)}`;
+
+    // Evidence
+    const evidenceList = document.getElementById('drawerEvidence');
+    if (r.evidence && r.evidence.length) {
+      evidenceList.innerHTML = r.evidence.map(e => `
+        <div class="evidence-item" data-evidence="${escapeHtml(e.name)}">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <rect x="2" y="3" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/>
+            <circle cx="5.5" cy="6.5" r="1" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M2 10L5 7L8 10L10 8L12 10" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+          <span class="evidence-name">${escapeHtml(e.name)}</span>
+          <span class="evidence-size">${escapeHtml(e.size)}</span>
+        </div>
+      `).join('');
+    } else {
+      evidenceList.innerHTML = '<div style="font-size:.8125rem;color:var(--muted);font-style:italic">Không có bằng chứng đính kèm.</div>';
+    }
+
+    // Timeline
+    const timeline = document.getElementById('drawerTimeline');
+    timeline.innerHTML = r.timeline.map(t => `
+      <div class="timeline-item">
+        <span class="timeline-dot ${t.status}"></span>
+        <div>
+          <p class="timeline-title">${escapeHtml(t.title)}</p>
+          <p class="timeline-desc">${escapeHtml(t.desc)}</p>
+          <div class="timeline-time">${escapeHtml(t.time)}</div>
+        </div>
+      </div>
+    `).join('');
+
+    drawer.classList.add('open');
+    drawerBackdrop.classList.add('on');
+    document.body.style.overflow = 'hidden';
+
+    // Bind evidence clicks
+    document.querySelectorAll('[data-evidence]').forEach(el => {
+      el.addEventListener('click', () => {
+        showToast('Đang mở: ' + el.dataset.evidence);
+      });
+    });
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    drawerBackdrop.classList.remove('on');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+  drawerBackdrop.addEventListener('click', closeDrawer);
+
+  document.querySelectorAll('[data-drawer-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.drawerAction;
+      if (action === 'assign') {
+        if (currentReport) {
+          currentReport.assignee = 'Admin Hùng';
+          showToast('Đã gán ' + currentReport.id + ' cho bạn.');
+          document.getElementById('drawerAssignee').textContent = 'Admin Hùng';
+          renderTable();
+        }
+      } else if (action === 'resolve') {
+        if (currentReport) {
+          openActionModal(currentReport.id);
+        }
+      }
+    });
+  });
+
+  /* ============ ACTION MODAL ============ */
+  const actionModal = document.getElementById('actionModal');
+  const actionNote = document.getElementById('actionNote');
+  const noteCounter = document.getElementById('noteCounter');
+  const submitAction = document.getElementById('submitAction');
+
+  function openActionModal(reportId) {
+    const r = REPORTS.find(x => x.id === reportId);
+    if (!r) return;
+    currentReport = r;
+
+    document.getElementById('actionReportId').textContent = '#' + r.id;
+    document.getElementById('actionForm').reset();
+    document.querySelectorAll('.action-opt').forEach(o => o.classList.remove('checked'));
+    noteCounter.textContent = '0 / 500 ký tự';
+    submitAction.disabled = true;
+
+    actionModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.querySelectorAll('.action-opt').forEach(opt => {
+    const input = opt.querySelector('input');
+    input.addEventListener('change', () => {
+      document.querySelectorAll('.action-opt').forEach(o => o.classList.remove('checked'));
+      opt.classList.add('checked');
+      validateAction();
+    });
+  });
+
+  actionNote.addEventListener('input', () => {
+    noteCounter.textContent = actionNote.value.length + ' / 500 ký tự';
+    validateAction();
+  });
+
+  function validateAction() {
+    const action = document.querySelector('input[name="action"]:checked');
+    const note = actionNote.value.trim();
+    submitAction.disabled = !(action && note.length >= 20);
+  }
+
+  document.getElementById('actionForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!currentReport) return;
+
+    const action = document.querySelector('input[name="action"]:checked')?.value;
+    const actionLabels = {
+      'dismiss': 'Bỏ qua báo cáo',
+      'warn': 'Gửi cảnh cáo',
+      'restrict-7': 'Hạn chế 7 ngày',
+      'restrict-30': 'Hạn chế 30 ngày',
+      'ban': 'Khóa vĩnh viễn'
+    };
+
+    // Cập nhật state
+    if (action === 'dismiss') {
+      currentReport.status = 'dismissed';
+      currentReport.statusLabel = 'Đã bỏ qua';
+    } else {
+      currentReport.status = 'resolved';
+      currentReport.statusLabel = 'Đã xử lý';
+    }
+
+    closeActionModal();
+    closeDrawer();
+    renderTable();
+    showToast(`Đã áp dụng: ${actionLabels[action]} cho ${currentReport.id}.`);
+  });
+
+  function closeActionModal() {
+    actionModal.classList.remove('active');
+    if (!drawer.classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  document.querySelectorAll('[data-close]').forEach(b => {
+    b.addEventListener('click', () => {
+      const overlay = b.closest('.modal-overlay');
+      if (overlay) {
+        overlay.classList.remove('active');
+        if (!drawer.classList.contains('open')) {
+          document.body.style.overflow = '';
+        }
+      }
+    });
+  });
+
+  actionModal.addEventListener('click', e => {
+    if (e.target === actionModal) closeActionModal();
+  });
+
+  /* ============ QUICK FILTERS ============ */
+  document.querySelectorAll('.quick-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.quick-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentQuick = chip.dataset.quick;
+      currentPage = 1;
+      renderTable();
+    });
+  });
+
+  /* ============ FILTER LISTENERS ============ */
+  document.getElementById('searchInput').addEventListener('input', () => {
+    currentPage = 1;
+    renderTable();
+  });
+  ['severityFilter', 'categoryFilter', 'statusFilter', 'sortFilter'].forEach(id => {
+    document.getElementById(id).addEventListener('change', () => {
+      currentPage = 1;
+      renderTable();
+    });
+  });
+
+  /* ============ REFRESH ============ */
+  document.getElementById('refreshBtn').addEventListener('click', function() {
+    this.style.transform = 'rotate(360deg)';
+    this.style.transition = 'transform .6s ease';
+    setTimeout(() => {
+      this.style.transform = '';
+      this.style.transition = '';
+    }, 600);
+    showToast('Đã làm mới danh sách báo cáo.');
+  });
+
+  /* ============ SIDEBAR MOBILE ============ */
+  const sidebar = document.getElementById('sidebar');
+  const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+  const menuToggle = document.getElementById('menuToggle');
+
+  menuToggle.addEventListener('click', () => {
+    sidebar.classList.add('open');
+    sidebarBackdrop.classList.add('on');
+    document.body.style.overflow = 'hidden';
+  });
+
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    sidebarBackdrop.classList.remove('on');
+    if (!drawer.classList.contains('open') && !actionModal.classList.contains('active')) {
+      document.body.style.overflow = '';
+    }
+  }
+  sidebarBackdrop.addEventListener('click', closeSidebar);
+
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', () => {
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      closeSidebar();
+      const view = link.dataset.view;
+      if (view !== 'reports') {
+        showToast('Đang chuyển đến: ' + view);
+      }
+    });
+  });
+
+  /* ============ ESC KEY ============ */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (actionModal.classList.contains('active')) closeActionModal();
+      else if (drawer.classList.contains('open')) closeDrawer();
+      else closeSidebar();
+    }
+  });
+
+  /* ============ TOAST ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('on'), 2600);
+  }
+
+  /* ============ INIT ============ */
+  renderTable();
+
+})();
+</script>
+
+</body>
+</html>

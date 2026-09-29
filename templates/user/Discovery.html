@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Khám phá — TRAODOI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf9f7;
+    --bg-alt: #f4f2ee;
+    --bg-hover: #fcfbf9;
+    --ink: #1e1e1e;
+    --ink-soft: #3d3d3d;
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --border: #e3e0da;
+    --border-strong: #d0ccc4;
+    --accent: #1e3a5f;
+    --accent-hover: #162c47;
+    --accent-soft: #e8edf3;
+    --success: #2f6b4f;
+    --success-soft: #e8f0eb;
+    --warning: #8a6a1f;
+    --warning-soft: #f4edda;
+    --danger: #8a2f2f;
+    --danger-soft: #f4e5e5;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible, select:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    font-weight: 500; font-size: .9375rem; line-height: 1;
+    padding: .75rem 1.5rem; border-radius: 6px;
+    border: 1px solid transparent; cursor: pointer; text-decoration: none;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    white-space: nowrap; font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+  .btn-secondary:hover { background: var(--bg-alt); border-color: var(--muted); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--ink-soft); padding: .5rem .75rem; }
+  .btn-ghost:hover { background: var(--bg-alt); color: var(--ink); }
+  .btn-sm { padding: .5rem .875rem; font-size: .8125rem; }
+
+  /* ---------- Header ---------- */
+  .top { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .top .wrap { max-width: 1320px; margin: 0 auto; padding: 0 1.5rem; }
+  @media (min-width: 768px) { .top .wrap { padding: 0 2.5rem; } }
+  .nav-link {
+    font-size: .9375rem; font-weight: 450; color: var(--ink-soft);
+    text-decoration: none; padding: .375rem 0; position: relative; transition: color .15s ease;
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.active { color: var(--ink); font-weight: 500; }
+  .nav-link.active::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -22px;
+    height: 2px; background: var(--accent);
+  }
+  @media (max-width: 767px) { .nav-link.active::after { display: none; } }
+  .hamburger {
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+    width: 2.25rem; height: 2.25rem; padding: .375rem;
+    background: transparent; border: 1px solid var(--border-strong);
+    border-radius: 6px; cursor: pointer;
+  }
+  .hamburger span { display: block; height: 1.5px; width: 100%; background: var(--ink-soft); transition: transform .2s ease, opacity .2s ease; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  .mobile-menu { display: none; border-top: 1px solid var(--border); background: var(--bg); }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block; padding: .875rem 1.5rem; font-size: .9375rem;
+    color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:hover { background: var(--bg-alt); color: var(--ink); }
+  .mobile-menu a:last-of-type { border-bottom: none; }
+  .credit-balance {
+    display: inline-flex; align-items: center; gap: .625rem;
+    padding: .5rem .875rem; background: #fff;
+    border: 1px solid var(--border-strong); border-radius: 6px; font-size: .875rem;
+  }
+  .credit-balance .num { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .credit-balance .lbl { color: var(--muted); font-size: .8125rem; }
+  .avatar-header {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 600; flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* ---------- Page ---------- */
+  .page { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+  @media (min-width: 768px) { .page { padding: 0 2.5rem 6rem; } }
+
+  .crumb {
+    display: flex; align-items: center; gap: .5rem;
+    padding: 1.5rem 0 1rem; font-size: .8125rem; color: var(--muted);
+  }
+  .crumb a { color: var(--muted); transition: color .15s ease; }
+  .crumb a:hover { color: var(--ink); }
+  .crumb .sep { color: var(--border-strong); }
+  .crumb .current { color: var(--ink); font-weight: 500; }
+
+  /* ---------- Hero ---------- */
+  .discover-hero {
+    padding-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .discover-eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1rem;
+  }
+  .discover-eyebrow::before {
+    content: ''; width: 20px; height: 1px; background: var(--accent);
+  }
+  .discover-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.75rem; font-weight: 500; line-height: 1.15;
+    letter-spacing: -.02em; margin: 0 0 .75rem;
+    color: var(--ink);
+  }
+  @media (min-width: 768px) { .discover-title { font-size: 2.25rem; } }
+  .discover-sub {
+    font-size: 1rem; line-height: 1.6;
+    color: var(--ink-soft); margin: 0 0 1.5rem;
+    max-width: 620px;
+  }
+
+  /* ---------- Interest chips ---------- */
+  .interest-chips {
+    display: flex; flex-wrap: wrap; gap: .5rem;
+    margin-bottom: 2.5rem;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: .375rem;
+    padding: .4375rem .875rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: .8125rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .chip .chip-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem;
+    opacity: .6;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Section ---------- */
+  .section {
+    margin-bottom: 3rem;
+  }
+  .section:last-child { margin-bottom: 0; }
+
+  .section-head {
+    display: flex; flex-direction: column; gap: .5rem;
+    padding-bottom: .875rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  @media (min-width: 640px) {
+    .section-head { flex-direction: row; align-items: baseline; justify-content: space-between; }
+  }
+  .section-title-wrap {
+    display: flex; align-items: baseline; gap: .75rem;
+  }
+  .section-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.25rem; font-weight: 500;
+    line-height: 1.3; letter-spacing: -.01em;
+    color: var(--ink); margin: 0;
+  }
+  @media (min-width: 768px) { .section-title { font-size: 1.5rem; } }
+  .section-sub {
+    font-size: .8125rem; color: var(--muted);
+    margin: 0;
+  }
+  .section-link {
+    font-size: .875rem; font-weight: 500;
+    color: var(--accent);
+    display: inline-flex; align-items: center; gap: .25rem;
+    transition: gap .15s ease;
+  }
+  .section-link:hover { gap: .5rem; }
+  .section-link::after { content: '→'; }
+
+  /* ---------- Horizontal scroll carousel ---------- */
+  .carousel {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: .5rem;
+    margin: 0 -1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+    scroll-snap-type: x mandatory;
+  }
+  @media (min-width: 768px) {
+    .carousel { margin: 0; padding-left: 0; padding-right: 0; }
+  }
+  .carousel::-webkit-scrollbar { height: 6px; }
+  .carousel::-webkit-scrollbar-track { background: transparent; }
+  .carousel::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 3px;
+  }
+  .carousel::-webkit-scrollbar-thumb:hover { background: var(--muted-2); }
+
+  /* ---------- Task card (cho carousel) ---------- */
+  .task-card {
+    flex: 0 0 280px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.125rem 1.25rem;
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: border-color .15s ease, transform .15s ease;
+    display: flex; flex-direction: column;
+    gap: .75rem;
+  }
+  .task-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .task-card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: .75rem;
+  }
+
+  .platform-mark {
+    width: 32px; height: 32px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 600; letter-spacing: .02em;
+    color: var(--accent); background: var(--accent-soft);
+    border-radius: 6px;
+  }
+  .task-card-platform {
+    display: flex; align-items: center; gap: .625rem;
+    min-width: 0;
+  }
+  .task-card-platform-info { min-width: 0; }
+  .task-card-platform-name {
+    font-size: .8125rem; font-weight: 500;
+    color: var(--ink);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .task-card-platform-type {
+    font-size: .6875rem; color: var(--muted);
+    margin-top: .0625rem;
+  }
+
+  .task-card-tag {
+    display: inline-flex; align-items: center; gap: .25rem;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    padding: .25rem .5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .task-card-tag.hot { background: var(--danger-soft); color: var(--danger); }
+  .task-card-tag.new { background: var(--success-soft); color: var(--success); }
+  .task-card-tag.following { background: var(--accent-soft); color: var(--accent); }
+  .task-card-tag.ending { background: var(--warning-soft); color: var(--warning); }
+
+  .task-card-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: .9375rem; font-weight: 500;
+    line-height: 1.4;
+    color: var(--ink);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .task-card-desc {
+    font-size: .8125rem; color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .task-card-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: .75rem;
+    padding-top: .75rem;
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+  }
+  .task-card-author {
+    display: flex; align-items: center; gap: .5rem;
+    min-width: 0;
+  }
+  .task-card-avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent-soft); color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .625rem; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .task-card-author-name {
+    font-size: .75rem; color: var(--muted);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .task-card-reward {
+    font-weight: 600; color: var(--success);
+    font-variant-numeric: tabular-nums;
+    font-size: .875rem;
+    white-space: nowrap;
+  }
+  .task-card-reward small {
+    font-weight: 400; font-size: .6875rem;
+    color: var(--muted);
+    margin-left: .125rem;
+  }
+
+  /* Progress (cho "sắp hết suất") */
+  .task-card-progress {
+    display: flex; flex-direction: column; gap: .375rem;
+    margin-top: .25rem;
+  }
+  .task-card-progress-label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: .75rem; color: var(--muted);
+  }
+  .task-card-progress-label strong {
+    color: var(--ink); font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .task-card-progress-bar {
+    height: 4px; background: var(--bg-alt);
+    border-radius: 2px; overflow: hidden;
+  }
+  .task-card-progress-bar > i {
+    display: block; height: 100%;
+    background: var(--warning); border-radius: 2px;
+    transition: width .3s ease;
+  }
+
+  /* ---------- Featured / big card ---------- */
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 768px) {
+    .featured-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .featured-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .featured-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.375rem;
+    cursor: pointer;
+    transition: border-color .15s ease, transform .15s ease;
+    display: flex; flex-direction: column;
+    gap: .875rem;
+  }
+  .featured-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  /* ---------- Suggested creators ---------- */
+  .creators-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+  }
+  @media (min-width: 640px) { .creators-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .creators-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .creator-card {
+    display: flex; align-items: center; gap: .875rem;
+    padding: 1rem 1.125rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color .15s ease;
+    cursor: pointer;
+  }
+  .creator-card:hover { border-color: var(--accent); }
+
+  .creator-card-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1rem; font-weight: 500;
+    flex-shrink: 0;
+  }
+  .creator-card-info { min-width: 0; flex: 1; }
+  .creator-card-name {
+    font-size: .875rem; font-weight: 500;
+    color: var(--ink);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    display: flex; align-items: center; gap: .375rem;
+  }
+  .creator-card-name .verified-icon { color: var(--accent); flex-shrink: 0; }
+  .creator-card-meta {
+    font-size: .75rem; color: var(--muted);
+    margin-top: .0625rem;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .creator-card-meta strong { color: var(--ink-soft); font-weight: 500; }
+  .creator-card-follow {
+    padding: .375rem .75rem;
+    font-size: .75rem; font-weight: 500;
+    background: transparent; color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 6px; cursor: pointer;
+    font-family: inherit;
+    transition: background .15s ease, color .15s ease;
+    flex-shrink: 0;
+  }
+  .creator-card-follow:hover { background: var(--accent-soft); }
+  .creator-card-follow.following {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* ---------- Empty ---------- */
+  .empty {
+    padding: 3rem 1.5rem; text-align: center;
+    background: #fff;
+    border: 1px dashed var(--border-strong);
+    border-radius: 8px;
+  }
+  .empty-title {
+    font-size: .9375rem; font-weight: 500;
+    color: var(--ink); margin: 0 0 .375rem;
+  }
+  .empty-desc {
+    font-size: .875rem; color: var(--muted);
+    line-height: 1.55; margin: 0;
+    max-width: 400px;
+    margin-left: auto; margin-right: auto;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: #fff; font-size: .875rem;
+    padding: .75rem 1.25rem; border-radius: 6px; z-index: 120;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    transition: transform .25s ease;
+    display: flex; align-items: center; gap: .625rem;
+    max-width: calc(100vw - 2rem);
+  }
+  .toast.on { transform: translateX(-50%) translateY(0); }
+  .toast .check {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--success);
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="top">
+  <div class="wrap">
+    <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAODOI trang chủ">
+        <span class="font-serif text-[1.375rem] font-medium tracking-[-.01em]">TRAODOI</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+        <a href="#" class="nav-link">Trang chủ</a>
+        <a href="#" class="nav-link active">Khám phá</a>
+        <a href="#" class="nav-link">Nhiệm vụ</a>
+        <a href="#" class="nav-link">Cộng đồng</a>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-3">
+        <div class="credit-balance">
+          <span class="lbl">Số dư</span>
+          <span class="num">260</span>
+          <span class="lbl">Credits</span>
+        </div>
+        <span class="avatar-header" aria-label="Tài khoản của tôi">MA</span>
+      </div>
+
+      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu md:hidden" id="mobileMenu">
+    <a href="#">Trang chủ</a>
+    <a href="#" style="font-weight:500;color:var(--ink)">Khám phá</a>
+    <a href="#">Nhiệm vụ</a>
+    <a href="#">Cộng đồng</a>
+    <div class="p-4 flex flex-col gap-2.5">
+      <div class="credit-balance" style="justify-content:center">
+        <span class="lbl">Số dư</span>
+        <span class="num">260</span>
+        <span class="lbl">Credits</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= PAGE ================= -->
+<div class="page">
+
+  <!-- Breadcrumb -->
+  <nav class="crumb" aria-label="Breadcrumb">
+    <a href="#">Trang chủ</a>
+    <span class="sep">/</span>
+    <span class="current">Khám phá</span>
+  </nav>
+
+  <!-- Hero -->
+  <section class="discover-hero">
+    <span class="discover-eyebrow">Khám phá</span>
+    <h1 class="discover-title">Nhiệm vụ phù hợp với bạn</h1>
+    <p class="discover-sub">
+      Dựa trên lịch sử hoạt động của bạn, đây là những nhiệm vụ bạn có thể quan tâm. Càng làm nhiều, gợi ý càng chính xác.
+    </p>
+
+    <!-- Interest chips -->
+    <div class="interest-chips" id="interestChips">
+      <button class="chip active" data-interest="all">
+        Tất cả <span class="chip-count">127</span>
+      </button>
+      <button class="chip" data-interest="photo">
+        Nhiếp ảnh <span class="chip-count">24</span>
+      </button>
+      <button class="chip" data-interest="design">
+        Thiết kế <span class="chip-count">18</span>
+      </button>
+      <button class="chip" data-interest="food">
+        Ẩm thực <span class="chip-count">21</span>
+      </button>
+      <button class="chip" data-interest="tech">
+        Công nghệ <span class="chip-count">19</span>
+      </button>
+      <button class="chip" data-interest="fashion">
+        Thời trang <span class="chip-count">14</span>
+      </button>
+      <button class="chip" data-interest="travel">
+        Du lịch <span class="chip-count">11</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ SECTION: GỢI Ý CHO BẠN ============ -->
+  <section class="section" data-interest-section="all photo design">
+    <div class="section-head">
+      <div class="section-title-wrap">
+        <h2 class="section-title">Gợi ý cho bạn</h2>
+        <span class="section-sub">Dựa trên 128 nhiệm vụ bạn đã hoàn thành</span>
+      </div>
+      <a href="#nhiem-vu" class="section-link">Xem tất cả</a>
+    </div>
+    <div class="carousel" id="carousel-suggested">
+      <!-- injected by JS -->
+    </div>
+  </section>
+
+  <!-- ============ SECTION: NGƯỜI BẠN THEO DÕI ============ -->
+  <section class="section" data-interest-section="all">
+    <div class="section-head">
+      <div class="section-title-wrap">
+        <h2 class="section-title">Từ người bạn theo dõi</h2>
+        <span class="section-sub">3 người tạo đang mở nhiệm vụ mới</span>
+      </div>
+      <a href="#" class="section-link">Quản lý theo dõi</a>
+    </div>
+    <div class="carousel" id="carousel-following">
+      <!-- injected by JS -->
+    </div>
+  </section>
+
+  <!-- ============ SECTION: ĐANG HOT ============ -->
+  <section class="section" data-interest-section="all tech food">
+    <div class="section-head">
+      <div class="section-title-wrap">
+        <h2 class="section-title">Đang hot tuần này</h2>
+        <span class="section-sub">Nhiệm vụ được nhận nhiều nhất</span>
+      </div>
+      <a href="#nhiem-vu" class="section-link">Xem tất cả</a>
+    </div>
+    <div class="carousel" id="carousel-hot">
+      <!-- injected by JS -->
+    </div>
+  </section>
+
+  <!-- ============ SECTION: SẮP HẾT SUẤT ============ -->
+  <section class="section" data-interest-section="all photo food fashion">
+    <div class="section-head">
+      <div class="section-title-wrap">
+        <h2 class="section-title">Sắp hết suất</h2>
+        <span class="section-sub">Còn dưới 5 suất — nhận nhanh trước khi đầy</span>
+      </div>
+      <a href="#nhiem-vu" class="section-link">Xem tất cả</a>
+    </div>
+    <div class="featured-grid" id="grid-ending">
+      <!-- injected by JS -->
+    </div>
+  </section>
+
+  <!-- ============ SECTION: NGƯỜI TẠO NỔI BẬT ============ -->
+  <section class="section" data-interest-section="all">
+    <div class="section-head">
+      <div class="section-title-wrap">
+        <h2 class="section-title">Người tạo uy tín</h2>
+        <span class="section-sub">Trust Score cao và tỷ lệ thanh toán 100%</span>
+      </div>
+      <a href="#" class="section-link">Xem bảng xếp hạng</a>
+    </div>
+    <div class="creators-grid" id="creatorsGrid">
+      <!-- injected by JS -->
+    </div>
+  </section>
+
+</div>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Thành công</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ DATA ============ */
+  const PLATFORM = {
+    facebook:  { name: 'Facebook',  mark: 'FB' },
+    instagram: { name: 'Instagram', mark: 'IG' },
+    tiktok:    { name: 'TikTok',    mark: 'TT' },
+    youtube:   { name: 'YouTube',   mark: 'YT' },
+    website:   { name: 'Website',   mark: 'WEB' }
+  };
+
+  const SUGGESTED = [
+    {
+      id: 'T-2101', platform: 'instagram', type: 'Theo dõi trang',
+      title: 'Theo dõi tài khoản nhiếp ảnh đường phố',
+      desc: 'Follow tài khoản, giữ trạng thái theo dõi tối thiểu 24 giờ.',
+      reward: 10, author: 'Mỹ Duyên', authorInitials: 'MD',
+      tag: 'new', tagLabel: 'Mới'
+    },
+    {
+      id: 'T-2102', platform: 'facebook', type: 'Tương tác',
+      title: 'Thả tim và chia sẻ bài viết về thiết kế',
+      desc: 'Tương tác với bài viết mới nhất về xu hướng thiết kế 2025.',
+      reward: 12, author: 'Đức Huy', authorInitials: 'DH',
+      tag: null
+    },
+    {
+      id: 'T-2103', platform: 'tiktok', type: 'Bình luận',
+      title: 'Bình luận video ẩm thực miền Trung',
+      desc: 'Bình luận tối thiểu 8 từ có nội dung liên quan đến video.',
+      reward: 15, author: 'Hoàng Nam', authorInitials: 'HN',
+      tag: null
+    },
+    {
+      id: 'T-2104', platform: 'website', type: 'Truy cập',
+      title: 'Truy cập portfolio thiết kế đồ hoạ',
+      desc: 'Ở lại trang tối thiểu 30 giây, cuộn qua ít nhất 2 phần.',
+      reward: 5, author: 'Thanh Vân', authorInitials: 'TV',
+      tag: null
+    },
+    {
+      id: 'T-2105', platform: 'youtube', type: 'Đăng ký kênh',
+      title: 'Đăng ký kênh YouTube review công nghệ',
+      desc: 'Đăng ký kênh, bật chuông thông báo, giữ 7 ngày.',
+      reward: 15, author: 'Trọng Nghĩa', authorInitials: 'TN',
+      tag: 'new', tagLabel: 'Mới'
+    },
+    {
+      id: 'T-2106', platform: 'instagram', type: 'Tương tác',
+      title: 'Thả tim 3 bài viết thời trang mới nhất',
+      desc: 'Thả tim 3 bài viết liên tiếp, không cần bình luận.',
+      reward: 8, author: 'Ngọc Mai', authorInitials: 'NM',
+      tag: null
+    }
+  ];
+
+  const FOLLOWING = [
+    {
+      id: 'T-2110', platform: 'facebook', type: 'Theo dõi trang',
+      title: 'Theo dõi trang Facebook doanh nghiệp',
+      desc: 'Follow trang, giữ tối thiểu 30 giây.',
+      reward: 12, author: 'Minh Anh', authorInitials: 'MA',
+      tag: 'following', tagLabel: 'Bạn theo dõi'
+    },
+    {
+      id: 'T-2111', platform: 'tiktok', type: 'Tương tác',
+      title: 'Xem video 15 giây và thả tim',
+      desc: 'Xem tối thiểu 15 giây, thả tim, không cần comment.',
+      reward: 6, author: 'Minh Anh', authorInitials: 'MA',
+      tag: 'following', tagLabel: 'Bạn theo dõi'
+    },
+    {
+      id: 'T-2112', platform: 'instagram', type: 'Bình luận',
+      title: 'Bình luận bài viết về nhiếp ảnh',
+      desc: 'Bình luận tối thiểu 5 từ có nội dung liên quan.',
+      reward: 9, author: 'Mỹ Duyên', authorInitials: 'MD',
+      tag: 'following', tagLabel: 'Bạn theo dõi'
+    }
+  ];
+
+  const HOT = [
+    {
+      id: 'T-2120', platform: 'youtube', type: 'Đăng ký kênh',
+      title: 'Đăng ký kênh YouTube công nghệ lớn',
+      desc: 'Đăng ký + bật chuông. Kênh có hơn 500k subscriber.',
+      reward: 20, author: 'Trọng Nghĩa', authorInitials: 'TN',
+      tag: 'hot', tagLabel: 'Hot'
+    },
+    {
+      id: 'T-2121', platform: 'facebook', type: 'Chia sẻ',
+      title: 'Chia sẻ bài viết công khai',
+      desc: 'Chia sẻ ở chế độ công khai, giữ tối thiểu 24 giờ.',
+      reward: 18, author: 'Đức Huy', authorInitials: 'DH',
+      tag: 'hot', tagLabel: 'Hot'
+    },
+    {
+      id: 'T-2122', platform: 'tiktok', type: 'Bình luận',
+      title: 'Bình luận video ẩm thực viral',
+      desc: 'Video có hơn 1 triệu view. Bình luận tối thiểu 8 từ.',
+      reward: 15, author: 'Hoàng Nam', authorInitials: 'HN',
+      tag: 'hot', tagLabel: 'Hot'
+    },
+    {
+      id: 'T-2123', platform: 'instagram', type: 'Tương tác',
+      title: 'Thả tim bài viết thời trang',
+      desc: 'Bài viết có hơn 10k like. Chỉ cần thả tim.',
+      reward: 7, author: 'Ngọc Mai', authorInitials: 'NM',
+      tag: 'hot', tagLabel: 'Hot'
+    }
+  ];
+
+  const ENDING = [
+    {
+      id: 'T-2130', platform: 'facebook', type: 'Theo dõi',
+      title: 'Theo dõi trang Facebook cá nhân',
+      desc: 'Follow trang, giữ tối thiểu 24 giờ.',
+      reward: 10, author: 'Minh Anh', authorInitials: 'MA',
+      slotsLeft: 3, slotsTotal: 50,
+      tag: 'ending', tagLabel: 'Sắp hết'
+    },
+    {
+      id: 'T-2131', platform: 'instagram', type: 'Tương tác',
+      title: 'Thả tim 5 bài viết nhiếp ảnh',
+      desc: 'Thả tim 5 bài viết liên tiếp từ cùng tài khoản.',
+      reward: 11, author: 'Mỹ Duyên', authorInitials: 'MD',
+      slotsLeft: 2, slotsTotal: 30,
+      tag: 'ending', tagLabel: 'Sắp hết'
+    },
+    {
+      id: 'T-2132', platform: 'website', type: 'Truy cập',
+      title: 'Truy cập website thời trang 30 giây',
+      desc: 'Ở lại trang tối thiểu 30 giây, cuộn xuống ít nhất 1 lần.',
+      reward: 5, author: 'Thanh Vân', authorInitials: 'TV',
+      slotsLeft: 4, slotsTotal: 100,
+      tag: 'ending', tagLabel: 'Sắp hết'
+    }
+  ];
+
+  const CREATORS = [
+    { id: 'C-01', name: 'Trọng Nghĩa', handle: '@trongnghia.dev', initials: 'TN',
+      trust: 98, tasks: 87, verified: true, following: false, field: 'Công nghệ' },
+    { id: 'C-02', name: 'Đức Huy', handle: '@duchuy.media', initials: 'DH',
+      trust: 97, tasks: 102, verified: true, following: false, field: 'Truyền thông' },
+    { id: 'C-03', name: 'Mỹ Duyên', handle: '@myduyen.photo', initials: 'MD',
+      trust: 96, tasks: 74, verified: true, following: true, field: 'Nhiếp ảnh' },
+    { id: 'C-04', name: 'Quốc Bảo', handle: '@quocbao.dev', initials: 'QB',
+      trust: 95, tasks: 68, verified: true, following: false, field: 'Phát triển' },
+    { id: 'C-05', name: 'Minh Anh', handle: '@minhanh.studio', initials: 'MA',
+      trust: 94, tasks: 12, verified: true, following: true, field: 'Nhiếp ảnh' },
+    { id: 'C-06', name: 'Thanh Vân', handle: '@thanhvan.shop', initials: 'TV',
+      trust: 93, tasks: 45, verified: true, following: false, field: 'Thời trang' }
+  ];
+
+  /* ============ HELPERS ============ */
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function renderTaskCard(t) {
+    const p = PLATFORM[t.platform] || { name: t.platform, mark: '??' };
+    const tagHtml = t.tag
+      ? `<span class="task-card-tag ${t.tag}">${escapeHtml(t.tagLabel)}</span>`
+      : '';
+
+    return `
+      <div class="task-card" data-task-id="${t.id}">
+        <div class="task-card-head">
+          <div class="task-card-platform">
+            <span class="platform-mark">${p.mark}</span>
+            <div class="task-card-platform-info">
+              <div class="task-card-platform-name">${escapeHtml(p.name)}</div>
+              <div class="task-card-platform-type">${escapeHtml(t.type)}</div>
+            </div>
+          </div>
+          ${tagHtml}
+        </div>
+
+        <h3 class="task-card-title">${escapeHtml(t.title)}</h3>
+        <p class="task-card-desc">${escapeHtml(t.desc)}</p>
+
+        <div class="task-card-meta">
+          <div class="task-card-author">
+            <span class="task-card-avatar">${escapeHtml(t.authorInitials)}</span>
+            <span class="task-card-author-name">${escapeHtml(t.author)}</span>
+          </div>
+          <span class="task-card-reward">+${t.reward}<small>Credits</small></span>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderEndingCard(t) {
+    const p = PLATFORM[t.platform] || { name: t.platform, mark: '??' };
+    const pct = Math.round((t.slotsLeft / t.slotsTotal) * 100);
+    const tagHtml = t.tag
+      ? `<span class="task-card-tag ${t.tag}">${escapeHtml(t.tagLabel)}</span>`
+      : '';
+
+    return `
+      <div class="featured-card" data-task-id="${t.id}">
+        <div class="task-card-head">
+          <div class="task-card-platform">
+            <span class="platform-mark">${p.mark}</span>
+            <div class="task-card-platform-info">
+              <div class="task-card-platform-name">${escapeHtml(p.name)}</div>
+              <div class="task-card-platform-type">${escapeHtml(t.type)}</div>
+            </div>
+          </div>
+          ${tagHtml}
+        </div>
+
+        <h3 class="task-card-title">${escapeHtml(t.title)}</h3>
+        <p class="task-card-desc">${escapeHtml(t.desc)}</p>
+
+        <div class="task-card-progress">
+          <div class="task-card-progress-label">
+            <span>Còn lại <strong>${t.slotsLeft}/${t.slotsTotal}</strong> suất</span>
+            <span>${pct}%</span>
+          </div>
+          <div class="task-card-progress-bar"><i style="width:${pct}%"></i></div>
+        </div>
+
+        <div class="task-card-meta">
+          <div class="task-card-author">
+            <span class="task-card-avatar">${escapeHtml(t.authorInitials)}</span>
+            <span class="task-card-author-name">${escapeHtml(t.author)}</span>
+          </div>
+          <span class="task-card-reward">+${t.reward}<small>Credits</small></span>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderCreator(c) {
+    const verifiedIcon = c.verified
+      ? '<svg class="verified-icon" width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      : '';
+
+    return `
+      <div class="creator-card" data-creator-id="${c.id}">
+        <span class="creator-card-avatar">${escapeHtml(c.initials)}</span>
+        <div class="creator-card-info">
+          <div class="creator-card-name">
+            ${escapeHtml(c.name)} ${verifiedIcon}
+          </div>
+          <div class="creator-card-meta">
+            <strong>Trust ${c.trust}</strong> · ${c.tasks} nhiệm vụ · ${escapeHtml(c.field)}
+          </div>
+        </div>
+        <button class="creator-card-follow ${c.following ? 'following' : ''}" data-follow="${c.id}">
+          ${c.following ? 'Đang theo dõi' : 'Theo dõi'}
+        </button>
+      </div>
+    `;
+  }
+
+  /* ============ RENDER ============ */
+  function renderAll() {
+    document.getElementById('carousel-suggested').innerHTML = SUGGESTED.map(renderTaskCard).join('');
+    document.getElementById('carousel-following').innerHTML = FOLLOWING.map(renderTaskCard).join('');
+    document.getElementById('carousel-hot').innerHTML = HOT.map(renderTaskCard).join('');
+    document.getElementById('grid-ending').innerHTML = ENDING.map(renderEndingCard).join('');
+    document.getElementById('creatorsGrid').innerHTML = CREATORS.map(renderCreator).join('');
+
+    // Bind task card clicks
+    document.querySelectorAll('[data-task-id]').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.dataset.taskId;
+        showToast('Đang mở nhiệm vụ ' + id + '…');
+      });
+    });
+
+    // Bind follow buttons
+    document.querySelectorAll('[data-follow]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.follow;
+        const creator = CREATORS.find(c => c.id === id);
+        if (!creator) return;
+        creator.following = !creator.following;
+        btn.classList.toggle('following', creator.following);
+        btn.textContent = creator.following ? 'Đang theo dõi' : 'Theo dõi';
+        showToast(creator.following
+          ? 'Đã theo dõi ' + creator.name + '. Bạn sẽ nhận thông báo khi họ mở nhiệm vụ mới.'
+          : 'Đã bỏ theo dõi ' + creator.name + '.');
+      });
+    });
+  }
+
+  /* ============ INTEREST CHIPS ============ */
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const interest = chip.dataset.interest;
+
+      // Filter sections
+      document.querySelectorAll('[data-interest-section]').forEach(section => {
+        const tags = section.dataset.interestSection.split(' ');
+        const matches = interest === 'all' || tags.includes(interest);
+        section.style.display = matches ? '' : 'none';
+      });
+    });
+  });
+
+  /* ============ TOAST ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('on'), 2600);
+  }
+
+  /* ============ HEADER MOBILE MENU ============ */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburgerBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', open);
+    hamburgerBtn.setAttribute('aria-expanded', open);
+  });
+
+  /* ============ INIT ============ */
+  renderAll();
+
+})();
+</script>
+
+</body>
+</html>

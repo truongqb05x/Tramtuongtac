@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Điều khoản sử dụng &amp; Quy tắc cộng đồng — TRAODOI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf9f7;
+    --bg-alt: #f4f2ee;
+    --bg-hover: #fcfbf9;
+    --ink: #1e1e1e;
+    --ink-soft: #3d3d3d;
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --border: #e3e0da;
+    --border-strong: #d0ccc4;
+    --accent: #1e3a5f;
+    --accent-hover: #162c47;
+    --accent-soft: #e8edf3;
+    --success: #2f6b4f;
+    --success-soft: #e8f0eb;
+    --warning: #8a6a1f;
+    --warning-soft: #f4edda;
+    --danger: #8a2f2f;
+    --danger-soft: #f4e5e5;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* ---------- Header ---------- */
+  .top { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .top .wrap { max-width: 1320px; margin: 0 auto; padding: 0 1.5rem; }
+  @media (min-width: 768px) { .top .wrap { padding: 0 2.5rem; } }
+  .nav-link {
+    font-size: .9375rem; font-weight: 450; color: var(--ink-soft);
+    text-decoration: none; padding: .375rem 0; position: relative; transition: color .15s ease;
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.active { color: var(--ink); font-weight: 500; }
+  .nav-link.active::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -22px;
+    height: 2px; background: var(--accent);
+  }
+  @media (max-width: 767px) { .nav-link.active::after { display: none; } }
+  .hamburger {
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+    width: 2.25rem; height: 2.25rem; padding: .375rem;
+    background: transparent; border: 1px solid var(--border-strong);
+    border-radius: 6px; cursor: pointer;
+  }
+  .hamburger span { display: block; height: 1.5px; width: 100%; background: var(--ink-soft); transition: transform .2s ease, opacity .2s ease; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  .mobile-menu { display: none; border-top: 1px solid var(--border); background: var(--bg); }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block; padding: .875rem 1.5rem; font-size: .9375rem;
+    color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:hover { background: var(--bg-alt); color: var(--ink); }
+  .mobile-menu a:last-of-type { border-bottom: none; }
+  .avatar-header {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 600; flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* ---------- Page ---------- */
+  .page { max-width: 1160px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+  @media (min-width: 768px) { .page { padding: 0 2.5rem 6rem; } }
+
+  .crumb {
+    display: flex; align-items: center; gap: .5rem;
+    padding: 1.5rem 0 1rem; font-size: .8125rem; color: var(--muted);
+  }
+  .crumb a { color: var(--muted); text-decoration: none; transition: color .15s ease; }
+  .crumb a:hover { color: var(--ink); }
+  .crumb .sep { color: var(--border-strong); }
+  .crumb .current { color: var(--ink); font-weight: 500; }
+
+  /* ---------- Document hero ---------- */
+  .doc-hero {
+    padding-bottom: 2.5rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  .doc-eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1rem;
+  }
+  .doc-eyebrow::before {
+    content: ''; width: 20px; height: 1px; background: var(--accent);
+  }
+  .doc-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 2rem; font-weight: 500; line-height: 1.15;
+    letter-spacing: -.02em; margin: 0 0 1rem;
+    color: var(--ink);
+    max-width: 780px;
+  }
+  @media (min-width: 768px) { .doc-title { font-size: 2.75rem; } }
+  .doc-lede {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 1.5rem;
+    max-width: 680px;
+    font-style: italic;
+  }
+  .doc-meta {
+    display: flex; flex-wrap: wrap; gap: 1.5rem;
+    font-size: .8125rem; color: var(--muted);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    max-width: 780px;
+  }
+  .doc-meta-item {
+    display: inline-flex; align-items: center; gap: .375rem;
+  }
+  .doc-meta-item strong { color: var(--ink); font-weight: 500; }
+
+  /* ---------- Layout ---------- */
+  .doc-layout {
+    display: grid; grid-template-columns: 1fr; gap: 3rem;
+  }
+  @media (min-width: 1024px) {
+    .doc-layout {
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 4rem; align-items: start;
+    }
+  }
+
+  /* ---------- Sidebar TOC ---------- */
+  .toc {
+    position: sticky; top: 96px;
+  }
+  @media (max-width: 1023px) {
+    .toc {
+      position: static;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .toc { border-left: 2px solid var(--border); padding-left: 1.5rem; }
+  }
+  .toc-label {
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .75rem;
+    display: block;
+  }
+  .toc-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: .125rem;
+  }
+  @media (max-width: 1023px) {
+    .toc-list { flex-direction: row; flex-wrap: wrap; gap: .25rem; }
+  }
+  .toc-link {
+    display: block; padding: .375rem 0;
+    font-size: .8125rem; color: var(--ink-soft);
+    text-decoration: none; line-height: 1.4;
+    transition: color .15s ease;
+    cursor: pointer; background: none; border: none;
+    font-family: inherit; text-align: left; width: 100%;
+  }
+  @media (max-width: 1023px) {
+    .toc-link {
+      padding: .375rem .625rem;
+      border-radius: 4px;
+      background: var(--bg-alt);
+      width: auto;
+      font-size: .75rem;
+    }
+  }
+  .toc-link:hover { color: var(--ink); }
+  @media (min-width: 1024px) {
+    .toc-link.active {
+      color: var(--ink); font-weight: 500;
+      position: relative;
+    }
+    .toc-link.active::before {
+      content: ''; position: absolute;
+      left: -1.5rem; top: 0; bottom: 0;
+      width: 2px; background: var(--accent);
+    }
+  }
+  @media (max-width: 1023px) {
+    .toc-link.active {
+      background: var(--accent-soft); color: var(--accent); font-weight: 500;
+    }
+  }
+  .toc-link.sub {
+    padding-left: 1rem; font-size: .75rem;
+  }
+  @media (max-width: 1023px) {
+    .toc-link.sub { display: none; }
+  }
+
+  /* ---------- Content ---------- */
+  .doc-content {
+    max-width: 720px;
+  }
+
+  .doc-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 96px;
+  }
+  .doc-section:last-child { margin-bottom: 0; }
+
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem; font-weight: 500;
+    letter-spacing: .08em; color: var(--accent);
+    margin-bottom: .5rem;
+    display: block;
+  }
+  .section-heading {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.5rem; font-weight: 500;
+    line-height: 1.25; letter-spacing: -.01em;
+    color: var(--ink); margin: 0 0 1rem;
+  }
+  @media (min-width: 768px) { .section-heading { font-size: 1.75rem; } }
+
+  .subsection-heading {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; font-weight: 500;
+    line-height: 1.35; letter-spacing: -.005em;
+    color: var(--ink); margin: 1.75rem 0 .75rem;
+  }
+
+  .doc-content p {
+    font-size: 1rem; line-height: 1.75;
+    color: var(--ink-soft);
+    margin: 0 0 1rem;
+  }
+  .doc-content p strong {
+    color: var(--ink); font-weight: 500;
+  }
+  .doc-content p:last-child { margin-bottom: 0; }
+
+  .doc-content a {
+    color: var(--accent); text-decoration: none;
+    border-bottom: 1px solid rgba(30,58,95,.25);
+    transition: border-color .15s ease;
+  }
+  .doc-content a:hover {
+    border-bottom-color: var(--accent);
+  }
+
+  /* Numbered list */
+  .doc-content ol.numbered {
+    list-style: none;
+    padding: 0; margin: 0 0 1rem;
+    counter-reset: item;
+  }
+  .doc-content ol.numbered > li {
+    position: relative;
+    padding-left: 2.25rem;
+    margin-bottom: .75rem;
+    font-size: 1rem; line-height: 1.7;
+    color: var(--ink-soft);
+    counter-increment: item;
+  }
+  .doc-content ol.numbered > li::before {
+    content: counter(item, decimal-leading-zero);
+    position: absolute;
+    left: 0; top: .0625rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .8125rem; font-weight: 500;
+    color: var(--accent);
+    letter-spacing: .02em;
+  }
+  .doc-content ol.numbered > li strong { color: var(--ink); font-weight: 500; }
+
+  /* Definition list (rule + explanation) */
+  .rule-list {
+    display: flex; flex-direction: column;
+    margin: 1.25rem 0 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .rule-item {
+    display: grid; grid-template-columns: 1fr;
+    gap: .375rem;
+    padding: 1.125rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  @media (min-width: 640px) {
+    .rule-item {
+      grid-template-columns: 200px 1fr;
+      gap: 1.5rem;
+    }
+  }
+  .rule-label {
+    font-size: .8125rem; font-weight: 600;
+    color: var(--ink); line-height: 1.5;
+    letter-spacing: .005em;
+  }
+  .rule-text {
+    font-size: .9375rem; color: var(--ink-soft);
+    line-height: 1.65;
+    margin: 0;
+  }
+  .rule-text strong { color: var(--ink); font-weight: 500; }
+
+  /* Callout */
+  .callout {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: .875rem;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    border-radius: 6px;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+  }
+  .callout.warning {
+    background: var(--warning-soft);
+    border-left-color: var(--warning);
+  }
+  .callout.danger {
+    background: var(--danger-soft);
+    border-left-color: var(--danger);
+  }
+  .callout-icon {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    color: var(--accent); letter-spacing: .06em;
+    padding-top: .1875rem;
+  }
+  .callout.warning .callout-icon { color: var(--warning); }
+  .callout.danger .callout-icon { color: var(--danger); }
+  .callout-body {
+    font-size: .9375rem; line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .callout-body strong { color: var(--ink); font-weight: 500; }
+
+  /* Violation levels */
+  .levels {
+    display: grid; grid-template-columns: 1fr; gap: .75rem;
+    margin: 1.25rem 0 1rem;
+  }
+  @media (min-width: 640px) { .levels { grid-template-columns: repeat(3, 1fr); } }
+  .level-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    background: #fff;
+  }
+  .level-tag {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    padding: .25rem .5rem; border-radius: 3px;
+    margin-bottom: .625rem;
+  }
+  .level-tag.low { background: var(--warning-soft); color: var(--warning); }
+  .level-tag.medium { background: #f0e6d8; color: #8a5a1f; }
+  .level-tag.high { background: var(--danger-soft); color: var(--danger); }
+  .level-tag::before {
+    content: ''; width: 5px; height: 5px;
+    border-radius: 50%; background: currentColor;
+  }
+  .level-title {
+    font-size: .875rem; font-weight: 600;
+    color: var(--ink); margin: 0 0 .375rem;
+  }
+  .level-desc {
+    font-size: .8125rem; color: var(--muted);
+    line-height: 1.5; margin: 0;
+  }
+
+  /* Doc footer */
+  .doc-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-strong);
+  }
+  .doc-footer-grid {
+    display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .doc-footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  }
+  .doc-footer-label {
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .5rem;
+    display: block;
+  }
+  .doc-footer-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; font-weight: 500;
+    color: var(--ink); margin: 0 0 .5rem;
+    line-height: 1.35;
+  }
+  .doc-footer-desc {
+    font-size: .875rem; color: var(--muted);
+    line-height: 1.6; margin: 0 0 .875rem;
+  }
+  .doc-footer-link {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-size: .875rem; font-weight: 500;
+    color: var(--accent); text-decoration: none;
+    border-bottom: 1px solid rgba(30,58,95,.3);
+    padding-bottom: 1px;
+    transition: border-color .15s ease;
+  }
+  .doc-footer-link:hover { border-bottom-color: var(--accent); }
+
+  /* Version banner */
+  .version-banner {
+    display: flex; align-items: center; gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-alt);
+    border-radius: 6px;
+    font-size: .8125rem;
+    color: var(--muted);
+  }
+  .version-banner strong { color: var(--ink); font-weight: 500; }
+  .version-banner .dot { color: var(--border-strong); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="top">
+  <div class="wrap">
+    <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAODOI trang chủ">
+        <span class="font-serif text-[1.375rem] font-medium tracking-[-.01em]">TRAODOI</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+        <a href="#" class="nav-link">Trang chủ</a>
+        <a href="#" class="nav-link">Khám phá</a>
+        <a href="#" class="nav-link">Nhiệm vụ</a>
+        <a href="#" class="nav-link">Cộng đồng</a>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-3">
+        <span class="avatar-header" aria-label="Tài khoản của tôi">MA</span>
+      </div>
+
+      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu md:hidden" id="mobileMenu">
+    <a href="#">Trang chủ</a>
+    <a href="#">Khám phá</a>
+    <a href="#">Nhiệm vụ</a>
+    <a href="#">Cộng đồng</a>
+    <a href="#" style="font-weight:500;color:var(--ink)">Điều khoản &amp; Quy tắc</a>
+  </div>
+</header>
+
+<!-- ================= PAGE ================= -->
+<div class="page">
+
+  <!-- Breadcrumb -->
+  <nav class="crumb" aria-label="Breadcrumb">
+    <a href="#">Pháp lý</a>
+    <span class="sep">/</span>
+    <span class="current">Điều khoản &amp; Quy tắc cộng đồng</span>
+  </nav>
+
+  <!-- Document hero -->
+  <header class="doc-hero">
+    <span class="doc-eyebrow">Văn bản pháp lý</span>
+    <h1 class="doc-title">
+      Điều khoản sử dụng và Quy tắc cộng đồng
+    </h1>
+    <p class="doc-lede">
+      TRAODOI hoạt động dựa trên một thỏa thuận đơn giản: bạn tôn trọng người khác, chúng tôi bảo vệ quyền lợi của bạn. Văn bản này giải thích rõ hai chiều của thỏa thuận đó.
+    </p>
+    <div class="doc-meta">
+      <span class="doc-meta-item">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <rect x="2" y="3" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M2 6H12M5 1.5V4M9 1.5V4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Cập nhật lần cuối: <strong>01/10/2025</strong>
+      </span>
+      <span class="doc-meta-item">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M7 1.5V7L10 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/>
+        </svg>
+        Hiệu lực từ: <strong>15/10/2025</strong>
+      </span>
+      <span class="doc-meta-item">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M2 3H12V11H2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M2 5H12" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        Phiên bản: <strong>v3.2</strong>
+      </span>
+      <span class="doc-meta-item">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M4 1.5V3M10 1.5V3M2.5 5H11.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <rect x="2.5" y="3" width="9" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        Thời gian đọc: <strong>~12 phút</strong>
+      </span>
+    </div>
+  </header>
+
+  <!-- Layout -->
+  <div class="doc-layout">
+
+    <!-- ============ SIDEBAR TOC ============ -->
+    <aside class="toc" aria-label="Mục lục">
+      <span class="toc-label">Nội dung</span>
+      <ul class="toc-list" id="tocList">
+        <li><a class="toc-link active" data-target="gioi-thieu">Giới thiệu</a></li>
+        <li><a class="toc-link" data-target="tai-khoan">1. Tài khoản &amp; trách nhiệm</a></li>
+        <li><a class="toc-link" data-target="credits">2. Credits &amp; giao dịch</a></li>
+        <li><a class="toc-link" data-target="nhiem-vu">3. Nhiệm vụ &amp; xác minh</a></li>
+        <li><a class="toc-link" data-target="uy-tin">4. Trust Score &amp; uy tín</a></li>
+        <li><a class="toc-link" data-target="quy-tac">5. Quy tắc cộng đồng</a></li>
+        <li><a class="toc-link" data-target="vi-pham">6. Vi phạm &amp; xử lý</a></li>
+        <li><a class="toc-link" data-target="tranh-chap">7. Tranh chấp &amp; khiếu nại</a></li>
+        <li><a class="toc-link" data-target="quyen">8. Quyền của bạn</a></li>
+        <li><a class="toc-link" data-target="thay-doi">9. Thay đổi điều khoản</a></li>
+        <li><a class="toc-link" data-target="lien-he">10. Liên hệ</a></li>
+      </ul>
+    </aside>
+
+    <!-- ============ CONTENT ============ -->
+    <article class="doc-content">
+
+      <!-- Giới thiệu -->
+      <section class="doc-section" id="gioi-thieu">
+        <span class="section-num">Giới thiệu</span>
+        <h2 class="section-heading">Vì sao có văn bản này</h2>
+        <p>
+          TRAODOI là một nền tảng trao đổi tương tác dựa trên hành vi thực tế. Điều đó chỉ hoạt động được khi mọi người tin rằng người khác cũng đang chơi đúng luật. Văn bản này không phải để bảo vệ công ty khỏi người dùng — nó để bảo vệ <strong>sự công bằng giữa những người dùng với nhau</strong>.
+        </p>
+        <p>
+          Khi bạn tạo tài khoản, bạn đồng ý với hai nhóm quy định: <strong>Điều khoản sử dụng</strong> (quan hệ giữa bạn và TRAODOI) và <strong>Quy tắc cộng đồng</strong> (cách bạn đối xử với người dùng khác). Cả hai đều có hiệu lực ngay khi bạn nhấn nút đăng ký.
+        </p>
+        <div class="callout">
+          <span class="callout-icon">GHI CHÚ</span>
+          <p class="callout-body">
+            Nếu bạn không đồng ý với bất kỳ phần nào, bạn có thể ngừng sử dụng nền tảng bất kỳ lúc nào. Credits chưa dùng sẽ được hoàn lại theo tỷ lệ quy đổi hiện hành trong vòng 30 ngày.
+          </p>
+        </div>
+      </section>
+
+      <!-- 1. Tài khoản -->
+      <section class="doc-section" id="tai-khoan">
+        <span class="section-num">Điều 01</span>
+        <h2 class="section-heading">Tài khoản &amp; trách nhiệm</h2>
+        <p>
+          Bạn chịu trách nhiệm về mọi hành động diễn ra dưới tài khoản của mình. Điều này nghe có vẻ hiển nhiên, nhưng nó có nghĩa cụ thể:
+        </p>
+        <ol class="numbered">
+          <li>
+            <strong>Một người, một tài khoản.</strong> Không tạo nhiều tài khoản để tự làm nhiệm vụ cho chính mình hoặc để thao túng bảng xếp hạng.
+          </li>
+          <li>
+            <strong>Thông tin chính xác.</strong> Email và số điện thoại dùng để đăng ký phải thuộc quyền kiểm soát của bạn. Chúng tôi không yêu cầu CMND hay hộ chiếu, nhưng chúng tôi có thể yêu cầu xác minh lại nếu phát hiện dấu hiệu bất thường.
+          </li>
+          <li>
+            <strong>Không chia sẻ tài khoản.</strong> Nếu bạn cho người khác dùng tài khoản của mình, mọi vi phạm họ gây ra đều tính vào bạn. Đây là một trong những nguyên nhân hàng đầu khiến tài khoản bị khóa.
+          </li>
+          <li>
+            <strong>Bảo mật đăng nhập.</strong> Hãy bật xác thực hai lớp. Nếu bạn nghi ngờ tài khoản bị xâm nhập, đổi mật khẩu ngay và đăng xuất khỏi tất cả thiết bị trong trang cài đặt.
+          </li>
+        </ol>
+        <p>
+          Tài khoản không hoạt động trong 12 tháng liên tiếp có thể bị tạm ẩn khỏi cộng đồng. Bạn có thể kích hoạt lại bằng cách đăng nhập, dữ liệu sẽ được giữ nguyên trong 24 tháng kể từ ngày hoạt động cuối.
+        </p>
+      </section>
+
+      <!-- 2. Credits -->
+      <section class="doc-section" id="credits">
+        <span class="section-num">Điều 02</span>
+        <h2 class="section-heading">Credits &amp; giao dịch</h2>
+        <p>
+          Credits là đơn vị trao đổi nội bộ của TRAODOI. Chúng tôi nói thẳng: <strong>Credits không phải tiền</strong>. Chúng không thể chuyển đổi thành tiền mặt, không có giá trị pháp lý bên ngoài nền tảng, và không được bảo hiểm bởi bất kỳ tổ chức tài chính nào.
+        </p>
+
+        <h3 class="subsection-heading">Bạn có thể kiếm Credits bằng cách</h3>
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-label">Hoàn thành nhiệm vụ</div>
+            <p class="rule-text">Mỗi nhiệm vụ có phần thưởng hiển thị trước. Credits được cộng ngay sau khi xác minh thành công.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Hoàn tiền từ suất chưa làm</div>
+            <p class="rule-text">Khi nhiệm vụ bạn mở kết thúc mà còn suất chưa có người làm, Credits tương ứng sẽ được hoàn lại tự động.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Nạp trực tiếp</div>
+            <p class="rule-text">Bạn có thể nạp Credits bằng tiền Việt Nam qua các phương thức thanh toán được hỗ trợ. Đây là tùy chọn, không bắt buộc.</p>
+          </div>
+        </div>
+
+        <h3 class="subsection-heading">Bạn chi Credits khi</h3>
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-label">Mở nhiệm vụ cho nội dung của bạn</div>
+            <p class="rule-text">Tổng chi phí = số suất × phần thưởng + phí nền tảng. Phí nền tảng hiện tại là <strong>2%</strong> và sẽ được thông báo trước nếu thay đổi.</p>
+          </div>
+        </div>
+
+        <div class="callout warning">
+          <span class="callout-icon">LƯU Ý</span>
+          <p class="callout-body">
+            Credits <strong>không được chuyển nhượng</strong> giữa các tài khoản, trừ khi thông qua cơ chế nhiệm vụ chính thức. Mọi giao dịch Credits bên ngoài nền tảng đều bị coi là vi phạm và có thể dẫn đến khóa tài khoản vĩnh viễn.
+          </p>
+        </div>
+      </section>
+
+      <!-- 3. Nhiệm vụ -->
+      <section class="doc-section" id="nhiem-vu">
+        <span class="section-num">Điều 03</span>
+        <h2 class="section-heading">Nhiệm vụ &amp; xác minh</h2>
+        <p>
+          Khi bạn nhận một nhiệm vụ, bạn đang cam kết thực hiện đúng yêu cầu đã ghi. Khi bạn mở một nhiệm vụ, bạn đang cam kết trả Credits cho bất kỳ ai hoàn thành đúng yêu cầu đó.
+        </p>
+
+        <h3 class="subsection-heading">Người làm nhiệm vụ</h3>
+        <ol class="numbered">
+          <li>Đọc kỹ yêu cầu trước khi nhấn "Nhận nhiệm vụ". Yêu cầu hiển thị trong trang chi tiết nhiệm vụ.</li>
+          <li>Giữ đúng trạng thái tương tác trong khoảng thời gian yêu cầu (ví dụ: theo dõi tối thiểu 30 giây, giữ đăng ký 7 ngày).</li>
+          <li>Không dùng tài khoản ảo, tài khoản không hoạt động, hoặc các công cụ tự động để làm nhiệm vụ.</li>
+          <li>Nhấn "Tôi đã hoàn thành" chỉ khi bạn thực sự đã làm xong. Gửi xác nhận sai sẽ ảnh hưởng đến Trust Score của bạn.</li>
+        </ol>
+
+        <h3 class="subsection-heading">Người tạo nhiệm vụ</h3>
+        <ol class="numbered">
+          <li>Yêu cầu phải rõ ràng, cụ thể, và có thể xác minh được. Nhiệm vụ mơ hồ có thể bị ẩn khỏi marketplace.</li>
+          <li>Không hủy hoặc tạm dừng nhiệm vụ mà không có lý do chính đáng khi đã có người nhận.</li>
+          <li>Không từ chối xác minh vô căn cứ. Nếu bạn cho rằng người làm nhiệm vụ không hoàn thành đúng yêu cầu, hãy mở tranh chấp — hệ thống sẽ xem xét.</li>
+          <li>Credits đã cam kết không thể rút lại cho đến khi nhiệm vụ kết thúc.</li>
+        </ol>
+
+        <div class="callout">
+          <span class="callout-icon">GHI CHÚ</span>
+          <p class="callout-body">
+            Hầu hết nhiệm vụ được xác minh tự động trong vòng vài phút. Một số trường hợp cần xác minh thủ công sẽ mất tối đa 24 giờ. Nếu quá thời gian này chưa có kết quả, bạn có thể liên hệ hỗ trợ.
+          </p>
+        </div>
+      </section>
+
+      <!-- 4. Trust Score -->
+      <section class="doc-section" id="uy-tin">
+        <span class="section-num">Điều 04</span>
+        <h2 class="section-heading">Trust Score &amp; uy tín</h2>
+        <p>
+          Trust Score là thước đo mức độ đáng tin của bạn trong cộng đồng. Điểm này được tính từ nhiều yếu tố, không phải từ một con số duy nhất.
+        </p>
+
+        <h3 class="subsection-heading">Các yếu tố cấu thành</h3>
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-label">Tỷ lệ hoàn thành</div>
+            <p class="rule-text">Số nhiệm vụ bạn hoàn thành chia cho số nhiệm vụ bạn đã nhận. Nhiệm vụ bị từ chối xác minh làm giảm chỉ số này.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Phản hồi đúng hạn</div>
+            <p class="rule-text">Bạn có hoàn thành trong thời hạn đã cam kết không. Hoàn thành muộn vẫn được tính nhưng ảnh hưởng nhẹ đến điểm.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Đánh giá cộng đồng</div>
+            <p class="rule-text">Điểm trung bình từ các đánh giá của người dùng khác sau khi tương tác với bạn.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Tuổi tài khoản</div>
+            <p class="rule-text">Tài khoản hoạt động đều đặn trong thời gian dài được cộng điểm. Đây là cách hạn chế tài khoản ảo mới lập.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Lịch sử tranh chấp</div>
+            <p class="rule-text">Số tranh chấp bị xử thua trong 90 ngày gần nhất. Không có tranh chấp là điểm cộng.</p>
+          </div>
+        </div>
+
+        <p>
+          Trust Score có thể giảm khi bạn vi phạm quy tắc, và có thể tăng trở lại nếu bạn duy trì hành vi tích cực trong thời gian dài. Điểm không bao giờ tăng đột ngột — điều này có chủ đích, để ngăn chặn gian lận.
+        </p>
+      </section>
+
+      <!-- 5. Quy tắc cộng đồng -->
+      <section class="doc-section" id="quy-tac">
+        <span class="section-num">Điều 05</span>
+        <h2 class="section-heading">Quy tắc cộng đồng</h2>
+        <p>
+          Phần này quan trọng hơn tất cả các phần còn lại. Nếu bạn chỉ đọc một phần của văn bản này, hãy đọc phần này.
+        </p>
+
+        <h3 class="subsection-heading">Những điều bạn không được làm</h3>
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-label">Tự làm nhiệm vụ của mình</div>
+            <p class="rule-text">Dùng tài khoản phụ, nhờ người thân, hoặc tạo tài khoản mới để nhận nhiệm vụ do chính bạn mở. Đây là vi phạm nghiêm trọng nhất và hầu như luôn dẫn đến khóa tài khoản vĩnh viễn.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Nội dung gây hại</div>
+            <p class="rule-text">Không mở nhiệm vụ cho nội dung vi phạm pháp luật Việt Nam, nội dung khiêu dâm, bạo lực, thù địch, hoặc xâm phạm quyền riêng tư của người khác.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Spam &amp; lừa đảo</div>
+            <p class="rule-text">Không mở nhiệm vụ dẫn đến trang lừa đảo, trang phishing, hoặc bất kỳ nội dung nào nhằm chiếm đoạt thông tin của người làm nhiệm vụ.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Quấy rối người khác</div>
+            <p class="rule-text">Không gửi tin nhắn quấy rối, đe dọa, hoặc phân biệt đối xử với người dùng khác — dù là qua hệ thống hay qua bình luận trong nhiệm vụ.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Thao túng hệ thống</div>
+            <p class="rule-text">Không dùng bot, script, extension hay bất kỳ công cụ tự động nào để nhận nhiệm vụ, tạo nhiệm vụ, hoặc thao túng Trust Score.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Mua bán tài khoản</div>
+            <p class="rule-text">Không mua, bán, cho thuê, hoặc chuyển nhượng tài khoản TRAODOI. Tài khoản gắn với con người, không phải tài sản.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Giao dịch Credits bên ngoài</div>
+            <p class="rule-text">Không trao đổi Credits qua tiền mặt, chuyển khoản, hay bất kỳ kênh nào ngoài hệ thống nhiệm vụ chính thức.</p>
+          </div>
+        </div>
+
+        <h3 class="subsection-heading">Những điều chúng tôi khuyến khích</h3>
+        <ol class="numbered">
+          <li>
+            <strong>Đọc kỹ trước khi nhận nhiệm vụ.</strong> Hiểu rõ yêu cầu giúp bạn hoàn thành nhanh hơn và tránh bị từ chối.
+          </li>
+          <li>
+            <strong>Phản hồi trung thực.</strong> Nếu bạn không hoàn thành được, hãy để nhiệm vụ hết hạn thay vì gửi xác nhận sai. Hệ thống ghi nhận cả hai hành vi, nhưng chỉ một hành vi bị trừ điểm.
+          </li>
+          <li>
+            <strong>Đánh giá công bằng.</strong> Nếu bạn là người tạo nhiệm vụ, hãy đánh giá người làm nhiệm vụ dựa trên hành vi thực tế, không dựa trên cảm tính.
+          </li>
+          <li>
+            <strong>Báo cáo vi phạm.</strong> Nếu bạn thấy nhiệm vụ hoặc người dùng có dấu hiệu gian lận, hãy báo cáo. Mỗi báo cáo đều được xem xét.
+          </li>
+          <li>
+            <strong>Giữ lịch sự.</strong> Ngay cả khi bạn cho rằng mình bị đối xử không công bằng, hãy giữ thái độ tôn trọng. Tranh chấp được xử lý dựa trên bằng chứng, không dựa trên cảm xúc.
+          </li>
+        </ol>
+      </section>
+
+      <!-- 6. Vi phạm -->
+      <section class="doc-section" id="vi-pham">
+        <span class="section-num">Điều 06</span>
+        <h2 class="section-heading">Vi phạm &amp; xử lý</h2>
+        <p>
+          Chúng tôi xử lý vi phạm theo ba mức độ, tùy theo mức độ nghiêm trọng và số lần tái phạm. Mọi hình phạt đều được thông báo qua email và thông báo trong ứng dụng.
+        </p>
+
+        <div class="levels">
+          <div class="level-card">
+            <span class="level-tag low">Mức 1</span>
+            <h4 class="level-title">Cảnh cáo</h4>
+            <p class="level-desc">Áp dụng cho vi phạm nhẹ lần đầu: hoàn thành nhiệm vụ muộn, mô tả nhiệm vụ mơ hồ, gửi xác nhận sai sót. Hệ thống gửi cảnh cáo, không trừ Trust Score.</p>
+          </div>
+          <div class="level-card">
+            <span class="level-tag medium">Mức 2</span>
+            <h4 class="level-title">Hạn chế</h4>
+            <p class="level-desc">Áp dụng cho vi phạm tái phạm hoặc có chủ ý: từ chối xác minh vô căn cứ, mở nhiệm vụ với nội dung không phù hợp, tranh chấp thua liên tiếp. Tài khoản bị hạn chế một số tính năng trong 7–30 ngày, Trust Score trừ 3–10 điểm.</p>
+          </div>
+          <div class="level-card">
+            <span class="level-tag high">Mức 3</span>
+            <h4 class="level-title">Khóa tài khoản</h4>
+            <p class="level-desc">Áp dụng cho vi phạm nghiêm trọng: tự làm nhiệm vụ của mình, lừa đảo, dùng bot, mua bán tài khoản, nội dung vi phạm pháp luật. Tài khoản bị khóa vĩnh viễn, Credits và dữ liệu bị xóa theo quy định.</p>
+          </div>
+        </div>
+
+        <div class="callout danger">
+          <span class="callout-icon">CẢNH BÁO</span>
+          <p class="callout-body">
+            Một số hành vi có thể bị xử lý ở mức 3 <strong>ngay lần đầu</strong>, không qua cảnh cáo: tự làm nhiệm vụ của mình, lừa đảo người dùng khác, tấn công hệ thống, hoặc đăng nội dung vi phạm pháp luật.
+          </p>
+        </div>
+
+        <p>
+          Nếu bạn cho rằng quyết định xử lý là không chính xác, bạn có quyền mở khiếu nại trong vòng 14 ngày kể từ ngày nhận thông báo. Xem Điều 07 để biết quy trình.
+        </p>
+      </section>
+
+      <!-- 7. Tranh chấp -->
+      <section class="doc-section" id="tranh-chap">
+        <span class="section-num">Điều 07</span>
+        <h2 class="section-heading">Tranh chấp &amp; khiếu nại</h2>
+        <p>
+          Tranh chấp xảy ra khi một bên cho rằng bên kia không thực hiện đúng cam kết. Chúng tôi xử lý mọi tranh chấp dựa trên bằng chứng, không dựa trên số lượng tài khoản hay mức độ nổi tiếng.
+        </p>
+
+        <h3 class="subsection-heading">Quy trình tranh chấp</h3>
+        <ol class="numbered">
+          <li>
+            <strong>Bên khiếu nại mở tranh chấp trong 72 giờ</strong> kể từ khi nhiệm vụ bị từ chối hoặc kết thúc. Nếu quá thời gian này, tranh chấp có thể không được xem xét.
+          </li>
+          <li>
+            <strong>Cung cấp bằng chứng.</strong> Ảnh chụp màn hình, đường dẫn, hoặc mô tả chi tiết. Bằng chứng càng cụ thể, xử lý càng nhanh.
+          </li>
+          <li>
+            <strong>Bên còn lại có 48 giờ để phản hồi.</strong> Hệ thống thông báo cho cả hai bên qua email và trong ứng dụng.
+          </li>
+          <li>
+            <strong>Đội ngũ xem xét và ra quyết định trong vòng 7 ngày làm việc.</strong> Quyết định được gửi đến cả hai bên kèm lý do.
+          </li>
+          <li>
+            <strong>Quyết định có thể được kháng cáo một lần</strong> trong vòng 7 ngày nếu có bằng chứng mới. Kháng cáo phải được gửi qua kênh chính thức, không qua tin nhắn riêng.
+          </li>
+        </ol>
+
+        <h3 class="subsection-heading">Nguyên tắc xử lý</h3>
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-label">Bên nào đúng được hoàn Credits</div>
+            <p class="rule-text">Nếu người làm nhiệm vụ đúng, họ nhận Credits đã cam kết. Nếu người tạo nhiệm vụ đúng, Credits được hoàn lại cho họ.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Bên sai có thể bị trừ Trust Score</div>
+            <p class="rule-text">Từ 2–5 điểm tùy mức độ. Tái phạm nhiều lần có thể dẫn đến hạn chế hoặc khóa tài khoản.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Bên cố tình gian lận bị xử lý nặng hơn</div>
+            <p class="rule-text">Nếu phát hiện bằng chứng giả mạo hoặc khiếu nại có động cơ xấu, hình phạt sẽ tăng lên một mức.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <span class="callout-icon">GHI CHÚ</span>
+          <p class="callout-body">
+            Chúng tôi không tiết lộ danh tính người báo cáo hoặc chi tiết nội bộ của quá trình xem xét. Điều này để bảo vệ cả hai bên khỏi các hành vi trả đũa.
+          </p>
+        </div>
+      </section>
+
+      <!-- 8. Quyền -->
+      <section class="doc-section" id="quyen">
+        <span class="section-num">Điều 08</span>
+        <h2 class="section-heading">Quyền của bạn</h2>
+        <p>
+          Bạn có những quyền sau đây đối với dữ liệu và tài khoản của mình. Chúng tôi cam kết thực hiện trong vòng 30 ngày kể từ khi bạn yêu cầu.
+        </p>
+
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-label">Quyền truy cập</div>
+            <p class="rule-text">Bạn có thể yêu cầu bản sao toàn bộ dữ liệu mà chúng tôi lưu về bạn. Gửi email đến <a href="mailto:privacy@traodoi.app">privacy@traodoi.app</a>.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Quyền chỉnh sửa</div>
+            <p class="rule-text">Bạn có thể chỉnh sửa hầu hết thông tin trong trang Cài đặt tài khoản. Một số thông tin như lịch sử giao dịch không thể chỉnh sửa để đảm bảo tính minh bạch.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Quyền xóa</div>
+            <p class="rule-text">Bạn có thể xóa tài khoản bất kỳ lúc nào. Dữ liệu sẽ được xóa trong vòng 30 ngày, trừ dữ liệu cần giữ lại theo quy định pháp luật hoặc để xử lý tranh chấp đang mở.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Quyền phản đối</div>
+            <p class="rule-text">Bạn có thể từ chối nhận thông báo marketing mà không ảnh hưởng đến các thông báo quan trọng về tài khoản.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Quyền di chuyển dữ liệu</div>
+            <p class="rule-text">Bạn có thể xuất dữ liệu nhiệm vụ và giao dịch dưới định dạng CSV hoặc JSON từ trang Ví Credits.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. Thay đổi -->
+      <section class="doc-section" id="thay-doi">
+        <span class="section-num">Điều 09</span>
+        <h2 class="section-heading">Thay đổi điều khoản</h2>
+        <p>
+          Chúng tôi có thể cập nhật văn bản này khi cần thiết — ví dụ khi thêm tính năng mới, khi luật pháp thay đổi, hoặc khi cộng đồng phát triển. Khi điều đó xảy ra:
+        </p>
+        <ol class="numbered">
+          <li>Chúng tôi thông báo qua email và thông báo trong ứng dụng ít nhất <strong>15 ngày</strong> trước khi thay đổi có hiệu lực.</li>
+          <li>Các thay đổi quan trọng sẽ được tóm tắt ở đầu văn bản, có ngày và phiên bản cụ thể.</li>
+          <li>Nếu bạn không đồng ý với thay đổi, bạn có thể xóa tài khoản trước ngày thay đổi có hiệu lực mà không bị mất Credits chưa dùng.</li>
+          <li>Nếu bạn tiếp tục sử dụng nền tảng sau ngày thay đổi có hiệu lực, điều đó có nghĩa là bạn chấp nhận điều khoản mới.</li>
+        </ol>
+
+        <div class="version-banner">
+          <span>Phiên bản hiện tại: <strong>v3.2</strong></span>
+          <span class="dot">·</span>
+          <span>Lần thay đổi lớn gần nhất: <strong>15/07/2025</strong> — bổ sung quy định về giao dịch Credits bên ngoài</span>
+        </div>
+      </section>
+
+      <!-- 10. Liên hệ -->
+      <section class="doc-section" id="lien-he">
+        <span class="section-num">Điều 10</span>
+        <h2 class="section-heading">Liên hệ</h2>
+        <p>
+          Nếu bạn có câu hỏi về văn bản này, hoặc muốn thực hiện bất kỳ quyền nào đã nêu ở Điều 08, hãy liên hệ với chúng tôi qua các kênh sau:
+        </p>
+
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-label">Câu hỏi chung</div>
+            <p class="rule-text"><a href="mailto:hello@traodoi.app">hello@traodoi.app</a> — phản hồi trong 48 giờ làm việc.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Quyền riêng tư &amp; dữ liệu</div>
+            <p class="rule-text"><a href="mailto:privacy@traodoi.app">privacy@traodoi.app</a> — phản hồi trong 30 ngày theo quy định.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Tranh chấp &amp; khiếu nại</div>
+            <p class="rule-text">Mở trực tiếp trong ứng dụng tại trang nhiệm vụ liên quan, hoặc gửi email đến <a href="mailto:disputes@traodoi.app">disputes@traodoi.app</a>.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Báo cáo vi phạm</div>
+            <p class="rule-text">Nút "Báo cáo" trong hồ sơ người dùng hoặc trong trang nhiệm vụ. Bạn có thể báo cáo ẩn danh.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Doc footer -->
+      <footer class="doc-footer">
+        <div class="doc-footer-grid">
+          <div>
+            <span class="doc-footer-label">Văn bản liên quan</span>
+            <h3 class="doc-footer-title">Chính sách bảo mật</h3>
+            <p class="doc-footer-desc">
+              Giải thích chi tiết cách chúng tôi thu thập, sử dụng và bảo vệ dữ liệu của bạn.
+            </p>
+            <a href="#" class="doc-footer-link">Đọc chính sách →</a>
+          </div>
+          <div>
+            <span class="doc-footer-label">Cần trợ giúp?</span>
+            <h3 class="doc-footer-title">Trung tâm trợ giúp</h3>
+            <p class="doc-footer-desc">
+              Câu trả lời cho những câu hỏi thường gặp về Credits, nhiệm vụ, Trust Score, và tài khoản.
+            </p>
+            <a href="#" class="doc-footer-link">Mở trung tâm trợ giúp →</a>
+          </div>
+        </div>
+      </footer>
+
+    </article>
+  </div>
+
+</div>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite" style="position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(120%);background:var(--ink);color:#fff;font-size:.875rem;padding:.75rem 1.25rem;border-radius:6px;z-index:120;box-shadow:0 4px 16px rgba(0,0,0,.12);transition:transform .25s ease;display:flex;align-items:center;gap:.625rem;max-width:calc(100vw - 2rem)">
+  <span style="width:16px;height:16px;border-radius:50%;background:var(--success);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Thành công</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ TOC SCROLL SPY ============ */
+  const tocLinks = document.querySelectorAll('.toc-link');
+  const sections = document.querySelectorAll('.doc-section[id]');
+
+  tocLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = link.dataset.target;
+      const target = document.getElementById(id);
+      if (!target) return;
+      const offset = 96;
+      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+  function updateActiveToc() {
+    const scrollY = window.pageYOffset + 140;
+    let current = sections[0]?.id;
+    sections.forEach(s => {
+      if (s.offsetTop <= scrollY) current = s.id;
+    });
+    tocLinks.forEach(l => {
+      l.classList.toggle('active', l.dataset.target === current);
+    });
+  }
+  window.addEventListener('scroll', updateActiveToc, { passive: true });
+  updateActiveToc();
+
+  /* ============ HEADER MOBILE MENU ============ */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburgerBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', open);
+    hamburgerBtn.setAttribute('aria-expanded', open);
+  });
+
+  /* ============ TOAST (không dùng nhiều trong trang này, giữ để nhất quán) ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.style.transform = 'translateX(-50%) translateY(120%)';
+    }, 2600);
+  }
+  window.showToast = showToast;
+
+})();
+</script>
+
+</body>
+</html>

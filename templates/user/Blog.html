@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blog &amp; Cập nhật — TRAODOI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf9f7;
+    --bg-alt: #f4f2ee;
+    --bg-hover: #fcfbf9;
+    --ink: #1e1e1e;
+    --ink-soft: #3d3d3d;
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --border: #e3e0da;
+    --border-strong: #d0ccc4;
+    --accent: #1e3a5f;
+    --accent-hover: #162c47;
+    --accent-soft: #e8edf3;
+    --success: #2f6b4f;
+    --success-soft: #e8f0eb;
+    --warning: #8a6a1f;
+    --warning-soft: #f4edda;
+    --danger: #8a2f2f;
+    --danger-soft: #f4e5e5;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    font-weight: 500; font-size: .9375rem; line-height: 1;
+    padding: .75rem 1.5rem; border-radius: 6px;
+    border: 1px solid transparent; cursor: pointer; text-decoration: none;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    white-space: nowrap; font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+  .btn-secondary:hover { background: var(--bg-alt); border-color: var(--muted); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--ink-soft); padding: .5rem .75rem; }
+  .btn-ghost:hover { background: var(--bg-alt); color: var(--ink); }
+  .btn-sm { padding: .5rem .875rem; font-size: .8125rem; }
+
+  /* ---------- Header ---------- */
+  .top { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .top .wrap { max-width: 1320px; margin: 0 auto; padding: 0 1.5rem; }
+  @media (min-width: 768px) { .top .wrap { padding: 0 2.5rem; } }
+  .nav-link {
+    font-size: .9375rem; font-weight: 450; color: var(--ink-soft);
+    text-decoration: none; padding: .375rem 0; position: relative; transition: color .15s ease;
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.active { color: var(--ink); font-weight: 500; }
+  .nav-link.active::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -22px;
+    height: 2px; background: var(--accent);
+  }
+  @media (max-width: 767px) { .nav-link.active::after { display: none; } }
+  .hamburger {
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+    width: 2.25rem; height: 2.25rem; padding: .375rem;
+    background: transparent; border: 1px solid var(--border-strong);
+    border-radius: 6px; cursor: pointer;
+  }
+  .hamburger span { display: block; height: 1.5px; width: 100%; background: var(--ink-soft); transition: transform .2s ease, opacity .2s ease; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  .mobile-menu { display: none; border-top: 1px solid var(--border); background: var(--bg); }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block; padding: .875rem 1.5rem; font-size: .9375rem;
+    color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:hover { background: var(--bg-alt); color: var(--ink); }
+  .mobile-menu a:last-of-type { border-bottom: none; }
+  .avatar-header {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 600; flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* ---------- Page ---------- */
+  .page { max-width: 1160px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+  @media (min-width: 768px) { .page { padding: 0 2.5rem 6rem; } }
+
+  .crumb {
+    display: flex; align-items: center; gap: .5rem;
+    padding: 1.5rem 0 1rem; font-size: .8125rem; color: var(--muted);
+  }
+  .crumb a { color: var(--muted); transition: color .15s ease; }
+  .crumb a:hover { color: var(--ink); }
+  .crumb .sep { color: var(--border-strong); }
+  .crumb .current { color: var(--ink); font-weight: 500; }
+
+  /* ---------- Blog hero ---------- */
+  .blog-hero {
+    padding-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  .blog-eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .blog-eyebrow::before {
+    content: ''; width: 20px; height: 1px; background: var(--accent);
+  }
+  .blog-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 2rem; font-weight: 500;
+    line-height: 1.15; letter-spacing: -.02em;
+    color: var(--ink); margin: 0 0 .75rem;
+  }
+  @media (min-width: 768px) { .blog-title { font-size: 2.75rem; } }
+  .blog-sub {
+    font-size: 1.0625rem; line-height: 1.6;
+    color: var(--ink-soft); margin: 0;
+    max-width: 640px;
+  }
+
+  /* ---------- Tag filter ---------- */
+  .tag-bar {
+    display: flex; flex-wrap: wrap; gap: .5rem;
+    padding: 1.25rem 0 2rem;
+    margin-bottom: .5rem;
+  }
+  .tag-btn {
+    display: inline-flex; align-items: center; gap: .375rem;
+    padding: .4375rem .875rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: .8125rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .tag-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .tag-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .tag-btn .tag-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem;
+    opacity: .6;
+    font-variant-numeric: tabular-nums;
+  }
+  .tag-btn.active .tag-count { opacity: .8; }
+
+  /* ---------- Featured post ---------- */
+  .featured-post {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+    transition: border-color .2s ease;
+    cursor: pointer;
+  }
+  @media (min-width: 900px) {
+    .featured-post { grid-template-columns: 1.1fr 1fr; }
+  }
+  .featured-post:hover { border-color: var(--accent); }
+
+  .featured-cover {
+    min-height: 240px;
+    position: relative;
+    background: var(--accent);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  @media (min-width: 900px) {
+    .featured-cover { min-height: 360px; }
+  }
+  .featured-cover::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 24px,
+      rgba(255,255,255,.06) 24px,
+      rgba(255,255,255,.06) 25px
+    );
+    pointer-events: none;
+  }
+  .featured-cover-inner {
+    position: relative;
+    text-align: center;
+    color: #fff;
+  }
+  .featured-cover-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(255,255,255,.65);
+    margin-bottom: 1rem;
+  }
+  .featured-cover-number {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 4rem; font-weight: 500;
+    line-height: 1;
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (min-width: 900px) {
+    .featured-cover-number { font-size: 5.5rem; }
+  }
+  .featured-cover-desc {
+    font-size: .8125rem;
+    color: rgba(255,255,255,.75);
+    margin-top: .75rem;
+    letter-spacing: .02em;
+  }
+
+  .featured-body {
+    padding: 1.75rem 1.75rem 2rem;
+    display: flex; flex-direction: column;
+    justify-content: center;
+  }
+  @media (min-width: 768px) {
+    .featured-body { padding: 2.5rem 2.75rem; }
+  }
+
+  .post-cat {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: .875rem;
+  }
+  .post-cat::before {
+    content: ''; width: 5px; height: 5px;
+    background: var(--accent); border-radius: 50%;
+  }
+
+  .featured-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.5rem; font-weight: 500;
+    line-height: 1.25; letter-spacing: -.015em;
+    color: var(--ink);
+    margin: 0 0 1rem;
+  }
+  @media (min-width: 768px) {
+    .featured-title { font-size: 1.875rem; }
+  }
+
+  .featured-excerpt {
+    font-size: 1rem; line-height: 1.65;
+    color: var(--ink-soft);
+    margin: 0 0 1.5rem;
+  }
+
+  .post-meta {
+    display: flex; align-items: center; flex-wrap: wrap;
+    gap: .75rem;
+    font-size: .8125rem; color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .post-meta .dot { color: var(--border-strong); }
+  .post-meta strong { color: var(--ink); font-weight: 500; }
+  .post-meta-author {
+    display: inline-flex; align-items: center; gap: .5rem;
+  }
+  .post-meta-avatar {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--accent-soft); color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .625rem; font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ---------- Blog grid + sidebar ---------- */
+  .blog-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  @media (min-width: 1024px) {
+    .blog-layout {
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 4rem;
+      align-items: start;
+    }
+  }
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  @media (min-width: 640px) {
+    .post-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .post-card {
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    border-top: 1px solid var(--border);
+    padding-top: 1.25rem;
+    transition: border-color .15s ease;
+  }
+  .post-card:hover { border-top-color: var(--accent); }
+
+  .post-card-cat {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .625rem;
+  }
+  .post-card-cat .cat-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--muted);
+  }
+  .post-card[data-cat="product"] .post-card-cat .cat-dot { background: var(--accent); }
+  .post-card[data-cat="product"] .post-card-cat { color: var(--accent); }
+  .post-card[data-cat="policy"] .post-card-cat .cat-dot { background: var(--warning); }
+  .post-card[data-cat="policy"] .post-card-cat { color: var(--warning); }
+  .post-card[data-cat="story"] .post-card-cat .cat-dot { background: var(--success); }
+  .post-card[data-cat="story"] .post-card-cat { color: var(--success); }
+  .post-card[data-cat="engineering"] .post-card-cat .cat-dot { background: #6b4f8a; }
+  .post-card[data-cat="engineering"] .post-card-cat { color: #6b4f8a; }
+
+  .post-card-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; font-weight: 500;
+    line-height: 1.35; letter-spacing: -.005em;
+    color: var(--ink);
+    margin: 0 0 .625rem;
+    transition: color .15s ease;
+  }
+  .post-card:hover .post-card-title { color: var(--accent); }
+
+  .post-card-excerpt {
+    font-size: .875rem; line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-card-meta {
+    font-size: .75rem; color: var(--muted);
+    display: flex; align-items: center; gap: .5rem;
+    flex-wrap: wrap;
+    margin-top: auto;
+    font-variant-numeric: tabular-nums;
+  }
+  .post-card-meta .dot { color: var(--border-strong); }
+
+  /* ---------- Sidebar ---------- */
+  .side-card-blog {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+  }
+  .side-card-blog:last-child { margin-bottom: 0; }
+  .side-card-blog-head {
+    padding: .875rem 1.25rem;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .side-card-blog-body { padding: 1.125rem 1.25rem; }
+
+  /* Popular posts */
+  .popular-item {
+    display: flex; gap: .875rem;
+    padding: .875rem 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    align-items: flex-start;
+  }
+  .popular-item:first-child { padding-top: 0; }
+  .popular-item:last-child { padding-bottom: 0; border-bottom: none; }
+  .popular-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem; font-weight: 600;
+    color: var(--muted-2);
+    letter-spacing: .04em;
+    min-width: 1.25rem;
+    padding-top: .125rem;
+  }
+  .popular-item:nth-child(1) .popular-num,
+  .popular-item:nth-child(2) .popular-num,
+  .popular-item:nth-child(3) .popular-num {
+    color: var(--accent);
+  }
+  .popular-info { min-width: 0; flex: 1; }
+  .popular-title {
+    font-size: .8125rem; font-weight: 500;
+    color: var(--ink);
+    line-height: 1.4;
+    margin: 0 0 .25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color .15s ease;
+  }
+  .popular-item:hover .popular-title { color: var(--accent); }
+  .popular-meta {
+    font-size: .6875rem; color: var(--muted);
+    display: flex; align-items: center; gap: .375rem;
+  }
+  .popular-meta .dot { color: var(--border-strong); }
+
+  /* Newsletter */
+  .newsletter {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 8px;
+    padding: 1.5rem 1.5rem 1.75rem;
+    margin-bottom: 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .newsletter::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20px,
+      rgba(255,255,255,.05) 20px,
+      rgba(255,255,255,.05) 21px
+    );
+    pointer-events: none;
+  }
+  .newsletter-inner { position: relative; }
+  .newsletter-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: rgba(255,255,255,.65);
+    margin-bottom: .625rem;
+  }
+  .newsletter-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -.005em;
+    margin: 0 0 .5rem;
+  }
+  .newsletter-desc {
+    font-size: .8125rem;
+    color: rgba(255,255,255,.8);
+    line-height: 1.55;
+    margin: 0 0 1rem;
+  }
+  .newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+  .newsletter-form input {
+    width: 100%;
+    padding: .625rem .75rem;
+    font-size: .875rem; font-family: inherit;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid transparent;
+    border-radius: 6px;
+  }
+  .newsletter-form input:focus {
+    outline: none;
+    border-color: #fff;
+    box-shadow: 0 0 0 3px rgba(255,255,255,.25);
+  }
+  .newsletter-form input::placeholder { color: var(--muted-2); }
+  .newsletter-form button {
+    padding: .625rem .75rem;
+    font-size: .875rem; font-weight: 500;
+    font-family: inherit;
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .newsletter-form button:hover {
+    background: rgba(255,255,255,.25);
+    border-color: rgba(255,255,255,.4);
+  }
+  .newsletter-note {
+    font-size: .6875rem;
+    color: rgba(255,255,255,.6);
+    margin-top: .75rem;
+    line-height: 1.5;
+  }
+
+  /* Topics */
+  .topic-list {
+    display: flex; flex-wrap: wrap; gap: .375rem;
+  }
+  .topic-tag {
+    display: inline-flex; align-items: center;
+    padding: .3125rem .625rem;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: .75rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .topic-tag:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .topic-tag .topic-count {
+    margin-left: .375rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem;
+    color: var(--muted-2);
+  }
+
+  /* Load more */
+  .load-more {
+    display: flex; justify-content: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Empty */
+  .empty-blog {
+    grid-column: 1 / -1;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    border: 1px dashed var(--border-strong);
+    border-radius: 8px;
+  }
+  .empty-blog-title {
+    font-size: .9375rem; font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 .375rem;
+  }
+  .empty-blog-desc {
+    font-size: .875rem; color: var(--muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: #fff; font-size: .875rem;
+    padding: .75rem 1.25rem; border-radius: 6px; z-index: 120;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    transition: transform .25s ease;
+    display: flex; align-items: center; gap: .625rem;
+    max-width: calc(100vw - 2rem);
+  }
+  .toast.on { transform: translateX(-50%) translateY(0); }
+  .toast .check {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--success);
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="top">
+  <div class="wrap">
+    <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAODOI trang chủ">
+        <span class="font-serif text-[1.375rem] font-medium tracking-[-.01em]">TRAODOI</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+        <a href="#" class="nav-link">Trang chủ</a>
+        <a href="#" class="nav-link">Khám phá</a>
+        <a href="#" class="nav-link">Nhiệm vụ</a>
+        <a href="#" class="nav-link active">Blog</a>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-3">
+        <span class="avatar-header" aria-label="Tài khoản của tôi">MA</span>
+      </div>
+
+      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu md:hidden" id="mobileMenu">
+    <a href="#">Trang chủ</a>
+    <a href="#">Khám phá</a>
+    <a href="#">Nhiệm vụ</a>
+    <a href="#" style="font-weight:500;color:var(--ink)">Blog</a>
+  </div>
+</header>
+
+<!-- ================= PAGE ================= -->
+<div class="page">
+
+  <!-- Breadcrumb -->
+  <nav class="crumb" aria-label="Breadcrumb">
+    <a href="#">Trang chủ</a>
+    <span class="sep">/</span>
+    <span class="current">Blog &amp; Cập nhật</span>
+  </nav>
+
+  <!-- Blog hero -->
+  <section class="blog-hero">
+    <span class="blog-eyebrow">Blog · Cập nhật · Câu chuyện</span>
+    <h1 class="blog-title">
+      Chúng tôi đang xây dựng gì và vì sao
+    </h1>
+    <p class="blog-sub">
+      Cập nhật tính năng mới, thay đổi chính sách, bài học từ vận hành, và câu chuyện từ những người dùng thật trên TRAODOI.
+    </p>
+  </section>
+
+  <!-- Tag filter -->
+  <div class="tag-bar" id="tagBar">
+    <button class="tag-btn active" data-tag="all">
+      Tất cả <span class="tag-count">14</span>
+    </button>
+    <button class="tag-btn" data-tag="product">
+      Sản phẩm <span class="tag-count">6</span>
+    </button>
+    <button class="tag-btn" data-tag="policy">
+      Chính sách <span class="tag-count">3</span>
+    </button>
+    <button class="tag-btn" data-tag="story">
+      Câu chuyện <span class="tag-count">3</span>
+    </button>
+    <button class="tag-btn" data-tag="engineering">
+      Kỹ thuật <span class="tag-count">2</span>
+    </button>
+  </div>
+
+  <!-- Featured post -->
+  <article class="featured-post" data-cat="product" id="featuredPost">
+    <div class="featured-cover">
+      <div class="featured-cover-inner">
+        <div class="featured-cover-label">Bản cập nhật lớn</div>
+        <div class="featured-cover-number">v3.2</div>
+        <div class="featured-cover-desc">Ra mắt 15/10/2025</div>
+      </div>
+    </div>
+    <div class="featured-body">
+      <span class="post-cat">Sản phẩm · Nổi bật</span>
+      <h2 class="featured-title">
+        Trust Score 2.0: minh bạch hơn, khó gian lận hơn, công bằng hơn
+      </h2>
+      <p class="featured-excerpt">
+        Chúng tôi viết lại toàn bộ thuật toán tính Trust Score từ đầu. Điểm không còn là một con số duy nhất, mà là tổng hợp của 5 yếu tố độc lập — mỗi yếu tố có trọng số riêng và không thể thao túng bằng một hành vi duy nhất.
+      </p>
+      <div class="post-meta">
+        <span class="post-meta-author">
+          <span class="post-meta-avatar">TN</span>
+          <strong>Trọng Nghĩa</strong>
+        </span>
+        <span class="dot">·</span>
+        <span>15/10/2025</span>
+        <span class="dot">·</span>
+        <span>12 phút đọc</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- Blog layout -->
+  <div class="blog-layout">
+
+    <!-- ============ MAIN: POST GRID ============ -->
+    <main>
+      <div class="post-grid" id="postGrid">
+        <!-- injected by JS -->
+      </div>
+
+      <div class="load-more">
+        <button class="btn btn-secondary" id="loadMoreBtn">Tải thêm bài viết</button>
+      </div>
+    </main>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside>
+
+      <!-- Newsletter -->
+      <div class="newsletter">
+        <div class="newsletter-inner">
+          <div class="newsletter-eyebrow">Bản tin hàng tuần</div>
+          <h3 class="newsletter-title">Nhận cập nhật mới nhất qua email</h3>
+          <p class="newsletter-desc">
+            Một email mỗi thứ Hai. Tóm tắt tính năng mới, thay đổi chính sách, và mẹo sử dụng.
+          </p>
+          <form class="newsletter-form" id="newsletterForm">
+            <input type="email" placeholder="you@example.com" required id="newsletterEmail" />
+            <button type="submit">Đăng ký</button>
+          </form>
+          <p class="newsletter-note">
+            Không spam. Có thể hủy đăng ký bất kỳ lúc nào.
+          </p>
+        </div>
+      </div>
+
+      <!-- Popular posts -->
+      <div class="side-card-blog">
+        <div class="side-card-blog-head">Đọc nhiều nhất</div>
+        <div class="side-card-blog-body">
+          <div class="popular-item" data-post="p1">
+            <span class="popular-num">01</span>
+            <div class="popular-info">
+              <p class="popular-title">Tại sao chúng tôi không cho chuyển Credits giữa người dùng</p>
+              <div class="popular-meta">
+                <span>8,2k lượt đọc</span>
+                <span class="dot">·</span>
+                <span>Chính sách</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="popular-item" data-post="p2">
+            <span class="popular-num">02</span>
+            <div class="popular-info">
+              <p class="popular-title">5 sai lầm khiến Trust Score của bạn giảm nhanh</p>
+              <div class="popular-meta">
+                <span>6,8k lượt đọc</span>
+                <span class="dot">·</span>
+                <span>Sản phẩm</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="popular-item" data-post="p3">
+            <span class="popular-num">03</span>
+            <div class="popular-info">
+              <p class="popular-title">Câu chuyện của Minh Anh: từ 0 đến 100 nhiệm vụ trong 6 tháng</p>
+              <div class="popular-meta">
+                <span>5,4k lượt đọc</span>
+                <span class="dot">·</span>
+                <span>Câu chuyện</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="popular-item" data-post="p4">
+            <span class="popular-num">04</span>
+            <div class="popular-info">
+              <p class="popular-title">Chúng tôi phát hiện và chặn 200 tài khoản bot như thế nào</p>
+              <div class="popular-meta">
+                <span>4,1k lượt đọc</span>
+                <span class="dot">·</span>
+                <span>Kỹ thuật</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="popular-item" data-post="p5">
+            <span class="popular-num">05</span>
+            <div class="popular-info">
+              <p class="popular-title">Điều khoản sử dụng v3.2 có gì mới — tóm tắt trong 3 phút</p>
+              <div class="popular-meta">
+                <span>3,7k lượt đọc</span>
+                <span class="dot">·</span>
+                <span>Chính sách</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Topics -->
+      <div class="side-card-blog">
+        <div class="side-card-blog-head">Chủ đề</div>
+        <div class="side-card-blog-body">
+          <div class="topic-list">
+            <button class="topic-tag">Trust Score <span class="topic-count">12</span></button>
+            <button class="topic-tag">Credits <span class="topic-count">8</span></button>
+            <button class="topic-tag">Nhiệm vụ <span class="topic-count">15</span></button>
+            <button class="topic-tag">Bảo mật <span class="topic-count">6</span></button>
+            <button class="topic-tag">Tranh chấp <span class="topic-count">4</span></button>
+            <button class="topic-tag">Cộng đồng <span class="topic-count">9</span></button>
+            <button class="topic-tag">Tài khoản <span class="topic-count">7</span></button>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+</div>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Thành công</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ POSTS DATA ============ */
+  const POSTS = [
+    {
+      id: 'post-1', cat: 'product', catLabel: 'Sản phẩm',
+      title: 'Cấu hình tài khoản mạng xã hội một lần, dùng cho mọi nhiệm vụ',
+      excerpt: 'Từ v3.2, bạn chỉ cần khai báo tài khoản mạng xã hội một lần. Hệ thống tự chọn tài khoản phù hợp khi bạn nhận nhiệm vụ — không cần cấu hình lại mỗi lần.',
+      date: '12/10/2025', readTime: '4 phút', author: 'Đức Huy', authorInitials: 'DH'
+    },
+    {
+      id: 'post-2', cat: 'policy', catLabel: 'Chính sách',
+      title: 'Điều khoản sử dụng v3.2 — tóm tắt những gì thay đổi',
+      excerpt: 'Bổ sung quy định rõ hơn về giao dịch Credits bên ngoài, bổ sung mục về chuyển dữ liệu quốc tế, và làm rõ quy trình kháng cáo tranh chấp. Không có thay đổi nào ảnh hưởng đến quyền lợi hiện tại của bạn.',
+      date: '08/10/2025', readTime: '6 phút', author: 'Minh Anh', authorInitials: 'MA'
+    },
+    {
+      id: 'post-3', cat: 'story', catLabel: 'Câu chuyện',
+      title: 'Từ 0 đến 100 nhiệm vụ trong 6 tháng: câu chuyện của Minh Anh',
+      excerpt: 'Minh Anh mở studio ảnh nhỏ ở Đà Nẵng. Chị bắt đầu dùng TRAODOI để quảng bá tác phẩm, và sau 6 tháng đã trở thành một trong những người tạo nhiệm vụ uy tín nhất.',
+      date: '05/10/2025', readTime: '8 phút', author: 'Thanh Vân', authorInitials: 'TV'
+    },
+    {
+      id: 'post-4', cat: 'engineering', catLabel: 'Kỹ thuật',
+      title: 'Chúng tôi phát hiện và chặn 200 tài khoản bot như thế nào',
+      excerpt: 'Tuần trước, hệ thống phát hiện một nhóm tài khoản có dấu hiệu bất thường: 40 nhiệm vụ trong 2 giờ, cùng IP, pattern tương tác giống nhau. Đây là cách chúng tôi xử lý.',
+      date: '01/10/2025', readTime: '10 phút', author: 'Trọng Nghĩa', authorInitials: 'TN'
+    },
+    {
+      id: 'post-5', cat: 'product', catLabel: 'Sản phẩm',
+      title: 'Trang Khám phá mới: gợi ý nhiệm vụ theo sở thích của bạn',
+      excerpt: 'Không còn phải lọc thủ công. Trang Khám phá mới dùng lịch sử hoạt động của bạn để gợi ý nhiệm vụ phù hợp — càng làm nhiều, gợi ý càng chính xác.',
+      date: '28/09/2025', readTime: '5 phút', author: 'Quốc Bảo', authorInitials: 'QB'
+    },
+    {
+      id: 'post-6', cat: 'policy', catLabel: 'Chính sách',
+      title: 'Tại sao chúng tôi không cho chuyển Credits giữa người dùng',
+      excerpt: 'Một trong những câu hỏi phổ biến nhất. Câu trả lời ngắn: để ngăn chặn thị trường chợ đen Credits và bảo vệ giá trị của hệ thống uy tín.',
+      date: '25/09/2025', readTime: '7 phút', author: 'Minh Anh', authorInitials: 'MA'
+    },
+    {
+      id: 'post-7', cat: 'story', catLabel: 'Câu chuyện',
+      title: 'Làm sao Hoàng Nam quản lý 30 nhiệm vụ mỗi tuần mà không kiệt sức',
+      excerpt: 'Hoàng Nam là một trong những người dùng tích cực nhất. Anh chia sẻ cách sắp xếp thời gian, chọn nhiệm vụ, và tránh để Trust Score giảm khi có quá nhiều việc.',
+      date: '22/09/2025', readTime: '9 phút', author: 'Mỹ Duyên', authorInitials: 'MD'
+    },
+    {
+      id: 'post-8', cat: 'product', catLabel: 'Sản phẩm',
+      title: 'Nhiệm vụ có xác minh thủ công: khi nào và vì sao',
+      excerpt: 'Không phải nhiệm vụ nào cũng xác minh tự động được. Bình luận có nội dung, chia sẻ ở chế độ công khai — cần con người đánh giá. Đây là cách chúng tôi làm.',
+      date: '18/09/2025', readTime: '6 phút', author: 'Trọng Nghĩa', authorInitials: 'TN'
+    },
+    {
+      id: 'post-9', cat: 'policy', catLabel: 'Chính sách',
+      title: '5 sai lầm khiến Trust Score của bạn giảm nhanh',
+      excerpt: 'Nhận quá nhiều nhiệm vụ, gửi xác nhận sai, để nhiệm vụ hết hạn liên tiếp — đây là ba trong số những sai lầm phổ biến nhất. Cách tránh chúng rất đơn giản.',
+      date: '15/09/2025', readTime: '5 phút', author: 'Đức Huy', authorInitials: 'DH'
+    },
+    {
+      id: 'post-10', cat: 'engineering', catLabel: 'Kỹ thuật',
+      title: 'Chúng tôi xây dựng hệ thống xác minh tương tác như thế nào',
+      excerpt: 'Đằng sau mỗi nhiệm vụ được xác minh tự động là một kiến trúc gồm 3 lớp: kiểm tra API, phân tích pattern, và fallback thủ công. Đây là cách nó hoạt động.',
+      date: '12/09/2025', readTime: '12 phút', author: 'Trọng Nghĩa', authorInitials: 'TN'
+    }
+  ];
+
+  const CAT_CLS = {
+    product: 'product',
+    policy: 'policy',
+    story: 'story',
+    engineering: 'engineering'
+  };
+
+  let currentTag = 'all';
+
+  /* ============ RENDER ============ */
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function renderPost(p) {
+    return `
+      <article class="post-card" data-cat="${p.cat}" data-post="${p.id}">
+        <span class="post-card-cat">
+          <span class="cat-dot"></span>
+          ${escapeHtml(p.catLabel)}
+        </span>
+        <h3 class="post-card-title">${escapeHtml(p.title)}</h3>
+        <p class="post-card-excerpt">${escapeHtml(p.excerpt)}</p>
+        <div class="post-card-meta">
+          <span>${escapeHtml(p.author)}</span>
+          <span class="dot">·</span>
+          <span>${escapeHtml(p.date)}</span>
+          <span class="dot">·</span>
+          <span>${escapeHtml(p.readTime)} đọc</span>
+        </div>
+      </article>
+    `;
+  }
+
+  function render() {
+    const featured = document.getElementById('featuredPost');
+    // Featured chỉ hiển thị khi tag là all hoặc product
+    const showFeatured = currentTag === 'all' || currentTag === 'product';
+    featured.style.display = showFeatured ? '' : 'none';
+
+    const filtered = currentTag === 'all'
+      ? POSTS
+      : POSTS.filter(p => p.cat === currentTag);
+
+    const grid = document.getElementById('postGrid');
+    if (!filtered.length) {
+      grid.innerHTML = `
+        <div class="empty-blog">
+          <div class="empty-blog-title">Chưa có bài viết nào</div>
+          <p class="empty-blog-desc">Chủ đề này chưa có bài viết. Vui lòng chọn chủ đề khác.</p>
+        </div>
+      `;
+      return;
+    }
+    grid.innerHTML = filtered.map(renderPost).join('');
+
+    // Bind click
+    grid.querySelectorAll('[data-post]').forEach(card => {
+      card.addEventListener('click', () => {
+        const p = POSTS.find(x => x.id === card.dataset.post);
+        if (p) showToast('Đang mở: ' + p.title);
+      });
+    });
+  }
+
+  /* ============ TAG FILTER ============ */
+  document.querySelectorAll('.tag-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTag = btn.dataset.tag;
+      render();
+    });
+  });
+
+  /* ============ FEATURED CLICK ============ */
+  document.getElementById('featuredPost').addEventListener('click', () => {
+    showToast('Đang mở: Trust Score 2.0 — minh bạch hơn, khó gian lận hơn');
+  });
+
+  /* ============ POPULAR CLICK ============ */
+  document.querySelectorAll('[data-post]').forEach(item => {
+    item.addEventListener('click', () => {
+      const title = item.querySelector('.popular-title').textContent.trim();
+      showToast('Đang mở: ' + title);
+    });
+  });
+
+  /* ============ TOPICS CLICK ============ */
+  document.querySelectorAll('.topic-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      showToast('Đang lọc theo chủ đề: ' + tag.textContent.trim().replace(/\s*\d+$/, ''));
+    });
+  });
+
+  /* ============ NEWSLETTER ============ */
+  document.getElementById('newsletterForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('newsletterEmail').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast('Email không hợp lệ.');
+      return;
+    }
+    document.getElementById('newsletterEmail').value = '';
+    showToast('Đã đăng ký. Bạn sẽ nhận bản tin đầu tiên vào thứ Hai tới.');
+  });
+
+  /* ============ LOAD MORE ============ */
+  document.getElementById('loadMoreBtn').addEventListener('click', function() {
+    const original = this.textContent;
+    this.disabled = true;
+    this.textContent = 'Đang tải…';
+    this.style.opacity = '.6';
+    setTimeout(() => {
+      this.textContent = original;
+      this.disabled = false;
+      this.style.opacity = '';
+      showToast('Đã tải hết bài viết hiện có. Quay lại sau để xem thêm.');
+    }, 900);
+  });
+
+  /* ============ TOAST ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('on'), 2800);
+  }
+
+  /* ============ HEADER MOBILE MENU ============ */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburgerBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', open);
+    hamburgerBtn.setAttribute('aria-expanded', open);
+  });
+
+  /* ============ INIT ============ */
+  render();
+
+})();
+</script>
+
+</body>
+</html>

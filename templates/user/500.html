@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lỗi máy chủ — TRAODOI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf9f7;
+    --bg-alt: #f4f2ee;
+    --bg-hover: #fcfbf9;
+    --ink: #1e1e1e;
+    --ink-soft: #3d3d3d;
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --border: #e3e0da;
+    --border-strong: #d0ccc4;
+    --accent: #1e3a5f;
+    --accent-hover: #162c47;
+    --accent-soft: #e8edf3;
+    --success: #2f6b4f;
+    --success-soft: #e8f0eb;
+    --warning: #8a6a1f;
+    --warning-soft: #f4edda;
+    --danger: #8a2f2f;
+    --danger-soft: #f4e5e5;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    font-weight: 500; font-size: .9375rem; line-height: 1;
+    padding: .75rem 1.5rem; border-radius: 6px;
+    border: 1px solid transparent; cursor: pointer; text-decoration: none;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    white-space: nowrap; font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+  .btn-secondary:hover { background: var(--bg-alt); border-color: var(--muted); }
+  .btn-sm { padding: .5rem .875rem; font-size: .8125rem; }
+
+  /* ---------- Header ---------- */
+  .top {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .top .wrap { max-width: 1160px; margin: 0 auto; padding: 0 1.5rem; }
+  @media (min-width: 768px) { .top .wrap { padding: 0 2.5rem; } }
+  .brand {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.375rem; font-weight: 500;
+    letter-spacing: -.01em;
+  }
+  .brand-sub {
+    font-size: .75rem; color: var(--muted);
+    margin-left: .625rem;
+    letter-spacing: .04em;
+  }
+
+  /* ---------- Main ---------- */
+  .err-shell {
+    flex: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+    width: 100%;
+  }
+  @media (min-width: 768px) {
+    .err-shell { padding: 5rem 2.5rem 5rem; }
+  }
+
+  .err-eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+  .err-eyebrow::before {
+    content: ''; width: 20px; height: 1px; background: var(--accent);
+  }
+  .err-eyebrow.danger { color: var(--danger); }
+  .err-eyebrow.danger::before { background: var(--danger); }
+
+  /* ---------- Big code number ---------- */
+  .err-code {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: clamp(5rem, 18vw, 10rem);
+    font-weight: 500;
+    line-height: .85;
+    letter-spacing: -.05em;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    margin: 0 0 .5rem;
+    display: block;
+  }
+  .err-code .accent { color: var(--accent); }
+  .err-code .danger { color: var(--danger); }
+
+  .err-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.5rem; font-weight: 500;
+    line-height: 1.25; letter-spacing: -.015em;
+    color: var(--ink);
+    margin: 0 0 1rem;
+    max-width: 640px;
+  }
+  @media (min-width: 768px) { .err-title { font-size: 2rem; } }
+
+  .err-lede {
+    font-size: 1.0625rem; line-height: 1.65;
+    color: var(--ink-soft);
+    margin: 0 0 2.25rem;
+    max-width: 560px;
+  }
+
+  /* ---------- Context box (chi tiết lỗi) ---------- */
+  .err-context {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    max-width: 640px;
+  }
+  .err-context-row {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    padding: .625rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: .8125rem;
+  }
+  @media (min-width: 480px) {
+    .err-context-row {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 1.5rem;
+    }
+  }
+  .err-context-row:first-child { padding-top: 0; }
+  .err-context-row:last-child { padding-bottom: 0; border-bottom: none; }
+  .err-context-key {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem;
+    font-weight: 500;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+  .err-context-val {
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .8125rem;
+    word-break: break-all;
+  }
+  .err-context-val.soft {
+    font-family: inherit;
+    color: var(--ink-soft);
+    font-size: .875rem;
+  }
+
+  /* ---------- Quick links ---------- */
+  .err-actions {
+    display: flex; flex-wrap: wrap; gap: .625rem;
+    margin-bottom: 3rem;
+  }
+
+  .quick-links-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .quick-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+    margin-bottom: 3rem;
+  }
+  @media (min-width: 480px) { .quick-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 768px) { .quick-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .quick-card {
+    display: flex; align-items: center; gap: .75rem;
+    padding: 1rem 1.125rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color .15s ease, transform .15s ease;
+    cursor: pointer;
+  }
+  .quick-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .quick-card-icon {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .quick-card-text { min-width: 0; }
+  .quick-card-title {
+    font-size: .875rem; font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 .125rem;
+  }
+  .quick-card-desc {
+    font-size: .75rem; color: var(--muted);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* ---------- Report box (chỉ hiển thị ở 500) ---------- */
+  .report-box {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--danger);
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    max-width: 640px;
+  }
+  .report-box-title {
+    display: flex; align-items: center; gap: .5rem;
+    font-size: .8125rem; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    color: var(--danger);
+    margin-bottom: .5rem;
+  }
+  .report-box-desc {
+    font-size: .875rem; color: var(--ink-soft);
+    line-height: 1.6;
+    margin: 0 0 1rem;
+  }
+  .report-box-desc strong { color: var(--ink); font-weight: 500; }
+  .report-box-actions {
+    display: flex; flex-wrap: wrap; gap: .5rem;
+  }
+
+  /* ---------- Footer ---------- */
+  .err-footer {
+    border-top: 1px solid var(--border);
+    padding: 1.75rem 1.5rem;
+    background: var(--bg-alt);
+    text-align: center;
+  }
+  @media (min-width: 768px) { .err-footer { padding: 2rem 2.5rem; } }
+
+  .err-footer-text {
+    font-size: .8125rem; color: var(--muted);
+    margin: 0;
+    display: flex; flex-wrap: wrap;
+    gap: .75rem; justify-content: center;
+    align-items: center;
+  }
+  .err-footer-text .sep { color: var(--border-strong); }
+  .err-footer-text a {
+    color: var(--muted);
+    transition: color .15s ease;
+  }
+  .err-footer-text a:hover { color: var(--ink); }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: #fff; font-size: .875rem;
+    padding: .75rem 1.25rem; border-radius: 6px; z-index: 120;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    transition: transform .25s ease;
+    display: flex; align-items: center; gap: .625rem;
+    max-width: calc(100vw - 2rem);
+  }
+  .toast.on { transform: translateX(-50%) translateY(0); }
+  .toast .check {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--success);
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="top">
+  <div class="wrap">
+    <div class="flex items-center justify-between h-[68px]">
+      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
+        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]" style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main class="err-shell">
+
+  <!-- ============ VARIANT: 500 ============ -->
+  <div class="error-container">
+    <span class="err-eyebrow danger">Lỗi 500 · Máy chủ gặp sự cố</span>
+
+    <div class="err-code">5<span class="danger">0</span>0</div>
+
+    <h1 class="err-title">
+      Có gì đó không ổn ở phía chúng tôi
+    </h1>
+    <p class="err-lede">
+      Đây là lỗi từ hệ thống, không phải từ bạn. Đội ngũ kỹ thuật đã được thông báo tự động. Chúng tôi sẽ khắc phục trong thời gian sớm nhất.
+    </p>
+
+    <div class="report-box">
+      <div class="report-box-title">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M7 3V7M7 10H7.01M2 7C2 4.2 4.2 2 7 2C9.8 2 12 4.2 12 7C12 9.8 9.8 12 7 12C4.2 12 2 9.8 2 7Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Trạng thái hệ thống
+      </div>
+      <p class="report-box-desc">
+        <strong>Đang khắc phục.</strong> Đây là sự cố tạm thời. Vui lòng thử lại sau vài phút. Nếu vấn đề kéo dài, hãy liên hệ hỗ trợ kèm mã tham chiếu bên dưới.
+      </p>
+      <div class="report-box-actions">
+        <button class="btn btn-primary btn-sm" id="retryBtn">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M12 7C12 9.8 9.8 12 7 12C4.2 12 2 9.8 2 7C2 4.2 4.2 2 7 2C9 2 10.7 3.1 11.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M12 2V5H9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Thử lại
+        </button>
+        <button class="btn btn-secondary btn-sm" id="reportError">
+          Báo cáo sự cố
+        </button>
+      </div>
+    </div>
+
+    <div class="err-context">
+      <div class="err-context-row">
+        <span class="err-context-key">Đường dẫn</span>
+        <span class="err-context-val" id="serverErrorUrl">/api/tasks</span>
+      </div>
+      <div class="err-context-row">
+        <span class="err-context-key">Thời gian</span>
+        <span class="err-context-val" id="serverErrorTime">—</span>
+      </div>
+      <div class="err-context-row">
+        <span class="err-context-key">Mã tham chiếu</span>
+        <span class="err-context-val" id="serverErrorRef">#ERR-500-XXXX</span>
+      </div>
+      <div class="err-context-row">
+        <span class="err-context-key">Trạng thái</span>
+        <span class="err-context-val soft">Đang được điều tra</span>
+      </div>
+    </div>
+
+    <div class="err-actions">
+      <a href="#" class="btn btn-primary">Về trang chủ</a>
+      <a href="#" class="btn btn-secondary">Kiểm tra trạng thái</a>
+    </div>
+
+    <span class="quick-links-title">Trong lúc chờ khắc phục</span>
+    <div class="quick-grid">
+      <a href="#" class="quick-card">
+        <span class="quick-card-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 3H12V11H2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+            <path d="M2 5H12" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+        </span>
+        <div class="quick-card-text">
+          <p class="quick-card-title">Trung tâm trợ giúp</p>
+          <p class="quick-card-desc">Có thể có câu trả lời</p>
+        </div>
+      </a>
+
+      <a href="#" class="quick-card">
+        <span class="quick-card-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M7 4V7L9 8.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <div class="quick-card-text">
+          <p class="quick-card-title">Trạng thái hệ thống</p>
+          <p class="quick-card-desc">Cập nhật real-time</p>
+        </div>
+      </a>
+
+      <a href="#" class="quick-card">
+        <span class="quick-card-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 4L7 7.5L12 4M2 4V10H12V4H2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <div class="quick-card-text">
+          <p class="quick-card-title">Liên hệ hỗ trợ</p>
+          <p class="quick-card-desc">hello@traodoi.app</p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="err-footer">
+  <p class="err-footer-text">
+    <span>© 2025 TRAODOI</span>
+    <span class="sep">·</span>
+    <a href="#">Điều khoản</a>
+    <span class="sep">·</span>
+    <a href="#">Chính sách bảo mật</a>
+    <span class="sep">·</span>
+    <a href="#">Trung tâm trợ giúp</a>
+    <span class="sep">·</span>
+    <a href="#">Trạng thái hệ thống</a>
+  </p>
+</footer>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Thành công</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ FILL CONTEXT ============ */
+  const now = new Date();
+  const timeStr = now.getDate().toString().padStart(2, '0') + '/' +
+                  (now.getMonth() + 1).toString().padStart(2, '0') + '/' +
+                  now.getFullYear() + ' · ' +
+                  now.getHours().toString().padStart(2, '0') + ':' +
+                  now.getMinutes().toString().padStart(2, '0') + ':' +
+                  now.getSeconds().toString().padStart(2, '0');
+
+  const refRandom = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let s = '';
+    for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+    return s;
+  };
+
+  document.getElementById('serverErrorTime').textContent = timeStr;
+  document.getElementById('serverErrorRef').textContent = '#ERR-500-' + refRandom();
+
+  // Đường dẫn thật (nếu có)
+  const path = window.location.pathname;
+  if (path && path !== '/' && path !== '/500.html') {
+    document.getElementById('serverErrorUrl').textContent = path;
+  }
+
+  /* ============ RETRY BUTTON (chỉ ở 500) ============ */
+  const retryBtn = document.getElementById('retryBtn');
+  if (retryBtn) {
+    retryBtn.addEventListener('click', () => {
+      const original = retryBtn.innerHTML;
+      retryBtn.disabled = true;
+      retryBtn.innerHTML = 'Đang thử lại…';
+      retryBtn.style.opacity = '.7';
+      setTimeout(() => {
+        retryBtn.innerHTML = original;
+        retryBtn.disabled = false;
+        retryBtn.style.opacity = '';
+        showToast('Vẫn chưa kết nối được. Vui lòng thử lại sau vài phút.');
+      }, 1600);
+    });
+  }
+
+  /* ============ REPORT BUTTONS ============ */
+  const reportError = document.getElementById('reportError');
+  if (reportError) {
+    reportError.addEventListener('click', () => {
+      const ref = document.getElementById('serverErrorRef').textContent;
+      showToast('Đã gửi báo cáo ' + ref + ' đến đội ngũ kỹ thuật.');
+      reportError.disabled = true;
+      reportError.style.opacity = '.6';
+      reportError.textContent = 'Đã gửi báo cáo';
+    });
+  }
+
+  /* ============ TOAST ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('on'), 3200);
+  }
+
+})();
+</script>
+
+</body>
+</html>

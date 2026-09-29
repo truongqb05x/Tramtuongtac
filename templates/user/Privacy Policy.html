@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chính sách bảo mật — TRAODOI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf9f7;
+    --bg-alt: #f4f2ee;
+    --bg-hover: #fcfbf9;
+    --ink: #1e1e1e;
+    --ink-soft: #3d3d3d;
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --border: #e3e0da;
+    --border-strong: #d0ccc4;
+    --accent: #1e3a5f;
+    --accent-hover: #162c47;
+    --accent-soft: #e8edf3;
+    --success: #2f6b4f;
+    --success-soft: #e8f0eb;
+    --warning: #8a6a1f;
+    --warning-soft: #f4edda;
+    --danger: #8a2f2f;
+    --danger-soft: #f4e5e5;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* ---------- Header ---------- */
+  .top { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .top .wrap { max-width: 1320px; margin: 0 auto; padding: 0 1.5rem; }
+  @media (min-width: 768px) { .top .wrap { padding: 0 2.5rem; } }
+  .nav-link {
+    font-size: .9375rem; font-weight: 450; color: var(--ink-soft);
+    text-decoration: none; padding: .375rem 0; position: relative; transition: color .15s ease;
+  }
+  .nav-link:hover { color: var(--ink); }
+  .hamburger {
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+    width: 2.25rem; height: 2.25rem; padding: .375rem;
+    background: transparent; border: 1px solid var(--border-strong);
+    border-radius: 6px; cursor: pointer;
+  }
+  .hamburger span { display: block; height: 1.5px; width: 100%; background: var(--ink-soft); transition: transform .2s ease, opacity .2s ease; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  .mobile-menu { display: none; border-top: 1px solid var(--border); background: var(--bg); }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block; padding: .875rem 1.5rem; font-size: .9375rem;
+    color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:hover { background: var(--bg-alt); color: var(--ink); }
+  .mobile-menu a:last-of-type { border-bottom: none; }
+  .avatar-header {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 600; flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* ---------- Page ---------- */
+  .page { max-width: 1160px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+  @media (min-width: 768px) { .page { padding: 0 2.5rem 6rem; } }
+
+  .crumb {
+    display: flex; align-items: center; gap: .5rem;
+    padding: 1.5rem 0 1rem; font-size: .8125rem; color: var(--muted);
+  }
+  .crumb a { color: var(--muted); text-decoration: none; transition: color .15s ease; }
+  .crumb a:hover { color: var(--ink); }
+  .crumb .sep { color: var(--border-strong); }
+  .crumb .current { color: var(--ink); font-weight: 500; }
+
+  /* ---------- Document hero ---------- */
+  .doc-hero {
+    padding-bottom: 2.5rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  .doc-eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1rem;
+  }
+  .doc-eyebrow::before {
+    content: ''; width: 20px; height: 1px; background: var(--accent);
+  }
+  .doc-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 2rem; font-weight: 500; line-height: 1.15;
+    letter-spacing: -.02em; margin: 0 0 1rem;
+    color: var(--ink);
+    max-width: 780px;
+  }
+  @media (min-width: 768px) { .doc-title { font-size: 2.75rem; } }
+  .doc-lede {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 1.5rem;
+    max-width: 680px;
+    font-style: italic;
+  }
+  .doc-meta {
+    display: flex; flex-wrap: wrap; gap: 1.5rem;
+    font-size: .8125rem; color: var(--muted);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    max-width: 780px;
+  }
+  .doc-meta-item {
+    display: inline-flex; align-items: center; gap: .375rem;
+  }
+  .doc-meta-item strong { color: var(--ink); font-weight: 500; }
+
+  /* ---------- Layout ---------- */
+  .doc-layout {
+    display: grid; grid-template-columns: 1fr; gap: 3rem;
+  }
+  @media (min-width: 1024px) {
+    .doc-layout {
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 4rem; align-items: start;
+    }
+  }
+
+  /* ---------- Sidebar TOC ---------- */
+  .toc {
+    position: sticky; top: 96px;
+  }
+  @media (max-width: 1023px) {
+    .toc {
+      position: static;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .toc { border-left: 2px solid var(--border); padding-left: 1.5rem; }
+  }
+  .toc-label {
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .75rem;
+    display: block;
+  }
+  .toc-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: .125rem;
+  }
+  @media (max-width: 1023px) {
+    .toc-list { flex-direction: row; flex-wrap: wrap; gap: .25rem; }
+  }
+  .toc-link {
+    display: block; padding: .375rem 0;
+    font-size: .8125rem; color: var(--ink-soft);
+    text-decoration: none; line-height: 1.4;
+    transition: color .15s ease;
+    cursor: pointer; background: none; border: none;
+    font-family: inherit; text-align: left; width: 100%;
+  }
+  @media (max-width: 1023px) {
+    .toc-link {
+      padding: .375rem .625rem;
+      border-radius: 4px;
+      background: var(--bg-alt);
+      width: auto;
+      font-size: .75rem;
+    }
+  }
+  .toc-link:hover { color: var(--ink); }
+  @media (min-width: 1024px) {
+    .toc-link.active {
+      color: var(--ink); font-weight: 500;
+      position: relative;
+    }
+    .toc-link.active::before {
+      content: ''; position: absolute;
+      left: -1.5rem; top: 0; bottom: 0;
+      width: 2px; background: var(--accent);
+    }
+  }
+  @media (max-width: 1023px) {
+    .toc-link.active {
+      background: var(--accent-soft); color: var(--accent); font-weight: 500;
+    }
+  }
+
+  /* ---------- Content ---------- */
+  .doc-content {
+    max-width: 720px;
+  }
+
+  .doc-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 96px;
+  }
+  .doc-section:last-child { margin-bottom: 0; }
+
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem; font-weight: 500;
+    letter-spacing: .08em; color: var(--accent);
+    margin-bottom: .5rem;
+    display: block;
+  }
+  .section-heading {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.5rem; font-weight: 500;
+    line-height: 1.25; letter-spacing: -.01em;
+    color: var(--ink); margin: 0 0 1rem;
+  }
+  @media (min-width: 768px) { .section-heading { font-size: 1.75rem; } }
+
+  .subsection-heading {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; font-weight: 500;
+    line-height: 1.35; letter-spacing: -.005em;
+    color: var(--ink); margin: 1.75rem 0 .75rem;
+  }
+
+  .doc-content p {
+    font-size: 1rem; line-height: 1.75;
+    color: var(--ink-soft);
+    margin: 0 0 1rem;
+  }
+  .doc-content p strong {
+    color: var(--ink); font-weight: 500;
+  }
+  .doc-content p:last-child { margin-bottom: 0; }
+
+  .doc-content a {
+    color: var(--accent); text-decoration: none;
+    border-bottom: 1px solid rgba(30,58,95,.25);
+    transition: border-color .15s ease;
+  }
+  .doc-content a:hover {
+    border-bottom-color: var(--accent);
+  }
+
+  /* Numbered list */
+  .doc-content ol.numbered {
+    list-style: none;
+    padding: 0; margin: 0 0 1rem;
+    counter-reset: item;
+  }
+  .doc-content ol.numbered > li {
+    position: relative;
+    padding-left: 2.25rem;
+    margin-bottom: .75rem;
+    font-size: 1rem; line-height: 1.7;
+    color: var(--ink-soft);
+    counter-increment: item;
+  }
+  .doc-content ol.numbered > li::before {
+    content: counter(item, decimal-leading-zero);
+    position: absolute;
+    left: 0; top: .0625rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .8125rem; font-weight: 500;
+    color: var(--accent);
+    letter-spacing: .02em;
+  }
+  .doc-content ol.numbered > li strong { color: var(--ink); font-weight: 500; }
+
+  /* Bullet list */
+  .doc-content ul.bullet {
+    list-style: none;
+    padding: 0; margin: 0 0 1rem;
+  }
+  .doc-content ul.bullet > li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: .5rem;
+    font-size: .9375rem; line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .doc-content ul.bullet > li::before {
+    content: ''; position: absolute;
+    left: 0; top: .6875rem;
+    width: 6px; height: 1px;
+    background: var(--accent);
+  }
+  .doc-content ul.bullet > li strong { color: var(--ink); font-weight: 500; }
+
+  /* Data table (for collected data) */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: .875rem;
+  }
+  .data-table thead {
+    background: var(--bg-alt);
+  }
+  .data-table th {
+    text-align: left;
+    padding: .75rem 1rem;
+    font-size: .6875rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border-strong);
+  }
+  .data-table td {
+    padding: .875rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-soft);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td strong { color: var(--ink); font-weight: 500; }
+  .data-table td.mono-cell {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .8125rem;
+  }
+  @media (max-width: 640px) {
+    .data-table { font-size: .8125rem; }
+    .data-table th, .data-table td { padding: .625rem .75rem; }
+  }
+
+  /* Callout */
+  .callout {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: .875rem;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    border-radius: 6px;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+  }
+  .callout.warning {
+    background: var(--warning-soft);
+    border-left-color: var(--warning);
+  }
+  .callout.danger {
+    background: var(--danger-soft);
+    border-left-color: var(--danger);
+  }
+  .callout.success {
+    background: var(--success-soft);
+    border-left-color: var(--success);
+  }
+  .callout-icon {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    color: var(--accent); letter-spacing: .06em;
+    padding-top: .1875rem;
+  }
+  .callout.warning .callout-icon { color: var(--warning); }
+  .callout.danger .callout-icon { color: var(--danger); }
+  .callout.success .callout-icon { color: var(--success); }
+  .callout-body {
+    font-size: .9375rem; line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .callout-body strong { color: var(--ink); font-weight: 500; }
+
+  /* Two-column rule list */
+  .rule-list {
+    display: flex; flex-direction: column;
+    margin: 1.25rem 0 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .rule-item {
+    display: grid; grid-template-columns: 1fr;
+    gap: .375rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  @media (min-width: 640px) {
+    .rule-item {
+      grid-template-columns: 180px 1fr;
+      gap: 1.5rem;
+    }
+  }
+  .rule-label {
+    font-size: .8125rem; font-weight: 600;
+    color: var(--ink); line-height: 1.5;
+    letter-spacing: .005em;
+  }
+  .rule-text {
+    font-size: .9375rem; color: var(--ink-soft);
+    line-height: 1.65;
+    margin: 0;
+  }
+  .rule-text strong { color: var(--ink); font-weight: 500; }
+
+  /* Rights grid */
+  .rights-grid {
+    display: grid; grid-template-columns: 1fr; gap: .75rem;
+    margin: 1.25rem 0;
+  }
+  @media (min-width: 640px) { .rights-grid { grid-template-columns: 1fr 1fr; } }
+  .right-card {
+    padding: 1rem 1.125rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .right-card-head {
+    display: flex; align-items: center; gap: .5rem;
+    margin-bottom: .375rem;
+  }
+  .right-card-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    color: var(--accent); letter-spacing: .06em;
+  }
+  .right-card-title {
+    font-size: .875rem; font-weight: 600;
+    color: var(--ink); margin: 0;
+  }
+  .right-card-desc {
+    font-size: .8125rem; color: var(--muted);
+    line-height: 1.55; margin: 0;
+  }
+
+  /* Third-party list */
+  .third-party-list {
+    list-style: none; padding: 0; margin: 1.25rem 0;
+    display: flex; flex-direction: column;
+    border-top: 1px solid var(--border);
+  }
+  .third-party-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .375rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  @media (min-width: 640px) {
+    .third-party-item {
+      grid-template-columns: 200px 1fr auto;
+      gap: 1.5rem;
+      align-items: baseline;
+    }
+  }
+  .third-party-name {
+    font-size: .9375rem; font-weight: 500;
+    color: var(--ink);
+  }
+  .third-party-purpose {
+    font-size: .875rem; color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .third-party-region {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem; color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* Doc footer */
+  .doc-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-strong);
+  }
+  .doc-footer-grid {
+    display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .doc-footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  }
+  .doc-footer-label {
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .5rem;
+    display: block;
+  }
+  .doc-footer-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.125rem; font-weight: 500;
+    color: var(--ink); margin: 0 0 .5rem;
+    line-height: 1.35;
+  }
+  .doc-footer-desc {
+    font-size: .875rem; color: var(--muted);
+    line-height: 1.6; margin: 0 0 .875rem;
+  }
+  .doc-footer-link {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-size: .875rem; font-weight: 500;
+    color: var(--accent); text-decoration: none;
+    border-bottom: 1px solid rgba(30,58,95,.3);
+    padding-bottom: 1px;
+    transition: border-color .15s ease;
+  }
+  .doc-footer-link:hover { border-bottom-color: var(--accent); }
+
+  /* Version banner */
+  .version-banner {
+    display: flex; align-items: center; gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-alt);
+    border-radius: 6px;
+    font-size: .8125rem;
+    color: var(--muted);
+  }
+  .version-banner strong { color: var(--ink); font-weight: 500; }
+  .version-banner .dot { color: var(--border-strong); }
+
+  /* DPO box */
+  .dpo-box {
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+  }
+  .dpo-label {
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: .375rem;
+  }
+  .dpo-title {
+    font-size: .9375rem; font-weight: 600;
+    color: var(--ink); margin: 0 0 .375rem;
+  }
+  .dpo-desc {
+    font-size: .875rem; color: var(--ink-soft);
+    line-height: 1.6; margin: 0 0 .625rem;
+  }
+  .dpo-contact {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .8125rem; color: var(--accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="top">
+  <div class="wrap">
+    <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAODOI trang chủ">
+        <span class="font-serif text-[1.375rem] font-medium tracking-[-.01em]">TRAODOI</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+        <a href="#" class="nav-link">Trang chủ</a>
+        <a href="#" class="nav-link">Khám phá</a>
+        <a href="#" class="nav-link">Nhiệm vụ</a>
+        <a href="#" class="nav-link">Cộng đồng</a>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-3">
+        <span class="avatar-header" aria-label="Tài khoản của tôi">MA</span>
+      </div>
+
+      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu md:hidden" id="mobileMenu">
+    <a href="#">Trang chủ</a>
+    <a href="#">Khám phá</a>
+    <a href="#">Nhiệm vụ</a>
+    <a href="#">Cộng đồng</a>
+    <a href="#" style="font-weight:500;color:var(--ink)">Chính sách bảo mật</a>
+  </div>
+</header>
+
+<!-- ================= PAGE ================= -->
+<div class="page">
+
+  <!-- Breadcrumb -->
+  <nav class="crumb" aria-label="Breadcrumb">
+    <a href="#">Pháp lý</a>
+    <span class="sep">/</span>
+    <span class="current">Chính sách bảo mật</span>
+  </nav>
+
+  <!-- Document hero -->
+  <header class="doc-hero">
+    <span class="doc-eyebrow">Văn bản pháp lý</span>
+    <h1 class="doc-title">
+      Chính sách bảo mật
+    </h1>
+    <p class="doc-lede">
+      Văn bản này giải thích chúng tôi thu thập dữ liệu gì, dùng để làm gì, chia sẻ với ai, và bạn có quyền gì đối với dữ liệu của mình. Chúng tôi cố viết nó bằng ngôn ngữ dễ hiểu, không dùng thuật ngữ pháp lý khi không cần thiết.
+    </p>
+    <div class="doc-meta">
+      <span class="doc-meta-item">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <rect x="2" y="3" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M2 6H12M5 1.5V4M9 1.5V4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Cập nhật lần cuối: <strong>01/10/2025</strong>
+      </span>
+      <span class="doc-meta-item">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M7 1.5V7L10 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/>
+        </svg>
+        Hiệu lực từ: <strong>15/10/2025</strong>
+      </span>
+      <span class="doc-meta-item">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M2 3H12V11H2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M2 5H12" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        Phiên bản: <strong>v2.4</strong>
+      </span>
+      <span class="doc-meta-item">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M4 1.5V3M10 1.5V3M2.5 5H11.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <rect x="2.5" y="3" width="9" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        Thời gian đọc: <strong>~10 phút</strong>
+      </span>
+    </div>
+  </header>
+
+  <!-- Layout -->
+  <div class="doc-layout">
+
+    <!-- ============ SIDEBAR TOC ============ -->
+    <aside class="toc" aria-label="Mục lục">
+      <span class="toc-label">Nội dung</span>
+      <ul class="toc-list" id="tocList">
+        <li><a class="toc-link active" data-target="tong-quan">Tổng quan</a></li>
+        <li><a class="toc-link" data-target="thu-thap">1. Dữ liệu chúng tôi thu thập</a></li>
+        <li><a class="toc-link" data-target="su-dung">2. Cách chúng tôi sử dụng</a></li>
+        <li><a class="toc-link" data-target="chia-se">3. Chia sẻ với bên thứ ba</a></li>
+        <li><a class="toc-link" data-target="cookie">4. Cookie &amp; theo dõi</a></li>
+        <li><a class="toc-link" data-target="luu-tru">5. Lưu trữ &amp; xoá</a></li>
+        <li><a class="toc-link" data-target="bao-mat">6. Biện pháp bảo mật</a></li>
+        <li><a class="toc-link" data-target="quyen">7. Quyền của bạn</a></li>
+        <li><a class="toc-link" data-target="tre-em">8. Trẻ em</a></li>
+        <li><a class="toc-link" data-target="quoc-te">9. Chuyển dữ liệu quốc tế</a></li>
+        <li><a class="toc-link" data-target="thay-doi">10. Thay đổi chính sách</a></li>
+        <li><a class="toc-link" data-target="lien-he">11. Liên hệ</a></li>
+      </ul>
+    </aside>
+
+    <!-- ============ CONTENT ============ -->
+    <article class="doc-content">
+
+      <!-- Tổng quan -->
+      <section class="doc-section" id="tong-quan">
+        <span class="section-num">Tổng quan</span>
+        <h2 class="section-heading">Tóm tắt trong 60 giây</h2>
+        <p>
+          Nếu bạn chỉ đọc một phần của văn bản này, hãy đọc phần tóm tắt này. Nó bao gồm 5 điểm quan trọng nhất về cách chúng tôi xử lý dữ liệu của bạn:
+        </p>
+        <ol class="numbered">
+          <li>
+            <strong>Chúng tôi thu thập ít dữ liệu hơn mức cần thiết.</strong> Chỉ những gì cần để vận hành nền tảng và bảo vệ cộng đồng.
+          </li>
+          <li>
+            <strong>Chúng tôi không bán dữ liệu của bạn.</strong> Không bao giờ. Không có ngoại lệ.
+          </li>
+          <li>
+            <strong>Chúng tôi không yêu cầu mật khẩu mạng xã hội.</strong> Chỉ đường dẫn hồ sơ công khai và tên hiển thị.
+          </li>
+          <li>
+            <strong>Chúng tôi chia sẻ dữ liệu với rất ít bên.</strong> Chỉ các nhà cung cấp hạ tầng cần thiết (hosting, email) và cơ quan pháp luật khi có yêu cầu hợp lệ.
+          </li>
+          <li>
+            <strong>Bạn có quyền kiểm soát dữ liệu của mình.</strong> Truy cập, chỉnh sửa, xuất, hoặc xoá bất kỳ lúc nào.
+          </li>
+        </ol>
+        <div class="callout success">
+          <span class="callout-icon">CAM KẾT</span>
+          <p class="callout-body">
+            Chúng tôi cam kết <strong>không sử dụng dữ liệu của bạn để huấn luyện AI</strong> hay bán cho bên thứ ba vì mục đích quảng cáo. Nếu chính sách này thay đổi, chúng tôi sẽ thông báo trước 30 ngày và cho bạn quyền chọn không tham gia.
+          </p>
+        </div>
+      </section>
+
+      <!-- 1. Thu thập -->
+      <section class="doc-section" id="thu-thap">
+        <span class="section-num">Điều 01</span>
+        <h2 class="section-heading">Dữ liệu chúng tôi thu thập</h2>
+        <p>
+          Chúng tôi chia dữ liệu thành ba nhóm: dữ liệu bạn cung cấp trực tiếp, dữ liệu thu thập tự động, và dữ liệu từ bên thứ ba.
+        </p>
+
+        <h3 class="subsection-heading">Dữ liệu bạn cung cấp trực tiếp</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Loại dữ liệu</th>
+              <th>Ví dụ</th>
+              <th>Bắt buộc?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Thông tin tài khoản</strong></td>
+              <td>Email, mật khẩu (đã mã hoá), tên hiển thị, handle</td>
+              <td>Có</td>
+            </tr>
+            <tr>
+              <td><strong>Hồ sơ công khai</strong></td>
+              <td>Ảnh đại diện, giới thiệu ngắn, địa điểm</td>
+              <td>Không</td>
+            </tr>
+            <tr>
+              <td><strong>Cấu hình mạng xã hội</strong></td>
+              <td>Đường dẫn hồ sơ công khai, tên hiển thị trên nền tảng</td>
+              <td>Không (nhưng cần để làm nhiệm vụ)</td>
+            </tr>
+            <tr>
+              <td><strong>Nội dung nhiệm vụ</strong></td>
+              <td>Tiêu đề, mô tả, đường dẫn nội dung, ảnh bằng chứng</td>
+              <td>Có (khi bạn tạo nhiệm vụ)</td>
+            </tr>
+            <tr>
+              <td><strong>Nội dung tranh chấp</strong></td>
+              <td>Mô tả khiếu nại, ảnh chụp màn hình</td>
+              <td>Không (chỉ khi bạn mở tranh chấp)</td>
+            </tr>
+            <tr>
+              <td><strong>Liên hệ hỗ trợ</strong></td>
+              <td>Nội dung tin nhắn, email liên hệ</td>
+              <td>Không (chỉ khi bạn liên hệ)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 class="subsection-heading">Dữ liệu thu thập tự động</h3>
+        <ul class="bullet">
+          <li><strong>Log truy cập:</strong> địa chỉ IP, thời gian, loại thiết bị, trình duyệt — dùng để phát hiện bất thường và bảo mật.</li>
+          <li><strong>Log hoạt động:</strong> nhiệm vụ đã nhận, đã hoàn thành, giao dịch Credits, thay đổi Trust Score — cần thiết để vận hành hệ thống uy tín.</li>
+          <li><strong>Dữ liệu phiên:</strong> token đăng nhập, thời gian hết hạn — để bạn không phải đăng nhập lại mỗi lần truy cập.</li>
+          <li><strong>Dữ liệu thiết bị cơ bản:</strong> hệ điều hành, kích thước màn hình — dùng để hiển thị giao diện phù hợp.</li>
+        </ul>
+
+        <div class="callout">
+          <span class="callout-icon">GHI CHÚ</span>
+          <p class="callout-body">
+            Chúng tôi <strong>không thu thập</strong>: vị trí GPS chính xác, danh bạ, tin nhắn SMS, ảnh trong thư viện, hay bất kỳ dữ liệu nào ngoài phạm vi vận hành nền tảng.
+          </p>
+        </div>
+
+        <h3 class="subsection-heading">Dữ liệu từ bên thứ ba</h3>
+        <ul class="bullet">
+          <li><strong>Đăng nhập Google (nếu bạn chọn):</strong> chúng tôi nhận email, tên hiển thị, và ID Google để tạo tài khoản. Chúng tôi không nhận quyền truy cập vào Gmail, Drive hay dữ liệu khác của bạn.</li>
+          <li><strong>Nhà cung cấp thanh toán:</strong> khi bạn nạp Credits, chúng tôi nhận xác nhận giao dịch từ đối tác thanh toán. Chúng tôi không lưu số thẻ hay thông tin ngân hàng của bạn.</li>
+        </ul>
+      </section>
+
+      <!-- 2. Sử dụng -->
+      <section class="doc-section" id="su-dung">
+        <span class="section-num">Điều 02</span>
+        <h2 class="section-heading">Cách chúng tôi sử dụng dữ liệu</h2>
+        <p>
+          Mỗi loại dữ liệu đều có mục đích cụ thể. Chúng tôi không thu thập dữ liệu "để dành" hay "phòng khi cần".
+        </p>
+
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-label">Vận hành nền tảng</div>
+            <p class="rule-text">Xác thực đăng nhập, hiển thị nhiệm vụ phù hợp, xử lý giao dịch Credits, tính Trust Score. Đây là mục đích chính và không thể tắt.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Xác minh &amp; chống gian lận</div>
+            <p class="rule-text">Đối chiếu tương tác với tài khoản đã cấu hình, phát hiện bot, tài khoản ảo, hành vi bất thường. Đây là lý do chúng tôi cần log hoạt động.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Xử lý tranh chấp</div>
+            <p class="rule-text">Khi có khiếu nại, chúng tôi xem xét log và bằng chứng của cả hai bên. Dữ liệu được giữ lại cho đến khi tranh chấp kết thúc.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Thông báo</div>
+            <p class="rule-text">Gửi thông báo về nhiệm vụ mới, kết quả xác minh, thay đổi Trust Score — theo cài đặt bạn đã chọn trong trang Cài đặt tài khoản.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Cải thiện sản phẩm</div>
+            <p class="rule-text">Phân tích tổng hợp (aggregate) về hành vi người dùng — ví dụ: nhiệm vụ nào được hoàn thành nhanh nhất. Dữ liệu này được ẩn danh trước khi phân tích.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Tuân thủ pháp luật</div>
+            <p class="rule-text">Lưu trữ hồ sơ giao dịch để tuân thủ quy định thuế và pháp lý, hoặc cung cấp cho cơ quan chức năng khi có yêu cầu hợp lệ.</p>
+          </div>
+        </div>
+
+        <div class="callout warning">
+          <span class="callout-icon">LƯU Ý</span>
+          <p class="callout-body">
+            Chúng tôi <strong>không</strong> sử dụng dữ liệu của bạn để: gửi quảng cáo của bên thứ ba, xây dựng hồ sơ (profile) bán cho nhà quảng cáo, huấn luyện mô hình AI, hoặc bán cho bất kỳ ai vì bất kỳ mục đích gì.
+          </p>
+        </div>
+      </section>
+
+      <!-- 3. Chia sẻ -->
+      <section class="doc-section" id="chia-se">
+        <span class="section-num">Điều 03</span>
+        <h2 class="section-heading">Chia sẻ với bên thứ ba</h2>
+        <p>
+          Chúng tôi chia sẻ dữ liệu với số lượng nhà cung cấp tối thiểu, chỉ những bên cần thiết để vận hành nền tảng. Mỗi bên đều có hợp đồng bảo mật và chỉ được dùng dữ liệu cho mục đích đã cam kết.
+        </p>
+
+        <ul class="third-party-list">
+          <li class="third-party-item">
+            <div class="third-party-name">Nhà cung cấp hosting</div>
+            <div class="third-party-purpose">Lưu trữ máy chủ, cơ sở dữ liệu, backup. Họ có quyền truy cập hạ tầng nhưng dữ liệu được mã hoá khi lưu.</div>
+            <div class="third-party-region">Singapore</div>
+          </li>
+          <li class="third-party-item">
+            <div class="third-party-name">Nhà cung cấp email</div>
+            <div class="third-party-purpose">Gửi email xác minh, thông báo, khôi phục mật khẩu. Chỉ nhận email và tên hiển thị của bạn.</div>
+            <div class="third-party-region">Hoa Kỳ</div>
+          </li>
+          <li class="third-party-item">
+            <div class="third-party-name">Nhà cung cấp thanh toán</div>
+            <div class="third-party-purpose">Xử lý giao dịch nạp Credits. Họ xử lý thông tin thẻ, chúng tôi chỉ nhận xác nhận giao dịch.</div>
+            <div class="third-party-region">Việt Nam</div>
+          </li>
+          <li class="third-party-item">
+            <div class="third-party-name">Công cụ phân tích ẩn danh</div>
+            <div class="third-party-purpose">Đo lường hiệu suất trang (tốc độ tải, lỗi JS). Dữ liệu được ẩn danh trước khi gửi.</div>
+            <div class="third-party-region">EU</div>
+          </li>
+          <li class="third-party-item">
+            <div class="third-party-name">Dịch vụ chống gian lận</div>
+            <div class="third-party-purpose">Phát hiện bot và tài khoản ảo qua phân tích pattern. Không nhận dữ liệu cá nhân trực tiếp.</div>
+            <div class="third-party-region">Hoa Kỳ</div>
+          </li>
+        </ul>
+
+        <div class="callout">
+          <span class="callout-icon">GHI CHÚ</span>
+          <p class="callout-body">
+            Chúng tôi có thể chia sẻ dữ liệu với cơ quan pháp luật khi có <strong>yêu cầu hợp lệ</strong> (lệnh của toà án, yêu cầu từ cơ quan điều tra có thẩm quyền). Trong trường hợp đó, chúng tôi sẽ cố gắng thông báo cho bạn trước, trừ khi bị pháp luật cấm.
+          </p>
+        </div>
+      </section>
+
+      <!-- 4. Cookie -->
+      <section class="doc-section" id="cookie">
+        <span class="section-num">Điều 04</span>
+        <h2 class="section-heading">Cookie &amp; theo dõi</h2>
+        <p>
+          Chúng tôi dùng cookie và localStorage để nền tảng hoạt động đúng. Cụ thể:
+        </p>
+
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-label">Cookie thiết yếu</div>
+            <p class="rule-text">Duy trì phiên đăng nhập, bảo vệ chống CSRF, ghi nhớ tuỳ chọn của bạn. Không thể tắt vì nền tảng sẽ không hoạt động.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">localStorage</div>
+            <p class="rule-text">Lưu trạng thái UI (tab đang xem, filter đã chọn) để bạn không phải thiết lập lại mỗi lần truy cập.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Cookie phân tích</div>
+            <p class="rule-text">Đo lường hiệu suất trang ẩn danh. Có thể tắt trong Cài đặt → Thông báo → Kênh nhận thông báo.</p>
+          </div>
+        </div>
+
+        <p>
+          Chúng tôi <strong>không dùng</strong> cookie quảng cáo, không nhúng pixel của Facebook/Google Ads, và không theo dõi bạn ra ngoài nền tảng.
+        </p>
+      </section>
+
+      <!-- 5. Lưu trữ -->
+      <section class="doc-section" id="luu-tru">
+        <span class="section-num">Điều 05</span>
+        <h2 class="section-heading">Lưu trữ &amp; xoá dữ liệu</h2>
+        <p>
+          Mỗi loại dữ liệu có thời gian lưu trữ khác nhau, dựa trên mục đích sử dụng và yêu cầu pháp lý.
+        </p>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Loại dữ liệu</th>
+              <th>Thời gian lưu</th>
+              <th>Lý do</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Thông tin tài khoản</strong></td>
+              <td>Đến khi bạn xoá tài khoản</td>
+              <td>Để duy trì đăng nhập và hồ sơ công khai</td>
+            </tr>
+            <tr>
+              <td><strong>Log hoạt động</strong></td>
+              <td>24 tháng</td>
+              <td>Phát hiện gian lận, xử lý tranh chấp cũ</td>
+            </tr>
+            <tr>
+              <td><strong>Giao dịch Credits</strong></td>
+              <td>5 năm</td>
+              <td>Tuân thủ quy định thuế và kế toán</td>
+            </tr>
+            <tr>
+              <td><strong>Nội dung tranh chấp</strong></td>
+              <td>36 tháng sau khi kết thúc</td>
+              <td>Đối chiếu nếu có khiếu nại lặp lại</td>
+            </tr>
+            <tr>
+              <td><strong>Log truy cập</strong></td>
+              <td>6 tháng</td>
+              <td>Phát hiện tấn công, bảo mật</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          Khi bạn xoá tài khoản, dữ liệu cá nhân sẽ bị xoá trong vòng <strong>30 ngày</strong>, trừ những dữ liệu được liệt kê ở trên (giữ lại theo yêu cầu pháp lý hoặc vận hành). Dữ liệu đã ẩn danh (ví dụ: số liệu thống kê tổng hợp) có thể được giữ lại vô thời hạn vì không thể liên kết ngược về bạn.
+        </p>
+      </section>
+
+      <!-- 6. Bảo mật -->
+      <section class="doc-section" id="bao-mat">
+        <span class="section-num">Điều 06</span>
+        <h2 class="section-heading">Biện pháp bảo mật</h2>
+        <p>
+          Chúng tôi bảo vệ dữ liệu của bạn bằng nhiều lớp, từ hạ tầng đến ứng dụng:
+        </p>
+
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-label">Mã hoá đường truyền</div>
+            <p class="rule-text">Toàn bộ kết nối dùng HTTPS/TLS 1.3. Không có lưu lượng không mã hoá.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Mã hoá khi lưu</div>
+            <p class="rule-text">Mật khẩu được hash bằng bcrypt. Dữ liệu nhạy cảm được mã hoá at-rest.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Xác thực 2 lớp</div>
+            <p class="rule-text">Hỗ trợ 2FA qua ứng dụng xác thực, SMS, và passkey. Khuyến nghị bật cho mọi tài khoản.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Phân quyền tối thiểu</div>
+            <p class="rule-text">Nhân viên chỉ truy cập dữ liệu khi cần cho công việc, mọi truy cập đều được log lại.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Kiểm tra định kỳ</div>
+            <p class="rule-text">Đánh giá bảo mật mỗi 6 tháng, và pentest bởi bên độc lập mỗi năm một lần.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Thông báo sự cố</div>
+            <p class="rule-text">Nếu xảy ra rò rỉ dữ liệu ảnh hưởng đến bạn, chúng tôi thông báo trong vòng 72 giờ.</p>
+          </div>
+        </div>
+
+        <div class="callout danger">
+          <span class="callout-icon">CẢNH BÁO</span>
+          <p class="callout-body">
+            Không có hệ thống nào an toàn 100%. Nếu bạn phát hiện lỗ hổng bảo mật, hãy báo cáo cho chúng tôi tại <a href="mailto:security@traodoi.app">security@traodoi.app</a>. Chúng tôi có chương trình bug bounty cho các báo cáo hợp lệ.
+          </p>
+        </div>
+      </section>
+
+      <!-- 7. Quyền -->
+      <section class="doc-section" id="quyen">
+        <span class="section-num">Điều 07</span>
+        <h2 class="section-heading">Quyền của bạn đối với dữ liệu</h2>
+        <p>
+          Bạn có 6 quyền cơ bản đối với dữ liệu cá nhân của mình. Chúng tôi cam kết thực hiện trong vòng <strong>30 ngày</strong> kể từ khi nhận yêu cầu.
+        </p>
+
+        <div class="rights-grid">
+          <div class="right-card">
+            <div class="right-card-head">
+              <span class="right-card-num">01</span>
+              <h4 class="right-card-title">Quyền truy cập</h4>
+            </div>
+            <p class="right-card-desc">Yêu cầu bản sao toàn bộ dữ liệu chúng tôi lưu về bạn. Gửi email đến privacy@traodoi.app.</p>
+          </div>
+
+          <div class="right-card">
+            <div class="right-card-head">
+              <span class="right-card-num">02</span>
+              <h4 class="right-card-title">Quyền chỉnh sửa</h4>
+            </div>
+            <p class="right-card-desc">Sửa thông tin trong Cài đặt tài khoản. Một số dữ liệu như lịch sử giao dịch không thể sửa để đảm bảo minh bạch.</p>
+          </div>
+
+          <div class="right-card">
+            <div class="right-card-head">
+              <span class="right-card-num">03</span>
+              <h4 class="right-card-title">Quyền xoá</h4>
+            </div>
+            <p class="right-card-desc">Xoá tài khoản và dữ liệu liên quan. Không thể hoàn tác, nhưng bạn kiểm soát hoàn toàn.</p>
+          </div>
+
+          <div class="right-card">
+            <div class="right-card-head">
+              <span class="right-card-num">04</span>
+              <h4 class="right-card-title">Quyền hạn chế</h4>
+            </div>
+            <p class="right-card-desc">Yêu cầu chúng tôi tạm ngừng xử lý dữ liệu của bạn trong một số trường hợp, ví dụ khi bạn đang khiếu nại.</p>
+          </div>
+
+          <div class="right-card">
+            <div class="right-card-head">
+              <span class="right-card-num">05</span>
+              <h4 class="right-card-title">Quyền di chuyển</h4>
+            </div>
+            <p class="right-card-desc">Xuất dữ liệu dưới định dạng CSV hoặc JSON. Có sẵn trong trang Ví Credits và theo yêu cầu qua email.</p>
+          </div>
+
+          <div class="right-card">
+            <div class="right-card-head">
+              <span class="right-card-num">06</span>
+              <h4 class="right-card-title">Quyền phản đối</h4>
+            </div>
+            <p class="right-card-desc">Từ chối nhận thông báo marketing mà không ảnh hưởng đến thông báo tài khoản thiết yếu.</p>
+          </div>
+        </div>
+
+        <p>
+          Để thực hiện bất kỳ quyền nào, gửi email đến <a href="mailto:privacy@traodoi.app">privacy@traodoi.app</a> với tiêu đề rõ ràng. Chúng tôi có thể yêu cầu bạn xác minh danh tính trước khi xử lý, để tránh người khác giả mạo yêu cầu.
+        </p>
+      </section>
+
+      <!-- 8. Trẻ em -->
+      <section class="doc-section" id="tre-em">
+        <span class="section-num">Điều 08</span>
+        <h2 class="section-heading">Trẻ em</h2>
+        <p>
+          TRAODOI không dành cho người dưới <strong>16 tuổi</strong>. Chúng tôi không cố ý thu thập dữ liệu từ trẻ em dưới độ tuổi này.
+        </p>
+        <p>
+          Nếu bạn là cha mẹ hoặc người giám hộ và phát hiện con bạn đã tạo tài khoản, hãy liên hệ với chúng tôi tại <a href="mailto:privacy@traodoi.app">privacy@traodoi.app</a>. Chúng tôi sẽ xoá tài khoản và dữ liệu liên quan trong vòng 7 ngày.
+        </p>
+        <p>
+          Khi đăng ký, chúng tôi yêu cầu bạn xác nhận đã đủ 16 tuổi. Nếu phát hiện tài khoản của người dưới 16 tuổi, chúng tôi sẽ tạm khoá và liên hệ để xác minh.
+        </p>
+      </section>
+
+      <!-- 9. Quốc tế -->
+      <section class="doc-section" id="quoc-te">
+        <span class="section-num">Điều 09</span>
+        <h2 class="section-heading">Chuyển dữ liệu quốc tế</h2>
+        <p>
+          Máy chủ chính của TRAODOI đặt tại <strong>Singapore</strong>, và một số nhà cung cấp dịch vụ của chúng tôi ở Hoa Kỳ và EU. Điều này có nghĩa dữ liệu của bạn có thể được xử lý ngoài Việt Nam.
+        </p>
+        <p>
+          Khi chuyển dữ liệu qua biên giới, chúng tôi áp dụng các biện pháp bảo vệ:
+        </p>
+        <ul class="bullet">
+          <li>Chỉ chuyển đến quốc gia có luật bảo vệ dữ liệu tương đương hoặc cao hơn Việt Nam.</li>
+          <li>Ký kết điều khoản bảo vệ dữ liệu (SCC) với mọi nhà cung cấp nước ngoài.</li>
+          <li>Mã hoá dữ liệu khi truyền và khi lưu, để dù ở đâu dữ liệu vẫn được bảo vệ.</li>
+        </ul>
+      </section>
+
+      <!-- 10. Thay đổi -->
+      <section class="doc-section" id="thay-doi">
+        <span class="section-num">Điều 10</span>
+        <h2 class="section-heading">Thay đổi chính sách</h2>
+        <p>
+          Chúng tôi có thể cập nhật chính sách này khi cần thiết — ví dụ khi thêm tính năng mới, thay đổi nhà cung cấp dịch vụ, hoặc khi luật pháp thay đổi. Khi đó:
+        </p>
+        <ol class="numbered">
+          <li>Chúng tôi thông báo qua email và thông báo trong ứng dụng ít nhất <strong>15 ngày</strong> trước khi thay đổi có hiệu lực.</li>
+          <li>Với thay đổi quan trọng (ví dụ: thêm loại dữ liệu mới được thu thập), chúng tôi thông báo trước <strong>30 ngày</strong> và cho bạn quyền chọn không tham gia.</li>
+          <li>Các thay đổi quan trọng sẽ được tóm tắt ở đầu văn bản, có ngày và phiên bản cụ thể.</li>
+          <li>Nếu bạn không đồng ý, bạn có thể xoá tài khoản trước ngày thay đổi có hiệu lực mà không bị mất Credits chưa dùng.</li>
+        </ol>
+
+        <div class="version-banner">
+          <span>Phiên bản hiện tại: <strong>v2.4</strong></span>
+          <span class="dot">·</span>
+          <span>Lần thay đổi lớn gần nhất: <strong>15/07/2025</strong> — bổ sung quy định về chuyển dữ liệu quốc tế</span>
+        </div>
+      </section>
+
+      <!-- 11. Liên hệ -->
+      <section class="doc-section" id="lien-he">
+        <span class="section-num">Điều 11</span>
+        <h2 class="section-heading">Liên hệ</h2>
+        <p>
+          Nếu bạn có câu hỏi về chính sách này, hoặc muốn thực hiện bất kỳ quyền nào đã nêu ở Điều 07, hãy liên hệ với chúng tôi:
+        </p>
+
+        <div class="dpo-box">
+          <div class="dpo-label">Nhân viên bảo vệ dữ liệu (DPO)</div>
+          <h3 class="dpo-title">Phụ trách các vấn đề về quyền riêng tư</h3>
+          <p class="dpo-desc">
+            Mọi yêu cầu liên quan đến dữ liệu cá nhân, quyền riêng tư, hoặc khiếu nại về cách chúng tôi xử lý dữ liệu đều được chuyển đến DPO. Phản hồi trong vòng 30 ngày theo quy định.
+          </p>
+          <div class="dpo-contact">privacy@traodoi.app</div>
+        </div>
+
+        <div class="rule-list" style="margin-top:1.5rem">
+          <div class="rule-item">
+            <div class="rule-label">Câu hỏi chung</div>
+            <p class="rule-text"><a href="mailto:hello@traodoi.app">hello@traodoi.app</a> — cho các câu hỏi không liên quan đến dữ liệu cá nhân.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Báo cáo bảo mật</div>
+            <p class="rule-text"><a href="mailto:security@traodoi.app">security@traodoi.app</a> — cho lỗ hổng bảo mật và sự cố liên quan đến an toàn thông tin.</p>
+          </div>
+          <div class="rule-item">
+            <div class="rule-label">Khiếu nại về dữ liệu</div>
+            <p class="rule-text">Nếu bạn không hài lòng với cách chúng tôi xử lý yêu cầu, bạn có quyền khiếu nại lên cơ quan bảo vệ dữ liệu có thẩm quyền tại Việt Nam.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Doc footer -->
+      <footer class="doc-footer">
+        <div class="doc-footer-grid">
+          <div>
+            <span class="doc-footer-label">Văn bản liên quan</span>
+            <h3 class="doc-footer-title">Điều khoản sử dụng &amp; Quy tắc cộng đồng</h3>
+            <p class="doc-footer-desc">
+              Giải thích quan hệ giữa bạn và TRAODOI, cùng các quy tắc ứng xử trong cộng đồng.
+            </p>
+            <a href="#" class="doc-footer-link">Đọc điều khoản →</a>
+          </div>
+          <div>
+            <span class="doc-footer-label">Cần trợ giúp?</span>
+            <h3 class="doc-footer-title">Trung tâm trợ giúp</h3>
+            <p class="doc-footer-desc">
+              Câu trả lời cho những câu hỏi thường gặp về Credits, nhiệm vụ, Trust Score và tài khoản.
+            </p>
+            <a href="#" class="doc-footer-link">Mở trung tâm trợ giúp →</a>
+          </div>
+        </div>
+      </footer>
+
+    </article>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ TOC SCROLL SPY ============ */
+  const tocLinks = document.querySelectorAll('.toc-link');
+  const sections = document.querySelectorAll('.doc-section[id]');
+
+  tocLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = link.dataset.target;
+      const target = document.getElementById(id);
+      if (!target) return;
+      const offset = 96;
+      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+  function updateActiveToc() {
+    const scrollY = window.pageYOffset + 140;
+    let current = sections[0]?.id;
+    sections.forEach(s => {
+      if (s.offsetTop <= scrollY) current = s.id;
+    });
+    tocLinks.forEach(l => {
+      l.classList.toggle('active', l.dataset.target === current);
+    });
+  }
+  window.addEventListener('scroll', updateActiveToc, { passive: true });
+  updateActiveToc();
+
+  /* ============ HEADER MOBILE MENU ============ */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburgerBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', open);
+    hamburgerBtn.setAttribute('aria-expanded', open);
+  });
+
+})();
+</script>
+
+</body>
+</html>
