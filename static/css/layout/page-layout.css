@@ -1,0 +1,22 @@
+/* ---------- Page layout ---------- */
+.page { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+@media (min-width: 768px) { .page { padding: 2.5rem 2.5rem 5rem; } }
+
+/* ---------- Page head ---------- */
+.page-head {
+  padding-bottom: 1.75rem; margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.page-head.with-actions {
+  display: flex; flex-direction: column; gap: 1.25rem;
+}
+@media (min-width: 768px) {
+  .page-head.with-actions { flex-direction: row; align-items: flex-end; justify-content: space-between; }
+}
+.page-title {
+  font-family: 'IBM Plex Serif', Georgia, serif;
+  font-size: 1.75rem; font-weight: 500; line-height: 1.2;
+  letter-spacing: -.015em; margin: 0 0 .5rem;
+}
+@media (min-width: 768px) { .page-title { font-size: 2rem; } }
+.page-sub { font-size: .9375rem; color: var(--ink-soft); margin: 0; max-width: 620px; }

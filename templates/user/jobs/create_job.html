@@ -11,6 +11,8 @@
 <link rel="stylesheet" href="../../static/css/layout/base.css" />
 <link rel="stylesheet" href="../../static/css/layout/header.css" />
 <link rel="stylesheet" href="../../static/css/layout/notice.css" />
+<link rel="stylesheet" href="../../static/css/layout/page-layout.css" />
+<link rel="stylesheet" href="../../static/css/layout/form.css" />
 <style>
   .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
   .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
@@ -21,24 +23,7 @@
   .btn-sm { padding: .5rem .875rem; font-size: .8125rem; border-radius: 6px; }
 
   /* ---------- Page ---------- */
-  .page { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-  @media (min-width: 768px) { .page { padding: 2.5rem 2.5rem 5rem; } }
-
-  .page-head {
-    display: flex; flex-direction: column; gap: 1.25rem;
-    padding-bottom: 1.75rem; margin-bottom: 2.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  @media (min-width: 768px) {
-    .page-head { flex-direction: row; align-items: flex-end; justify-content: space-between; }
-  }
-  .page-title {
-    font-family: 'IBM Plex Serif', Georgia, serif;
-    font-size: 1.75rem; font-weight: 500; line-height: 1.2;
-    letter-spacing: -.015em; margin: 0 0 .5rem;
-  }
-  @media (min-width: 768px) { .page-title { font-size: 2rem; } }
-  .page-sub { font-size: .9375rem; color: var(--ink-soft); margin: 0; max-width: 620px; }
+  /* See page-layout.css */
 
   .balance-panel {
     display: flex; align-items: center; gap: 1.25rem;
@@ -95,44 +80,7 @@
   }
   .form-section-title { font-size: .9375rem; font-weight: 600; color: var(--ink); margin: 0; }
   .form-section-body { padding: 1.5rem; }
-
-  .field { margin-bottom: 1.25rem; }
-  .field:last-child { margin-bottom: 0; }
-  .field-label {
-    display: block; font-size: .8125rem; font-weight: 500;
-    color: var(--ink); margin-bottom: .4375rem;
-  }
-  .field-label .req { color: var(--danger); margin-left: .125rem; }
-  .field-label .opt {
-    color: var(--muted); font-weight: 400; margin-left: .375rem; font-size: .75rem;
-  }
-  .field-hint {
-    font-size: .75rem; color: var(--muted); margin-top: .375rem;
-    line-height: 1.5;
-  }
-  .field input[type="text"],
-  .field input[type="url"],
-  .field input[type="number"],
-  .field select,
-  .field textarea {
-    width: 100%; padding: .625rem .75rem;
-    font-size: .9375rem; font-family: inherit; color: var(--ink);
-    border: 1px solid var(--border-strong); border-radius: 6px;
-    background: #fff; transition: border-color .15s ease, box-shadow .15s ease;
-  }
-  .field textarea { resize: vertical; min-height: 96px; line-height: 1.55; }
-  .field input:focus, .field select:focus, .field textarea:focus {
-    outline: none; border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(30,58,95,.08);
-  }
-  .field input::placeholder, .field textarea::placeholder { color: var(--muted-2); }
-
-  .select-wrap { position: relative; }
-  .select-wrap select { appearance: none; -webkit-appearance: none; padding-right: 2.5rem; cursor: pointer; }
-  .select-arrow {
-    position: absolute; right: .875rem; top: 50%; transform: translateY(-50%);
-    pointer-events: none; color: var(--muted);
-  }
+  /* Form elements see form.css */
 
   /* ---------- Task type radio cards ---------- */
   .type-grid {
@@ -475,7 +423,7 @@
 <div class="page">
 
   <!-- Page head -->
-  <div class="page-head">
+  <div class="page-head with-actions">
     <div>
       <h1 class="page-title">Tạo nhiệm vụ</h1>
       <p class="page-sub">

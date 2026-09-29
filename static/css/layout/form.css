@@ -1,0 +1,42 @@
+/* ---------- Form elements ---------- */
+.field { margin-bottom: 1.25rem; }
+.field:last-of-type, .field:last-child { margin-bottom: 0; }
+.field-label {
+  display: block; font-size: .8125rem; font-weight: 500;
+  color: var(--ink); margin-bottom: .4375rem;
+}
+.field-label .req { color: var(--danger); margin-left: .125rem; }
+.field-label .opt {
+  color: var(--muted); font-weight: 400; margin-left: .375rem; font-size: .75rem;
+}
+.field-hint {
+  font-size: .75rem; color: var(--muted); margin-top: .375rem;
+  line-height: 1.5;
+}
+.field input[type="text"],
+.field input[type="url"],
+.field input[type="tel"],
+.field input[type="number"],
+.field input[type="password"],
+.field input[type="email"],
+.field select,
+.field textarea {
+  width: 100%; padding: .625rem .75rem;
+  font-size: .9375rem; font-family: inherit; color: var(--ink);
+  border: 1px solid var(--border-strong); border-radius: 6px;
+  background: #fff; transition: border-color .15s ease, box-shadow .15s ease;
+}
+.field textarea { resize: vertical; min-height: 96px; line-height: 1.55; }
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(30,58,95,.08);
+}
+.field input::placeholder, .field textarea::placeholder { color: var(--muted-2); }
+
+/* Custom select */
+.select-wrap { position: relative; }
+.select-wrap select { appearance: none; -webkit-appearance: none; padding-right: 2.5rem; cursor: pointer; }
+.select-arrow {
+  position: absolute; right: .875rem; top: 50%; transform: translateY(-50%);
+  pointer-events: none; color: var(--muted);
+}

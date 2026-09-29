@@ -11,6 +11,8 @@
 <link rel="stylesheet" href="../../static/css/layout/base.css" />
 <link rel="stylesheet" href="../../static/css/layout/header.css" />
 <link rel="stylesheet" href="../../static/css/layout/notice.css" />
+<link rel="stylesheet" href="../../static/css/layout/page-layout.css" />
+<link rel="stylesheet" href="../../static/css/layout/form.css" />
 <style>
 
   .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
@@ -24,23 +26,7 @@
 
 
   /* ---------- Page layout ---------- */
-  .page { max-width: 1160px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-  @media (min-width: 768px) { .page { padding: 2.5rem 2.5rem 5rem; } }
-
-
-
-  /* ---------- Page head ---------- */
-  .page-head {
-    padding-bottom: 1.75rem; margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .page-title {
-    font-family: 'IBM Plex Serif', Georgia, serif;
-    font-size: 1.75rem; font-weight: 500; line-height: 1.2;
-    letter-spacing: -.015em; margin: 0 0 .5rem;
-  }
-  @media (min-width: 768px) { .page-title { font-size: 2rem; } }
-  .page-sub { font-size: .9375rem; color: var(--ink-soft); margin: 0; max-width: 620px; }
+  /* See page-layout.css */
 
 
   /* ---------- Two-column layout ---------- */
@@ -79,42 +65,8 @@
   .form-head-desc { font-size: .8125rem; color: var(--muted); margin: 0; line-height: 1.5; }
   .form-body { padding: 1.5rem; }
 
-  .field { margin-bottom: 1.25rem; }
-  .field:last-of-type { margin-bottom: 1.5rem; }
-  .field-label {
-    display: block; font-size: .8125rem; font-weight: 500;
-    color: var(--ink); margin-bottom: .4375rem;
-  }
-  .field-hint {
-    font-size: .75rem; color: var(--muted); margin-top: .375rem; line-height: 1.5;
-  }
-  .field input[type="text"],
-  .field input[type="url"],
-  .field input[type="tel"],
-  .field select {
-    width: 100%; padding: .625rem .75rem;
-    font-size: .9375rem; font-family: inherit; color: var(--ink);
-    border: 1px solid var(--border-strong); border-radius: 6px;
-    background: #fff;
-    transition: border-color .15s ease, box-shadow .15s ease;
-  }
-  .field input:focus,
-  .field select:focus {
-    outline: none; border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(30,58,95,.08);
-  }
-  .field input::placeholder { color: var(--muted-2); }
-
-  /* Custom select with platform mark */
-  .select-wrap { position: relative; }
-  .select-wrap select {
-    appearance: none; -webkit-appearance: none;
-    padding-right: 2.5rem; cursor: pointer;
-  }
-  .select-arrow {
-    position: absolute; right: .875rem; top: 50%; transform: translateY(-50%);
-    pointer-events: none; color: var(--muted);
-  }
+  /* ---------- Form elements ---------- */
+  /* See form.css */
 
   .platform-mark {
     width: 26px; height: 26px; flex-shrink: 0;
