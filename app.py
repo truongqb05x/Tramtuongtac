@@ -30,6 +30,18 @@ def admin_reports():
 def admin_user_config():
     return render_template('admin/user_config.html')
 
+@app.route('/admin/config')
+def admin_config():
+    return render_template('admin/config.html')
+
+@app.route('/admin/logs')
+def admin_logs():
+    return render_template('admin/logs.html')
+
+@app.route('/admin/stats')
+def admin_stats():
+    return render_template('admin/stats.html')
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('user/errors/404.html'), 404

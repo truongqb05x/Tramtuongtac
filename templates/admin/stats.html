@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thống kê hệ thống - Admin Console</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../static/css/layout/layout_admin/admin.css">
+
+</head>
+<body>
+
+<div class="admin">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-name">TRAODOI</div>
+      <div class="sidebar-brand-sub">Admin Console · v3.2</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Tổng quan</div>
+      <button class="sidebar-link" data-view="dashboard">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <rect x="2" y="2" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
+            <rect x="7.5" y="2" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
+            <rect x="2" y="7.5" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
+            <rect x="7.5" y="7.5" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
+          </svg>
+        </span>
+        Dashboard
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Dịch vụ & Nhiệm vụ</div>
+      <button class="sidebar-link" data-view="tasks">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        Quản lý nhiệm vụ
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Tài chính</div>
+      <button class="sidebar-link" data-view="transactions">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <rect x="2" y="3" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M2 6H12" stroke="currentColor" stroke-width="1.3"/>
+          </svg>
+        </span>
+        Giao dịch nạp tiền
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Người dùng</div>
+      <button class="sidebar-link" data-view="users">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="7" cy="4" r="2.5" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M2.5 12C2.5 9.5 4.5 8 7 8C9.5 8 11.5 9.5 11.5 12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Danh sách users
+      </button>
+      <button class="sidebar-link" data-view="reports">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M7 2V7M7 10H7.01M2 7C2 4.2 4.2 2 7 2C9.8 2 12 4.2 12 7C12 9.8 9.8 12 7 12C4.2 12 2 9.8 2 7Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Xử lý vi phạm
+      </button>
+      <button class="sidebar-link" data-view="user-config">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M7 2V3M7 11V12M2 7H3M11 7H12M3.5 3.5L4.2 4.2M9.8 9.8L10.5 10.5M10.5 3.5L9.8 4.2M4.2 9.8L3.5 10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Cấu hình tài khoản
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Hệ thống</div>
+      <button class="sidebar-link" data-view="stats">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 12V5M7 12V2M12 12V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M2 12H12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Thống kê hệ thống
+      </button>
+      <button class="sidebar-link" data-view="config">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M7 1V2.5M7 11.5V13M1 7H2.5M11.5 7H13M2.5 2.5L3.5 3.5M10.5 10.5L11.5 11.5M11.5 2.5L10.5 3.5M3.5 10.5L2.5 11.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Cấu hình chung
+      </button>
+      <button class="sidebar-link" data-view="logs">
+        <span class="link-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M3 3H11V11H3Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+            <path d="M5 5.5H9M5 7.5H9M5 9.5H7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Nhật ký hoạt động
+      </button>
+    </div>
+  </aside>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="main">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle" aria-label="Mở menu">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 3.5H12M2 7H12M2 10.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <h1 class="page-title-admin" id="pageTitle">Thống kê hệ thống</h1>
+      </div>
+
+      <div class="topbar-right">
+
+        <button class="btn btn-ghost btn-sm" id="refreshBtn" title="Làm mới dữ liệu">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M12 7C12 9.8 9.8 12 7 12C4.2 12 2 9.8 2 7C2 4.2 4.2 2 7 2C9 2 10.7 3.1 11.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M12 2V5H9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <span class="admin-avatar" title="Admin">AD</span>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+      
+      <!-- Thẻ chỉ số tổng quan (Metrics Cards) -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+        
+        <div class="panel" style="padding: 1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div style="font-size: .8125rem; font-weight: 500; color: var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem;">Tổng Doanh Thu Nạp</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">245.5M ₫</div>
+              <div style="font-size: .8125rem; font-weight: 500; color: var(--success); display:flex; align-items:center; gap:4px; margin-top:.5rem;">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 12V2M7 2L3 6M7 2L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                +12.5% so với tháng trước
+              </div>
+            </div>
+            <div style="width:40px; height:40px; border-radius:8px; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="padding: 1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div style="font-size: .8125rem; font-weight: 500; color: var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem;">Lợi nhuận (Phí nền tảng)</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">24.5M ₫</div>
+              <div style="font-size: .8125rem; font-weight: 500; color: var(--success); display:flex; align-items:center; gap:4px; margin-top:.5rem;">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 12V2M7 2L3 6M7 2L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                +8.2% so với tháng trước
+              </div>
+            </div>
+            <div style="width:40px; height:40px; border-radius:8px; background:var(--success-soft); color:var(--success); display:flex; align-items:center; justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="padding: 1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div style="font-size: .8125rem; font-weight: 500; color: var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem;">Tổng số Users</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">12,480</div>
+              <div style="font-size: .8125rem; font-weight: 500; color: var(--success); display:flex; align-items:center; gap:4px; margin-top:.5rem;">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 12V2M7 2L3 6M7 2L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                +1,200 user mới
+              </div>
+            </div>
+            <div style="width:40px; height:40px; border-radius:8px; background:var(--warning-soft); color:var(--warning); display:flex; align-items:center; justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="padding: 1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div style="font-size: .8125rem; font-weight: 500; color: var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem;">Nhiệm vụ hoàn thành</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">854,020</div>
+              <div style="font-size: .8125rem; font-weight: 500; color: var(--danger); display:flex; align-items:center; gap:4px; margin-top:.5rem;">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M7 12L3 8M7 12L11 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                -2.1% so với tháng trước
+              </div>
+            </div>
+            <div style="width:40px; height:40px; border-radius:8px; background:#e0e7ff; color:#4f46e5; display:flex; align-items:center; justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Khối Bảng xếp hạng & Phân bổ (2 cột) -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; align-items: start;">
+        
+        <!-- Bảng xếp hạng -->
+        <div class="panel" style="padding:0;">
+          <div class="panel-head">
+            <h3 class="panel-head-title">Top Users Nạp Tiền</h3>
+          </div>
+          <div class="panel-body" style="padding:0;">
+            <table class="data-table-admin" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th>Người dùng</th>
+                  <th>Tổng nạp (₫)</th>
+                  <th class="right">Đã chi (Credits)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <span class="mini-avatar">T</span>
+                      <div>
+                        <div class="user-cell-name">Trần Văn A</div>
+                        <div class="user-cell-handle">@tranvana</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span style="font-weight:500;">15,500,000</span></td>
+                  <td class="right"><span class="cell-mono">14,200,000</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <span class="mini-avatar">H</span>
+                      <div>
+                        <div class="user-cell-name">Hoàng Ngọc H</div>
+                        <div class="user-cell-handle">@hoangh99</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span style="font-weight:500;">9,800,000</span></td>
+                  <td class="right"><span class="cell-mono">9,500,000</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <span class="mini-avatar">L</span>
+                      <div>
+                        <div class="user-cell-name">Lê Thị Mai</div>
+                        <div class="user-cell-handle">@lemai88</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span style="font-weight:500;">6,200,000</span></td>
+                  <td class="right"><span class="cell-mono">5,800,000</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <span class="mini-avatar" style="background:var(--warning-soft);color:var(--warning)">P</span>
+                      <div>
+                        <div class="user-cell-name">Phạm Tuấn</div>
+                        <div class="user-cell-handle">@tuanpham</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span style="font-weight:500;">4,100,000</span></td>
+                  <td class="right"><span class="cell-mono">1,100,000</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Progress Bars / Phân bổ -->
+        <div class="panel" style="padding:0;">
+          <div class="panel-head">
+            <h3 class="panel-head-title">Phân bổ Nhiệm vụ theo Nền tảng</h3>
+          </div>
+          <div class="panel-body" style="padding: 1.5rem;">
+            
+            <div style="margin-bottom: 1.25rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: .875rem; font-weight:500; color:var(--ink);">
+                <span>Facebook</span>
+                <span>45%</span>
+              </div>
+              <div style="height:8px; width:100%; background:var(--bg-alt); border-radius:4px; overflow:hidden;">
+                <div style="height:100%; width:45%; background:#1877F2; border-radius:4px;"></div>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 1.25rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: .875rem; font-weight:500; color:var(--ink);">
+                <span>TikTok</span>
+                <span>35%</span>
+              </div>
+              <div style="height:8px; width:100%; background:var(--bg-alt); border-radius:4px; overflow:hidden;">
+                <div style="height:100%; width:35%; background:#000000; border-radius:4px;"></div>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 1.25rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: .875rem; font-weight:500; color:var(--ink);">
+                <span>Instagram</span>
+                <span>12%</span>
+              </div>
+              <div style="height:8px; width:100%; background:var(--bg-alt); border-radius:4px; overflow:hidden;">
+                <div style="height:100%; width:12%; background:#E4405F; border-radius:4px;"></div>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 0;">
+              <div style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: .875rem; font-weight:500; color:var(--ink);">
+                <span>Khác (Youtube, Shopee...)</span>
+                <span>8%</span>
+              </div>
+              <div style="height:8px; width:100%; background:var(--bg-alt); border-radius:4px; overflow:hidden;">
+                <div style="height:100%; width:8%; background:var(--accent); border-radius:4px;"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Thành công</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+    const PAGE_TITLES = {
+    dashboard: 'Dashboard',
+    tasks: 'Quản lý nhiệm vụ',
+    transactions: 'Giao dịch nạp tiền',
+    users: 'Danh sách users',
+    reports: 'Xử lý vi phạm',
+    'user-config': 'Cấu hình tài khoản',
+    config: 'Cấu hình chung',
+    logs: 'Nhật ký hoạt động',
+    stats: 'Thống kê hệ thống'
+  };
+
+  /* ============ SIDEBAR NAVIGATION ============ */
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', () => {
+      const view = link.dataset.view;
+      if (view === 'stats') {
+        window.location.href = '/admin/stats';
+        return;
+      } else if (view === 'stats') {
+        window.location.href = '/admin/stats';
+        return;
+      } else if (view === 'tasks') {
+        window.location.href = '/admin/tasks';
+        return;
+      } else if (view === 'transactions') {
+        window.location.href = '/admin/transactions';
+        return;
+      } else if (view === 'users') {
+        window.location.href = '/admin/users';
+        return;
+      } else if (view === 'reports') {
+        window.location.href = '/admin/reports';
+        return;
+      } else if (view === 'user-config') {
+        window.location.href = '/admin/user-config';
+        return;
+      } else if (view === 'config') {
+        window.location.href = '/admin/config';
+        return;
+      } else if (view === 'logs') {
+        window.location.href = '/admin/logs';
+        return;
+      } else if (view === 'dashboard') {
+        window.location.href = '/admin';
+        return;
+      }
+      
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      const titleEl = document.getElementById('pageTitle');
+      if (titleEl) titleEl.textContent = PAGE_TITLES[view] || 'Admin';
+      closeSidebar();
+    });
+  });
+
+  /* ============ SIDEBAR MOBILE ============ */
+  const sidebar = document.getElementById('sidebar');
+  const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+  const menuToggle = document.getElementById('menuToggle');
+
+  function openSidebar() {
+    if (sidebar) sidebar.classList.add('open');
+    if (sidebarBackdrop) sidebarBackdrop.classList.add('on');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    if (sidebar) sidebar.classList.remove('open');
+    if (sidebarBackdrop) sidebarBackdrop.classList.remove('on');
+    document.body.style.overflow = '';
+  }
+  if (menuToggle) menuToggle.addEventListener('click', openSidebar);
+  if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', closeSidebar);
+
+  /* ============ REFRESH ============ */
+  const refreshBtn = document.getElementById('refreshBtn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', function() {
+      this.style.transform = 'rotate(360deg)';
+      this.style.transition = 'transform .6s ease';
+      setTimeout(() => {
+        this.style.transform = '';
+        this.style.transition = '';
+      }, 600);
+      showToast('Đã làm mới dữ liệu.');
+    });
+  }
+
+  /* ============ MODAL CLOSE ============ */
+  function closeModal(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+    if (!document.querySelector('.modal-overlay.active')) {
+      document.body.style.overflow = '';
+    }
+  }
+  window.closeModal = closeModal;
+
+  document.querySelectorAll('[data-close]').forEach(b => {
+    b.addEventListener('click', () => {
+      const overlay = b.closest('.modal-overlay');
+      if (overlay) closeModal(overlay.id);
+    });
+  });
+  document.querySelectorAll('.modal-overlay').forEach(o => {
+    o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
+      closeSidebar();
+    }
+  });
+
+  /* ============ TOAST ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  window.showToast = function(msg) {
+    if (!toast) return;
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('on'), 2800);
+  };
+
+})();
+</script>
+<!-- Script riêng của trang con sẽ nằm ở đây -->
+</body>
+</html>
