@@ -42,6 +42,54 @@ def admin_logs():
 def admin_stats():
     return render_template('admin/stats.html')
 
+@app.route('/home')
+def user_home():
+    return render_template('user/home.html')
+
+@app.route('/login')
+def user_login():
+    return render_template('user/auth/login.html')
+
+@app.route('/billing/buy-credits')
+def user_buy_credits():
+    return render_template('user/billing/buy_credits.html')
+
+@app.route('/jobs/create')
+def user_create_job():
+    return render_template('user/jobs/create_job.html')
+
+@app.route('/jobs')
+def user_job_list():
+    return render_template('user/jobs/job_list.html')
+
+@app.route('/api-docs')
+def user_api_docs():
+    return render_template('user/pages/api_docs.html')
+
+@app.route('/blog')
+def user_blog():
+    return render_template('user/pages/blog.html')
+
+@app.route('/faq')
+def user_faq():
+    return render_template('user/pages/faq.html')
+
+@app.route('/privacy')
+def user_privacy_policy():
+    return render_template('user/pages/privacy_policy.html')
+
+@app.route('/terms')
+def user_terms():
+    return render_template('user/pages/terms.html')
+
+@app.route('/settings/account')
+def user_settings_account():
+    return render_template('user/settings/account.html')
+
+@app.route('/settings/config')
+def user_settings_config():
+    return render_template('user/settings/config.html')
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('user/errors/404.html'), 404

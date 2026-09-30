@@ -212,30 +212,20 @@
   /* ============ TAB SWITCH ============ */
   const panes = { login: document.getElementById('pane-login'), register: document.getElementById('pane-register'), forgot: document.getElementById('pane-forgot') };
 
-  function switchTab(name, updateUrl = true) {
+  function switchTab(name) {
     if (!panes[name]) name = 'login';
     Object.entries(panes).forEach(([k, el]) => {
       el.classList.toggle('active', k === name);
     });
     document.title = (name === 'login' ? 'Đăng nhập' : (name === 'register' ? 'Đăng ký' : 'Khôi phục mật khẩu')) + ' — TRAMTUONGTAC';
-    if (updateUrl) {
-      window.history.pushState(null, '', '#' + name);
-    }
   }
 
   document.querySelectorAll('[data-switch]').forEach(b => {
     b.addEventListener('click', () => switchTab(b.dataset.switch));
   });
 
-  // Khởi tạo tab dựa trên URL hash
-  const initialHash = window.location.hash.replace('#', '');
-  switchTab(initialHash || 'login', true);
-
-  // Xử lý khi bấm nút Back/Forward trên trình duyệt
-  window.addEventListener('hashchange', () => {
-    const hash = window.location.hash.replace('#', '');
-    switchTab(hash || 'login', false);
-  });
+  // Khởi tạo tab mặc định
+  switchTab('login');
 
   /* ============ PASSWORD TOGGLE ============ */
   document.querySelectorAll('[data-toggle]').forEach(btn => {
