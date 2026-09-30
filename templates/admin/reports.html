@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Quản trị — TRAODOI</title>
+<title>Xử lý vi phạm - Admin Console</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,7 +23,7 @@
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">Tổng quan</div>
-      <button class="sidebar-link active" data-view="dashboard">
+      <button class="sidebar-link" data-view="dashboard">
         <span class="link-icon">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <rect x="2" y="2" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
@@ -72,7 +72,7 @@
         </span>
         Danh sách users
       </button>
-      <button class="sidebar-link" data-view="reports">
+      <button class="sidebar-link active" data-view="reports">
         <span class="link-icon">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path d="M7 2V7M7 10H7.01M2 7C2 4.2 4.2 2 7 2C9.8 2 12 4.2 12 7C12 9.8 9.8 12 7 12C4.2 12 2 9.8 2 7Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
@@ -126,7 +126,7 @@
             <path d="M2 3.5H12M2 7H12M2 10.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
-        <h1 class="page-title-admin" id="pageTitle">Dashboard</h1>
+        <h1 class="page-title-admin" id="pageTitle">Xử lý vi phạm</h1>
       </div>
 
       <div class="topbar-right">
@@ -143,7 +143,49 @@
 
     <!-- Content -->
     <main class="content">
-      <!-- Nội dung trang con sẽ nằm ở đây -->
+      
+      <div class="panel">
+        <div class="filter-bar-admin">
+          <div class="filter-search-admin">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+            <input type="text" placeholder="Tìm ID báo cáo, tài khoản bị báo cáo..." id="searchReports" />
+          </div>
+          <select class="filter-select-admin" id="filterReason">
+            <option value="">Tất cả lý do</option>
+            <option value="Pháp luật">Vi phạm pháp luật</option>
+            <option value="Tài khoản ảo">Tài khoản ảo / Bot</option>
+            <option value="Gian lận">Gian lận nhiệm vụ</option>
+            <option value="Spam">Spam / Rác</option>
+          </select>
+          <select class="filter-select-admin" id="filterStatus">
+            <option value="">Tất cả trạng thái</option>
+            <option value="pending">Chờ xử lý</option>
+            <option value="reviewing">Đang xem xét</option>
+            <option value="resolved">Đã xử lý</option>
+          </select>
+        </div>
+
+        <table class="data-table-admin" style="min-width: 900px;">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Người bị báo cáo</th>
+              <th>Lý do vi phạm</th>
+              <th>Chi tiết / Link bằng chứng</th>
+              <th>Mức độ</th>
+              <th>Trạng thái</th>
+              <th class="right">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="reportsTableBody">
+            <!-- JS -->
+          </tbody>
+        </table>
+      </div>
+
     </main>
   </div>
 </div>
@@ -277,6 +319,98 @@
 
 })();
 </script>
-<!-- Script riêng của trang con sẽ nằm ở đây -->
+<script>
+(function(){
+  'use strict';
+  
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  const ALL_REPORTS = [
+    { id: 'R-2841', accused: 'Trần Văn A', handle: '@tranvana', reasonType: 'Tài khoản ảo', desc: 'Dùng bot nhận 40 nhiệm vụ trong 2 giờ.', link: 'https://fb.com/fake.profile.123', severity: 'high', severityLabel: 'Nghiêm trọng', status: 'pending', statusLabel: 'Chờ xử lý' },
+    { id: 'R-2840', accused: 'Lê Thị B', handle: '@lethib', reasonType: 'Pháp luật', desc: 'Đăng tải nội dung đồi trụy / cờ bạc.', link: 'https://tiktok.com/@lethib/video1', severity: 'high', severityLabel: 'Nghiêm trọng', status: 'reviewing', statusLabel: 'Đang xem xét' },
+    { id: 'R-2839', accused: 'Phạm Văn C', handle: '@phamvanc', reasonType: 'Gian lận', desc: 'Cố tình hủy kết quả sau khi nhận tiền.', link: 'Nhiệm vụ #T-4910', severity: 'medium', severityLabel: 'Trung bình', status: 'reviewing', statusLabel: 'Đang xem xét' },
+    { id: 'R-2838', accused: 'Nguyễn Thị D', handle: '@nguyenthid', reasonType: 'Spam', desc: 'Spam comment giống hệt nhau liên tục.', link: 'Nhiệm vụ #T-4890', severity: 'low', severityLabel: 'Nhẹ', status: 'resolved', statusLabel: 'Đã xử lý' },
+    { id: 'R-2837', accused: 'Hoàng Văn E', handle: '@hoangvane', reasonType: 'Pháp luật', desc: 'Share bài viết lừa đảo chiếm đoạt tài sản.', link: 'https://fb.com/scam.post', severity: 'high', severityLabel: 'Nghiêm trọng', status: 'pending', statusLabel: 'Chờ xử lý' }
+  ];
+
+  function renderTable() {
+    const q = (document.getElementById('searchReports').value || '').toLowerCase();
+    const reason = document.getElementById('filterReason').value;
+    const stat = document.getElementById('filterStatus').value;
+
+    let list = ALL_REPORTS.slice();
+    if(q) {
+      list = list.filter(x => x.id.toLowerCase().includes(q) || x.accused.toLowerCase().includes(q) || x.handle.toLowerCase().includes(q));
+    }
+    if(reason) list = list.filter(x => x.reasonType === reason);
+    if(stat) list = list.filter(x => x.status === stat);
+
+    const tbody = document.getElementById('reportsTableBody');
+    if(!list.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8125rem">Không tìm thấy báo cáo nào.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = list.map(r => {
+      let sevClass = 'mute';
+      if(r.severity === 'high') sevClass = 'danger';
+      if(r.severity === 'medium') sevClass = 'warn';
+      if(r.severity === 'low') sevClass = 'info';
+
+      let stClass = 'mute';
+      if(r.status === 'pending') stClass = 'warn';
+      if(r.status === 'reviewing') stClass = 'info';
+      if(r.status === 'resolved') stClass = 'ok';
+
+      let actions = '';
+      if(r.status !== 'resolved') {
+        actions = `
+          <button class="btn btn-danger btn-sm" onclick="showToast('Đã khóa tài khoản ${r.handle}')">Khóa</button>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('Bỏ qua báo cáo ${r.id}')">Bỏ qua</button>
+        `;
+      } else {
+        actions = `<span class="cell-mono" style="color:var(--muted)">Đã đóng</span>`;
+      }
+
+      let linkDisplay = r.link.startsWith('http') ? `<a href="${r.link}" target="_blank" style="color:var(--accent);text-decoration:underline;">Link dẫn chứng</a>` : `<span class="cell-mono">${r.link}</span>`;
+
+      return `
+        <tr>
+          <td><span class="cell-mono">${r.id}</span></td>
+          <td>
+            <div class="user-cell">
+              <span class="mini-avatar">${escapeHtml(r.accused.charAt(0))}</span>
+              <div>
+                <div class="user-cell-name">${escapeHtml(r.accused)}</div>
+                <div class="user-cell-handle">${escapeHtml(r.handle)}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="status-pill mute">${escapeHtml(r.reasonType)}</span></td>
+          <td>
+            <div style="font-size:13px;max-width:250px;white-space:normal;line-height:1.4">${escapeHtml(r.desc)}</div>
+            <div style="margin-top:4px;font-size:12px;">${linkDisplay}</div>
+          </td>
+          <td><span class="status-pill ${sevClass}">${r.severityLabel}</span></td>
+          <td><span class="status-pill ${stClass}">${r.statusLabel}</span></td>
+          <td class="cell-right">
+            <div class="row-actions">${actions}</div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('searchReports').addEventListener('input', renderTable);
+  document.getElementById('filterReason').addEventListener('change', renderTable);
+  document.getElementById('filterStatus').addEventListener('change', renderTable);
+
+  renderTable();
+})();
+</script>
+
 </body>
 </html>

@@ -1,0 +1,39 @@
+
+
+.content {
+    padding: 1.5rem 1.5rem 3rem;
+  }
+  @media (min-width: 1024px) { .content { padding: 2rem 2.5rem 3rem; } }
+
+.panel {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .panel + .panel { margin-top: 1rem; }
+
+  .panel-head {
+    padding: .875rem 1.25rem;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem;
+  }
+  .panel-head-title {
+    font-size: .8125rem; font-weight: 600;
+    color: var(--ink);
+    margin: 0;
+    letter-spacing: .005em;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .panel-head-title .count-chip {
+    font-family: 'Inter', monospace;
+    font-size: .6875rem; font-weight: 600;
+    color: var(--danger);
+    background: var(--danger-soft);
+    padding: .125rem .4375rem;
+    border-radius: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .panel-body { padding: 1.25rem; }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Quản trị — TRAODOI</title>
+<title>Danh sách users - Admin Console</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,7 +23,7 @@
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">Tổng quan</div>
-      <button class="sidebar-link active" data-view="dashboard">
+      <button class="sidebar-link" data-view="dashboard">
         <span class="link-icon">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <rect x="2" y="2" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
@@ -63,7 +63,7 @@
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">Người dùng</div>
-      <button class="sidebar-link" data-view="users">
+      <button class="sidebar-link active" data-view="users">
         <span class="link-icon">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <circle cx="7" cy="4" r="2.5" stroke="currentColor" stroke-width="1.3"/>
@@ -126,7 +126,7 @@
             <path d="M2 3.5H12M2 7H12M2 10.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
-        <h1 class="page-title-admin" id="pageTitle">Dashboard</h1>
+        <h1 class="page-title-admin" id="pageTitle">Danh sách users</h1>
       </div>
 
       <div class="topbar-right">
@@ -143,7 +143,42 @@
 
     <!-- Content -->
     <main class="content">
-      <!-- Nội dung trang con sẽ nằm ở đây -->
+      
+      <div class="panel">
+        <div class="filter-bar-admin">
+          <div class="filter-search-admin">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+            <input type="text" placeholder="Tìm theo tên, handle..." id="searchUsers" />
+          </div>
+          <select class="filter-select-admin" id="filterStatus">
+            <option value="">Tất cả trạng thái</option>
+            <option value="info">Theo dõi</option>
+            <option value="warn">Cần xem xét</option>
+            <option value="danger">Bị khóa</option>
+            <option value="ok">Hoạt động tốt</option>
+          </select>
+        </div>
+
+        <table class="data-table-admin">
+          <thead>
+            <tr>
+              <th>Người dùng</th>
+              <th>Trust Score</th>
+              <th>Hoàn thành</th>
+              <th>Bị báo cáo</th>
+              <th>Trạng thái</th>
+              <th class="right">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <!-- JS -->
+          </tbody>
+        </table>
+      </div>
+
     </main>
   </div>
 </div>
@@ -277,6 +312,72 @@
 
 })();
 </script>
-<!-- Script riêng của trang con sẽ nằm ở đây -->
+<script>
+(function(){
+  'use strict';
+  
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  const ALL_USERS = [
+    { name: 'Trần Văn A', handle: '@tranvana', initials: 'TA', trust: 42, completed: '12 / 48', reports: 5, status: 'danger', statusLabel: 'Bị khóa' },
+    { name: 'Lê Thị B', handle: '@lethib', initials: 'LB', trust: 51, completed: '24 / 38', reports: 3, status: 'warn', statusLabel: 'Cần xem xét' },
+    { name: 'Phạm Văn C', handle: '@phamvanc', initials: 'PC', trust: 58, completed: '31 / 42', reports: 2, status: 'warn', statusLabel: 'Cần xem xét' },
+    { name: 'Nguyễn Thị D', handle: '@nguyenthid', initials: 'ND', trust: 63, completed: '48 / 56', reports: 1, status: 'info', statusLabel: 'Theo dõi' },
+    { name: 'Hoàng Văn E', handle: '@hoangvane', initials: 'HE', trust: 67, completed: '62 / 68', reports: 1, status: 'info', statusLabel: 'Theo dõi' },
+    { name: 'Vũ Thị F', handle: '@vuthif', initials: 'VF', trust: 92, completed: '120 / 125', reports: 0, status: 'ok', statusLabel: 'Hoạt động tốt' },
+    { name: 'Đặng Văn G', handle: '@dangvang', initials: 'DG', trust: 85, completed: '80 / 82', reports: 0, status: 'ok', statusLabel: 'Hoạt động tốt' }
+  ];
+
+  function renderTable() {
+    const q = (document.getElementById('searchUsers').value || '').toLowerCase();
+    const stat = document.getElementById('filterStatus').value;
+
+    let list = ALL_USERS.slice();
+    if(q) {
+      list = list.filter(x => x.name.toLowerCase().includes(q) || x.handle.toLowerCase().includes(q));
+    }
+    if(stat) list = list.filter(x => x.status === stat);
+
+    const tbody = document.getElementById('usersTableBody');
+    if(!list.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8125rem">Không tìm thấy người dùng nào.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = list.map(u => {
+      let trustStyle = u.trust < 50 ? 'color:var(--danger)' : (u.trust < 70 ? 'color:var(--warning)' : 'color:var(--success)');
+      return `
+        <tr>
+          <td>
+            <div class="user-cell">
+              <span class="mini-avatar">${escapeHtml(u.initials)}</span>
+              <div>
+                <div class="user-cell-name">${escapeHtml(u.name)}</div>
+                <div class="user-cell-handle">${escapeHtml(u.handle)}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="cell-strong" style="${trustStyle}">${u.trust}</span><span class="cell-mono"> / 100</span></td>
+          <td><span class="cell-mono">${escapeHtml(u.completed)}</span></td>
+          <td><span class="cell-strong">${u.reports}</span></td>
+          <td><span class="status-pill ${u.status}">${escapeHtml(u.statusLabel)}</span></td>
+          <td class="cell-right">
+            <button class="btn btn-secondary btn-sm" onclick="showToast('Đang mở hồ sơ ${u.handle}')">Chi tiết</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('searchUsers').addEventListener('input', renderTable);
+  document.getElementById('filterStatus').addEventListener('change', renderTable);
+
+  renderTable();
+})();
+</script>
+
 </body>
 </html>

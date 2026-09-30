@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Quản trị — TRAODOI</title>
+<title>Duyệt tài khoản liên kết - Admin Console</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,7 +23,7 @@
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">Tổng quan</div>
-      <button class="sidebar-link active" data-view="dashboard">
+      <button class="sidebar-link" data-view="dashboard">
         <span class="link-icon">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <rect x="2" y="2" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
@@ -80,7 +80,7 @@
         </span>
         Xử lý vi phạm
       </button>
-      <button class="sidebar-link" data-view="user-config">
+      <button class="sidebar-link active" data-view="user-config">
         <span class="link-icon">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.3"/>
@@ -126,7 +126,7 @@
             <path d="M2 3.5H12M2 7H12M2 10.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
-        <h1 class="page-title-admin" id="pageTitle">Dashboard</h1>
+        <h1 class="page-title-admin" id="pageTitle">Cấu hình tài khoản</h1>
       </div>
 
       <div class="topbar-right">
@@ -143,7 +143,53 @@
 
     <!-- Content -->
     <main class="content">
-      <!-- Nội dung trang con sẽ nằm ở đây -->
+      
+      <div class="panel">
+        <div class="filter-bar-admin">
+          <div class="filter-search-admin">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+            <input type="text" placeholder="Tìm theo tên user, link tài khoản liên kết..." id="searchAccounts" />
+          </div>
+          <select class="filter-select-admin" id="filterPlatform">
+            <option value="">Tất cả nền tảng</option>
+            <option value="Facebook">Facebook</option>
+            <option value="TikTok">TikTok</option>
+            <option value="Instagram">Instagram</option>
+            <option value="Youtube">Youtube</option>
+          </select>
+          <select class="filter-select-admin" id="filterSystemCheck">
+            <option value="">Tất cả cảnh báo</option>
+            <option value="clone">Nghi ngờ Clone</option>
+            <option value="ok">Bình thường</option>
+          </select>
+          <select class="filter-select-admin" id="filterStatus">
+            <option value="">Tất cả trạng thái</option>
+            <option value="pending">Chờ duyệt</option>
+            <option value="approved">Đã duyệt</option>
+            <option value="rejected">Bị từ chối / Khóa</option>
+          </select>
+        </div>
+
+        <table class="data-table-admin" style="min-width: 900px;">
+          <thead>
+            <tr>
+              <th>User (Chủ sở hữu)</th>
+              <th>Nền tảng</th>
+              <th>Tài khoản liên kết / Link</th>
+              <th>Đánh giá hệ thống</th>
+              <th>Trạng thái</th>
+              <th class="right">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="accountsTableBody">
+            <!-- JS -->
+          </tbody>
+        </table>
+      </div>
+
     </main>
   </div>
 </div>
@@ -277,6 +323,103 @@
 
 })();
 </script>
-<!-- Script riêng của trang con sẽ nằm ở đây -->
+<script>
+(function(){
+  'use strict';
+  
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  const ALL_ACCOUNTS = [
+    { id: 'A-101', owner: 'Trần Văn A', handle: '@tranvana', platform: 'Facebook', linkedName: 'Tran Van A Real', link: 'https://fb.com/profile.php?id=10008...', sysCheck: 'Nghi ngờ Clone (Avatar trống, 0 bạn bè)', sysCode: 'clone', status: 'pending', statusLabel: 'Chờ duyệt' },
+    { id: 'A-102', owner: 'Lê Thị B', handle: '@lethib', platform: 'TikTok', linkedName: 'lethiB_dance', link: 'https://tiktok.com/@lethib_dance', sysCheck: 'Bình thường (10k Followers)', sysCode: 'ok', status: 'pending', statusLabel: 'Chờ duyệt' },
+    { id: 'A-103', owner: 'Phạm Văn C', handle: '@phamvanc', platform: 'Instagram', linkedName: 'pham.c_99', link: 'https://instagram.com/pham.c_99', sysCheck: 'Bình thường', sysCode: 'ok', status: 'approved', statusLabel: 'Đã duyệt' },
+    { id: 'A-104', owner: 'Nguyễn Thị D', handle: '@nguyenthid', platform: 'Youtube', linkedName: 'Nguyen Thi D Vlogs', link: 'https://youtube.com/channel/UC...', sysCheck: 'Bình thường', sysCode: 'ok', status: 'approved', statusLabel: 'Đã duyệt' },
+    { id: 'A-105', owner: 'Hoàng Văn E', handle: '@hoangvane', platform: 'Facebook', linkedName: 'User123456', link: 'https://fb.com/user123456', sysCheck: 'Nghi ngờ Clone (Tên không hợp lệ, mới tạo 1 ngày)', sysCode: 'clone', status: 'pending', statusLabel: 'Chờ duyệt' },
+    { id: 'A-106', owner: 'Vũ Thị F', handle: '@vuthif', platform: 'TikTok', linkedName: 'bot_spam_001', link: 'https://tiktok.com/@bot_spam_001', sysCheck: 'Clone (Trùng IP với 5 tài khoản khác)', sysCode: 'clone', status: 'rejected', statusLabel: 'Bị khóa' }
+  ];
+
+  function renderTable() {
+    const q = (document.getElementById('searchAccounts').value || '').toLowerCase();
+    const plat = document.getElementById('filterPlatform').value;
+    const sys = document.getElementById('filterSystemCheck').value;
+    const stat = document.getElementById('filterStatus').value;
+
+    let list = ALL_ACCOUNTS.slice();
+    if(q) {
+      list = list.filter(x => x.owner.toLowerCase().includes(q) || x.handle.toLowerCase().includes(q) || x.linkedName.toLowerCase().includes(q));
+    }
+    if(plat) list = list.filter(x => x.platform === plat);
+    if(sys) list = list.filter(x => x.sysCode === sys);
+    if(stat) list = list.filter(x => x.status === stat);
+
+    const tbody = document.getElementById('accountsTableBody');
+    if(!list.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8125rem">Không tìm thấy tài khoản nào.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = list.map(a => {
+      let stClass = 'mute';
+      if(a.status === 'pending') stClass = 'warn';
+      if(a.status === 'approved') stClass = 'ok';
+      if(a.status === 'rejected') stClass = 'danger';
+
+      let sysClass = a.sysCode === 'clone' ? 'color:var(--danger);font-weight:500' : 'color:var(--success);';
+
+      let actions = '';
+      if(a.status === 'pending') {
+        actions = `
+          <button class="btn btn-success btn-sm" onclick="showToast('Đã duyệt tài khoản ${a.linkedName}')">Duyệt</button>
+          <button class="btn btn-danger btn-sm" onclick="showToast('Từ chối/Khóa tài khoản ${a.linkedName}')">Từ chối / Khóa</button>
+        `;
+      } else if (a.status === 'approved') {
+        actions = `
+          <button class="btn btn-danger btn-sm" onclick="showToast('Đã khóa tài khoản ${a.linkedName}')">Khóa tài khoản này</button>
+        `;
+      } else {
+        actions = `<span class="cell-mono" style="color:var(--muted)">Đã khóa</span>`;
+      }
+
+      let linkDisplay = `<a href="${a.link}" target="_blank" style="color:var(--accent);text-decoration:underline;">${escapeHtml(a.linkedName)}</a>`;
+
+      return `
+        <tr>
+          <td>
+            <div class="user-cell">
+              <span class="mini-avatar">${escapeHtml(a.owner.charAt(0))}</span>
+              <div>
+                <div class="user-cell-name">${escapeHtml(a.owner)}</div>
+                <div class="user-cell-handle">${escapeHtml(a.handle)}</div>
+              </div>
+            </div>
+          </td>
+          <td><span style="font-weight:500">${escapeHtml(a.platform)}</span></td>
+          <td>
+            <div style="font-size:13px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${linkDisplay}</div>
+          </td>
+          <td>
+            <div style="font-size:12.5px;max-width:260px;line-height:1.4;${sysClass}">${escapeHtml(a.sysCheck)}</div>
+          </td>
+          <td><span class="status-pill ${stClass}">${a.statusLabel}</span></td>
+          <td class="cell-right">
+            <div class="row-actions">${actions}</div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('searchAccounts').addEventListener('input', renderTable);
+  document.getElementById('filterPlatform').addEventListener('change', renderTable);
+  document.getElementById('filterSystemCheck').addEventListener('change', renderTable);
+  document.getElementById('filterStatus').addEventListener('change', renderTable);
+
+  renderTable();
+})();
+</script>
+
 </body>
 </html>

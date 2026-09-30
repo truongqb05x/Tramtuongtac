@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Quản trị — TRAODOI</title>
+<title>Quản lý nhiệm vụ - Admin Console</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,7 +23,7 @@
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">Tổng quan</div>
-      <button class="sidebar-link active" data-view="dashboard">
+      <button class="sidebar-link" data-view="dashboard">
         <span class="link-icon">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <rect x="2" y="2" width="4.5" height="4.5" stroke="currentColor" stroke-width="1.3"/>
@@ -38,7 +38,7 @@
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">Dịch vụ & Nhiệm vụ</div>
-      <button class="sidebar-link" data-view="tasks">
+      <button class="sidebar-link active" data-view="tasks">
         <span class="link-icon">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -126,7 +126,7 @@
             <path d="M2 3.5H12M2 7H12M2 10.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
-        <h1 class="page-title-admin" id="pageTitle">Dashboard</h1>
+        <h1 class="page-title-admin" id="pageTitle">Quản lý nhiệm vụ</h1>
       </div>
 
       <div class="topbar-right">
@@ -143,7 +143,52 @@
 
     <!-- Content -->
     <main class="content">
-      <!-- Nội dung trang con sẽ nằm ở đây -->
+      
+
+
+      <div class="panel">
+        <div class="filter-bar-admin">
+          <div class="filter-search-admin">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+            <input type="text" placeholder="Tìm mã NV, tên người tạo..." id="searchTasks" />
+          </div>
+          <select class="filter-select-admin" id="filterPlatform">
+            <option value="">Tất cả nền tảng</option>
+            <option value="Facebook">Facebook</option>
+            <option value="TikTok">TikTok</option>
+            <option value="Instagram">Instagram</option>
+            <option value="Youtube">Youtube</option>
+          </select>
+          <select class="filter-select-admin" id="filterStatus">
+            <option value="">Tất cả trạng thái</option>
+            <option value="pending">Chờ duyệt</option>
+            <option value="running">Đang chạy</option>
+            <option value="completed">Đã hoàn thành</option>
+            <option value="rejected">Bị từ chối</option>
+          </select>
+        </div>
+
+        <table class="data-table-admin" style="min-width: 800px;">
+          <thead>
+            <tr>
+              <th>Mã NV</th>
+              <th>Người tạo</th>
+              <th>Nền tảng</th>
+              <th>Yêu cầu (Action)</th>
+              <th>Thù lao / Số lượng</th>
+              <th>Trạng thái</th>
+              <th class="right">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="tasksTableBody">
+            <!-- JS -->
+          </tbody>
+        </table>
+      </div>
+
     </main>
   </div>
 </div>
@@ -277,6 +322,91 @@
 
 })();
 </script>
-<!-- Script riêng của trang con sẽ nằm ở đây -->
+<script>
+(function(){
+  'use strict';
+  
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  const ALL_TASKS = [
+    { id: '#T-4912', creator: 'Trần Văn A', handle: '@tranvana', platform: 'Facebook', req: 'Like & Follow fanpage', reward: '120', qty: '1000', status: 'pending', statusLabel: 'Chờ duyệt' },
+    { id: '#T-4911', creator: 'Lê Thị B', handle: '@lethib', platform: 'TikTok', req: 'Thả tim & Comment', reward: '80', qty: '500', status: 'running', statusLabel: 'Đang chạy' },
+    { id: '#T-4910', creator: 'Phạm Văn C', handle: '@phamvanc', platform: 'Instagram', req: 'Follow tài khoản', reward: '50', qty: '200', status: 'pending', statusLabel: 'Chờ duyệt' },
+    { id: '#T-4909', creator: 'Nguyễn Thị D', handle: '@nguyenthid', platform: 'Youtube', req: 'Sub channel', reward: '200', qty: '150', status: 'running', statusLabel: 'Đang chạy' },
+    { id: '#T-4908', creator: 'Hoàng Văn E', handle: '@hoangvane', platform: 'Facebook', req: 'Share bài viết', reward: '150', qty: '300', status: 'completed', statusLabel: 'Hoàn thành' },
+    { id: '#T-4907', creator: 'Vũ Thị F', handle: '@vuthif', platform: 'TikTok', req: 'Share video', reward: '70', qty: '1000', status: 'rejected', statusLabel: 'Từ chối' }
+  ];
+
+  function renderTable() {
+    const q = (document.getElementById('searchTasks').value || '').toLowerCase();
+    const plat = document.getElementById('filterPlatform').value;
+    const stat = document.getElementById('filterStatus').value;
+
+    let list = ALL_TASKS.slice();
+    if(q) {
+      list = list.filter(x => x.id.toLowerCase().includes(q) || x.creator.toLowerCase().includes(q) || x.handle.toLowerCase().includes(q));
+    }
+    if(plat) list = list.filter(x => x.platform === plat);
+    if(stat) list = list.filter(x => x.status === stat);
+
+    const tbody = document.getElementById('tasksTableBody');
+    if(!list.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8125rem">Không tìm thấy nhiệm vụ nào.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = list.map(t => {
+      let stCls = 'mute';
+      if(t.status === 'pending') stCls = 'warn';
+      if(t.status === 'running') stCls = 'info';
+      if(t.status === 'completed') stCls = 'ok';
+      if(t.status === 'rejected') stCls = 'danger';
+
+      let actions = '';
+      if(t.status === 'pending') {
+        actions = `<button class="btn btn-success btn-sm" onclick="showToast('Đã duyệt nhiệm vụ ${t.id}')">Duyệt</button>
+                   <button class="btn btn-danger btn-sm" onclick="showToast('Đã từ chối nhiệm vụ ${t.id}')">Từ chối</button>`;
+      } else {
+        actions = `<button class="btn btn-secondary btn-sm" onclick="showToast('Đang xem chi tiết ${t.id}')">Chi tiết</button>`;
+      }
+
+      return `
+        <tr>
+          <td><span class="cell-mono">${t.id}</span></td>
+          <td>
+            <div class="user-cell">
+              <span class="mini-avatar" style="border-radius:6px">${t.creator.charAt(0)}</span>
+              <div>
+                <div class="user-cell-name">${escapeHtml(t.creator)}</div>
+                <div class="user-cell-handle">${escapeHtml(t.handle)}</div>
+              </div>
+            </div>
+          </td>
+          <td><span style="font-weight:500">${escapeHtml(t.platform)}</span></td>
+          <td>${escapeHtml(t.req)}</td>
+          <td>
+            <div style="font-weight:600;color:var(--accent)">${t.reward} <small style="color:var(--muted);font-weight:400">CR</small></div>
+            <div class="cell-mono" style="margin-top:2px">x ${t.qty}</div>
+          </td>
+          <td><span class="status-pill ${stCls}">${t.statusLabel}</span></td>
+          <td class="cell-right">
+            <div class="row-actions">${actions}</div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('searchTasks').addEventListener('input', renderTable);
+  document.getElementById('filterPlatform').addEventListener('change', renderTable);
+  document.getElementById('filterStatus').addEventListener('change', renderTable);
+
+  renderTable();
+})();
+</script>
+
 </body>
 </html>
