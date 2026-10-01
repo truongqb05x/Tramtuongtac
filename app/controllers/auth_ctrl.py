@@ -7,6 +7,9 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('user_home'))
+        
     if request.method == 'POST':
         # Assuming frontend will send JSON for the login API
         data = request.get_json()

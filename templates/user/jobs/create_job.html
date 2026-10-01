@@ -1,536 +1,567 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Tạo nhiệm vụ — TRAODOI</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="../../static/css/layout/base.css" />
-<link rel="stylesheet" href="../../static/css/layout/header.css" />
-<link rel="stylesheet" href="../../static/css/layout/notice.css" />
-<link rel="stylesheet" href="../../static/css/layout/page-layout.css" />
-<link rel="stylesheet" href="../../static/css/layout/form.css" />
-<link rel="shortcut icon" href="../../../static/css/page/job/create_job.css" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tạo nhiệm vụ | TRAMTUONGTAC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="shortcut icon" href="../../../static/img/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../../static/css/layout/base.css">
+  <link rel="stylesheet" href="../../../static/css/layout/header.css" />
+  <link rel="stylesheet" href="../../../static/css/layout/notice.css" />
+  <link rel="stylesheet" href="../../../static/css/layout/page-layout.css" />
+  <link rel="stylesheet" href="../../../static/css/layout/form.css" />
+  <link rel="stylesheet" href="../../../static/css/page/job/create_job.css">
 </head>
+
 <body>
 
-<!-- ================= HEADER ================= -->
-<header class="top">
-  <div class="wrap">
-    <div class="flex items-center justify-between h-[64px] md:h-[72px]">
-      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
-        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]" style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
-      </a>
+  <!-- ================= HEADER ================= -->
+  <header class="top">
+    <div class="wrap">
+      <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+        <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+        </a>
 
-      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
-        <a href="/settings/config" class="nav-link">Cấu hình</a>
-        <a href="/jobs" class="nav-link">Làm Nhiệm Vụ</a>
-        <a href="/jobs/create" class="nav-link active">Tạo Tương Tác</a>
-        <a href="/blog" class="nav-link">Khám Phá</a>
-      </nav>
+        <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+          <a href="/settings/config" class="nav-link">Cấu hình</a>
+          <a href="/jobs" class="nav-link">Làm Nhiệm Vụ</a>
+          <a href="/jobs/create" class="nav-link active">Tạo Tương Tác</a>
+          <a href="/api-docs" class="nav-link">Tài liệu API</a>
+        </nav>
 
-      <div class="hidden md:flex items-center gap-3">
-        <div class="user-dropdown-wrap">
-          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
-            <img src="https://ui-avatars.com/api/?name=User&background=1e3a5f&color=fff" alt="Avatar" />
-          </button>
-          <div class="user-dropdown-menu" id="userDropdownMenu">
-            <a href="/settings/account">Hồ sơ</a>
-            <a href="/settings/config">Cài đặt</a>
-            <div class="divider"></div>
-            <a href="/auth/logout" class="text-danger">Đăng xuất</a>
-          </div>
-        </div>
-      </div>
-
-      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </div>
-
-  <div class="mobile-menu md:hidden" id="mobileMenu">
-    <a href="/settings/config">Cấu hình</a>
-    <a href="/jobs">Làm Nhiệm Vụ</a>
-    <a href="/jobs/create" style="font-weight:500;color:var(--ink)">Tạo Tương Tác</a>
-    <a href="/blog">Khám Phá</a>
-    <div class="p-4 flex flex-col gap-2.5">
-      <a href="/auth/logout" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
-    </div>
-  </div>
-</header>
-
-<!-- ================= PAGE ================= -->
-<div class="page">
-
-  <!-- Page head -->
-  <div class="page-head with-actions">
-    <div>
-      <h1 class="page-title">Tạo nhiệm vụ</h1>
-      <p class="page-sub">
-        Dùng Credits bạn kiếm được để mở nhiệm vụ cho nội dung của mình. Người khác hoàn thành, bạn nhận tương tác thật.
-      </p>
-    </div>
-    <div class="balance-panel">
-      <div class="balance-info">
-        <div class="balance-label">Credits khả dụng</div>
-        <div class="balance-value"><span id="balanceNum">{{ current_user.balance | int }}</span><small>Credits</small></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Create grid -->
-  <div class="create-grid">
-
-    <!-- ============ LEFT: FORM ============ -->
-    <form id="createForm" novalidate>
-
-      <!-- SECTION 1: Platform + type -->
-      <div class="form-section">
-        <div class="form-section-head">
-          <span class="step-num">1</span>
-          <h2 class="form-section-title">Chọn nền tảng &amp; loại nhiệm vụ</h2>
-        </div>
-        <div class="form-section-body">
-          <div class="field">
-            <label class="field-label" for="platformSelect">
-              Nền tảng <span class="req">*</span>
-            </label>
-            <div class="select-wrap">
-              <select id="platformSelect" required>
-                <option value="">— Chọn nền tảng —</option>
-                <option value="facebook">Facebook</option>
-                <option value="instagram">Instagram</option>
-                <option value="tiktok">TikTok</option>
-                <option value="youtube">YouTube</option>
-                <option value="website">Website</option>
-              </select>
-              <svg class="select-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="field-label">
-              Loại nhiệm vụ <span class="req">*</span>
-            </label>
-            <div class="type-grid" id="typeGrid">
-              <label class="type-card" data-type="follow">
-                <input type="radio" name="taskType" value="follow" />
-                <span class="tc-check"></span>
-                <span class="tc-name">Theo dõi</span>
-                <span class="tc-desc">Follow trang / kênh</span>
-              </label>
-              <label class="type-card" data-type="like">
-                <input type="radio" name="taskType" value="like" />
-                <span class="tc-check"></span>
-                <span class="tc-name">Tương tác</span>
-                <span class="tc-desc">Like, tim, share</span>
-              </label>
-              <label class="type-card" data-type="comment">
-                <input type="radio" name="taskType" value="comment" />
-                <span class="tc-check"></span>
-                <span class="tc-name">Bình luận</span>
-                <span class="tc-desc">Comment có nội dung</span>
-              </label>
-              <label class="type-card" data-type="visit">
-                <input type="radio" name="taskType" value="visit" />
-                <span class="tc-check"></span>
-                <span class="tc-name">Truy cập</span>
-                <span class="tc-desc">Visit + thời gian tối thiểu</span>
-              </label>
+        <div class="hidden md:flex items-center gap-3">
+          <div class="user-dropdown-wrap">
+            <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
+              <img src="https://ui-avatars.com/api/?name=User&background=1e3a5f&color=fff" alt="Avatar" />
+            </button>
+            <div class="user-dropdown-menu" id="userDropdownMenu">
+              <a href="/settings/account">Hồ sơ</a>
+              <a href="/settings/config">Cài đặt</a>
+              <div class="divider"></div>
+              <a href="/login" class="text-danger">Đăng xuất</a>
             </div>
           </div>
         </div>
+
+        <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
       </div>
-
-      <!-- SECTION 2: Content -->
-      <div class="form-section">
-        <div class="form-section-head">
-          <span class="step-num">2</span>
-          <h2 class="form-section-title">Nội dung cần tương tác</h2>
-        </div>
-        <div class="form-section-body">
-          <div class="field">
-            <label class="field-label" for="contentUrl">
-              Đường dẫn nội dung <span class="req">*</span>
-            </label>
-            <input type="url" id="contentUrl" placeholder="https://..." required />
-            <p class="field-hint" id="urlHint">Dán đường dẫn đầy đủ, bao gồm https://</p>
-          </div>
-
-
-          <div class="field">
-            <label class="field-label" for="taskDesc">
-              Ghi chú của bạn <span class="opt">(không bắt buộc)</span>
-            </label>
-            <textarea id="taskDesc" placeholder="Có thể để trống" maxlength="300"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- SECTION 3: Quantity + Reward -->
-      <div class="form-section">
-        <div class="form-section-head">
-          <span class="step-num">3</span>
-          <h2 class="form-section-title">Số lượng &amp; phần thưởng</h2>
-        </div>
-        <div class="form-section-body">
-          <div class="qty-reward">
-            <div class="field" style="margin-bottom:0">
-              <label class="field-label" for="slotsInput">
-                Số lượng <span class="req">*</span>
-              </label>
-              <div class="number-input">
-                <button type="button" data-step="slots" data-dir="-1" aria-label="Giảm">−</button>
-                <input type="number" id="slotsInput" value="20" min="1" max="500" step="1" required />
-                <button type="button" data-step="slots" data-dir="1" aria-label="Tăng">+</button>
-              </div>
-            </div>
-
-            <div class="field" style="margin-bottom:0">
-              <label class="field-label" for="rewardInput">
-                Chi phí <span class="req">*</span>
-              </label>
-              <div class="number-input">
-                <input type="number" id="rewardInput" value="5" readonly style="background: var(--bg-alt); cursor: not-allowed; text-align: center;" required />
-                <span class="suffix">Credits</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Balance warning — shown inline when insufficient -->
-          <div class="balance-warning" id="balanceWarning" style="display:none; margin-top: .875rem;">
-            <span class="bw-icon">!</span>
-            <div>
-              <span id="balanceMsg">Số dư không đủ. Cần nạp thêm Credits.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-    </form>
-
-    <!-- ============ RIGHT: SUMMARY ============ -->
-    <aside class="summary" aria-label="Tóm tắt chi phí">
-      <div class="summary-head">
-        <h3 class="summary-head-title">Tóm tắt chi phí</h3>
-      </div>
-
-      <div class="summary-body">
-        <div class="sum-row">
-          <span class="k">Số suất</span>
-          <span class="v" id="sumSlots">20</span>
-        </div>
-        <div class="sum-row">
-          <span class="k">Phần thưởng / suất</span>
-          <span class="v" id="sumReward">8 Credits</span>
-        </div>
-        <div class="sum-row">
-          <span class="k">Tạm tính</span>
-          <span class="v" id="sumSubtotal">160 Credits</span>
-        </div>
-        <div class="sum-row">
-          <span class="k">Phí nền tảng (2%)</span>
-          <span class="v" id="sumFee">3.2 Credits</span>
-        </div>
-        <div class="sum-divider"></div>
-        <div class="sum-row sum-total">
-          <span class="k">Tổng chi phí</span>
-          <span class="v" id="sumTotal">164 Credits</span>
-        </div>
-
-      </div>
-
-      <div class="summary-actions">
-        <button class="btn btn-primary" id="submitCreate" type="button">Tạo nhiệm vụ</button>
-      </div>
-    </aside>
-  </div>
-
-  <!-- ============ LIST: CREATED TASKS ============ -->
-  <section aria-labelledby="createdTitle">
-    <div class="list-head">
-      <h2 class="list-title" id="createdTitle">Nhiệm vụ bạn đã tạo</h2>
-      <span class="list-count" id="createdCount">3 nhiệm vụ</span>
     </div>
 
-    <div class="created-list" id="createdList">
-      <!-- Rows injected by JS -->
-    </div>
-  </section>
-
-</div>
-
-<!-- ================= MODAL: CONFIRM CREATE ================= -->
-<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
-  <div class="modal-box">
-    <button class="modal-close" data-close aria-label="Đóng">×</button>
-    <h3 id="confirmTitle">Xác nhận tạo nhiệm vụ</h3>
-    <p>Credits sẽ được trừ ngay khi nhiệm vụ được mở. Số lượng chưa làm sẽ được hoàn lại khi nhiệm vụ kết thúc.</p>
-    <div class="modal-summary">
-      <div class="modal-summary-row"><span class="k">Nhiệm vụ</span><span class="v" id="mTitle">—</span></div>
-      <div class="modal-summary-row"><span class="k">Link nội dung</span><span class="v" id="mPlatform" style="word-break:break-all;font-size:.8rem">—</span></div>
-      <div class="modal-summary-row"><span class="k">Số suất</span><span class="v" id="mSlots">—</span></div>
-      <div class="modal-summary-row"><span class="k">Phần thưởng / suất</span><span class="v" id="mReward">—</span></div>
-      <div class="modal-summary-row total"><span class="k">Tổng chi phí</span><span class="v" id="mTotal">—</span></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" data-close>Hủy</button>
-      <button class="btn btn-primary" id="confirmCreate">Tạo nhiệm vụ</button>
-    </div>
-  </div>
-</div>
-
-<!-- ================= MODAL: TOP-UP ================= -->
-<div class="modal-overlay" id="topupModal" role="dialog" aria-modal="true" aria-labelledby="topupTitle">
-  <div class="modal-box">
-    <button class="modal-close" data-close aria-label="Đóng">×</button>
-    <h3 id="topupTitle">Nạp Credits</h3>
-    <p>Credits dùng để mở nhiệm vụ cho nội dung của bạn. Chọn gói phù hợp.</p>
-
-    <div class="topup-grid" id="topupGrid">
-      <label class="topup-opt checked" data-topup="100">
-        <input type="radio" name="topup" value="100" checked />
-        <div class="topup-amt">100</div>
-        <div class="topup-price">50.000 ₫</div>
-      </label>
-      <label class="topup-opt" data-topup="250">
-        <input type="radio" name="topup" value="250" />
-        <div class="topup-amt">250</div>
-        <div class="topup-price">115.000 ₫</div>
-      </label>
-      <label class="topup-opt" data-topup="500">
-        <input type="radio" name="topup" value="500" />
-        <div class="topup-amt">500</div>
-        <div class="topup-price">220.000 ₫</div>
-      </label>
-      <label class="topup-opt" data-topup="1000">
-        <input type="radio" name="topup" value="1000" />
-        <div class="topup-amt">1.000</div>
-        <div class="topup-price">420.000 ₫</div>
-      </label>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn btn-secondary" data-close>Hủy</button>
-      <button class="btn btn-primary" id="confirmTopup">Nạp Credits</button>
-    </div>
-  </div>
-</div>
-
-<!-- ================= MODAL: LOGIN ================= -->
-<div class="modal-overlay" id="modal-login" role="dialog" aria-modal="true">
-  <div class="modal-box">
-    <button class="modal-close" data-close aria-label="Đóng">×</button>
-    <h3>Đăng nhập</h3>
-    <p>Chào mừng trở lại. Tiếp tục xây dựng uy tín của bạn.</p>
-    <form onsubmit="event.preventDefault(); alert('Demo: Đăng nhập thành công!'); closeModal('modal-login');">
-      <div class="field">
-        <label class="field-label" for="loginEmail">Email</label>
-        <input type="email" id="loginEmail" placeholder="you@example.com" required />
+    <div class="mobile-menu md:hidden" id="mobileMenu">
+      <a href="/settings/config">Cấu hình</a>
+      <a href="/jobs">Làm Nhiệm Vụ</a>
+      <a href="/jobs/create" style="font-weight:500;color:var(--ink)">Tạo Tương Tác</a>
+      <a href="/api-docs">Tài liệu API</a>
+      <div class="p-4 flex flex-col gap-2.5">
+        <a href="/login" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng
+          xuất</a>
       </div>
-      <div class="field">
-        <label class="field-label" for="loginPass">Mật khẩu</label>
-        <input type="password" id="loginPass" placeholder="••••••••" required />
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%">Đăng nhập</button>
-    </form>
-  </div>
-</div>
+    </div>
+  </header>
 
-<!-- ================= TOAST ================= -->
-<div class="toast" id="toast" role="status" aria-live="polite">
-  <span class="check">
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </span>
-  <span id="toastMsg">Thành công</span>
-</div>
+  <!-- ================= PAGE ================= -->
+  <div class="page">
 
-<!-- ============ FOOTER ============ -->
-<footer class="bg-[#f4f2ee] border-t border-[#e3e0da]">
-  <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
-    <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
+    <!-- Page head -->
+    <div class="page-head with-actions">
       <div>
-        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]" style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
-        <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
-          Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
+        <h1 class="page-title">Tạo nhiệm vụ</h1>
+        <p class="page-sub">
+          Dùng Credits bạn kiếm được để mở nhiệm vụ cho nội dung của mình. Người khác hoàn thành, bạn nhận tương tác
+          thật.
         </p>
       </div>
-      <div>
-        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
-        <ul class="space-y-2.5 list-none p-0 m-0">
-          <li><a href="/blog" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Khám phá</a></li>
-          <li><a href="/jobs" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Nhiệm vụ</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Bảng xếp hạng</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trust Score</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
-        <ul class="space-y-2.5 list-none p-0 m-0">
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ giúp</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều khoản</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách bảo mật</a></li>
-        </ul>
+      <div class="balance-panel">
+        <div class="balance-info">
+          <div class="balance-label">Credits khả dụng</div>
+          <div class="balance-value"><span id="balanceNum">{{ current_user.balance | int }}</span><small>Credits</small>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="mt-12 pt-6 border-t border-[#e3e0da] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-      <p class="text-[0.8125rem] text-[#6b6b6b]">© 2026 TRAMTUONGTAC. Tất cả các quyền được bảo lưu.</p>
-      <p class="text-[0.8125rem] text-[#6b6b6b]">Made with care in Vietnam</p>
+
+    <!-- Create grid -->
+    <div class="create-grid">
+
+      <!-- ============ LEFT: FORM ============ -->
+      <form id="createForm" novalidate>
+
+        <!-- SECTION 1: Platform + type -->
+        <div class="form-section">
+          <div class="form-section-head">
+            <span class="step-num">1</span>
+            <h2 class="form-section-title">Chọn nền tảng &amp; loại nhiệm vụ</h2>
+          </div>
+          <div class="form-section-body">
+            <div class="field">
+              <label class="field-label" for="platformSelect">
+                Nền tảng <span class="req">*</span>
+              </label>
+              <div class="select-wrap">
+                <select id="platformSelect" required>
+                  <option value="">— Chọn nền tảng —</option>
+                  <option value="facebook">Facebook</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="tiktok">TikTok</option>
+                  <option value="youtube">YouTube</option>
+                  <option value="website">Website</option>
+                </select>
+                <svg class="select-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label">
+                Loại nhiệm vụ <span class="req">*</span>
+              </label>
+              <div class="type-grid" id="typeGrid">
+                <label class="type-card" data-type="follow">
+                  <input type="radio" name="taskType" value="follow" />
+                  <span class="tc-check"></span>
+                  <span class="tc-name">Theo dõi</span>
+                  <span class="tc-desc">Follow trang / kênh</span>
+                </label>
+                <label class="type-card" data-type="like">
+                  <input type="radio" name="taskType" value="like" />
+                  <span class="tc-check"></span>
+                  <span class="tc-name">Tương tác</span>
+                  <span class="tc-desc">Like, tim, share</span>
+                </label>
+                <label class="type-card" data-type="comment">
+                  <input type="radio" name="taskType" value="comment" />
+                  <span class="tc-check"></span>
+                  <span class="tc-name">Bình luận</span>
+                  <span class="tc-desc">Comment có nội dung</span>
+                </label>
+                <label class="type-card" data-type="visit">
+                  <input type="radio" name="taskType" value="visit" />
+                  <span class="tc-check"></span>
+                  <span class="tc-name">Truy cập</span>
+                  <span class="tc-desc">Visit + thời gian tối thiểu</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Content -->
+        <div class="form-section">
+          <div class="form-section-head">
+            <span class="step-num">2</span>
+            <h2 class="form-section-title">Nội dung cần tương tác</h2>
+          </div>
+          <div class="form-section-body">
+            <div class="field">
+              <label class="field-label" for="contentUrl">
+                Đường dẫn nội dung <span class="req">*</span>
+              </label>
+              <input type="url" id="contentUrl" placeholder="https://..." required />
+              <p class="field-hint" id="urlHint">Dán đường dẫn đầy đủ, bao gồm https://</p>
+            </div>
+
+
+            <div class="field">
+              <label class="field-label" for="taskDesc">
+                Ghi chú của bạn <span class="opt">(không bắt buộc)</span>
+              </label>
+              <textarea id="taskDesc" placeholder="Có thể để trống" maxlength="300"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Quantity + Reward -->
+        <div class="form-section">
+          <div class="form-section-head">
+            <span class="step-num">3</span>
+            <h2 class="form-section-title">Số lượng &amp; phần thưởng</h2>
+          </div>
+          <div class="form-section-body">
+            <div class="qty-reward">
+              <div class="field" style="margin-bottom:0">
+                <label class="field-label" for="slotsInput">
+                  Số lượng <span class="req">*</span>
+                </label>
+                <div class="number-input">
+                  <button type="button" data-step="slots" data-dir="-1" aria-label="Giảm">−</button>
+                  <input type="number" id="slotsInput" value="20" min="1" max="500" step="1" required />
+                  <button type="button" data-step="slots" data-dir="1" aria-label="Tăng">+</button>
+                </div>
+              </div>
+
+              <div class="field" style="margin-bottom:0">
+                <label class="field-label" for="rewardInput">
+                  Chi phí <span class="req">*</span>
+                </label>
+                <div class="number-input">
+                  <input type="number" id="rewardInput" value="5" readonly
+                    style="background: var(--bg-alt); cursor: not-allowed; text-align: center;" required />
+                  <span class="suffix">Credits</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Balance warning — shown inline when insufficient -->
+            <div class="balance-warning" id="balanceWarning" style="display:none; margin-top: .875rem;">
+              <span class="bw-icon">!</span>
+              <div>
+                <span id="balanceMsg">Số dư không đủ. Cần nạp thêm Credits.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </form>
+
+      <!-- ============ RIGHT: SUMMARY ============ -->
+      <aside class="summary" aria-label="Tóm tắt chi phí">
+        <div class="summary-head">
+          <h3 class="summary-head-title">Tóm tắt chi phí</h3>
+        </div>
+
+        <div class="summary-body">
+          <div class="sum-row">
+            <span class="k">Số suất</span>
+            <span class="v" id="sumSlots">20</span>
+          </div>
+          <div class="sum-row">
+            <span class="k">Phần thưởng </span>
+            <span class="v" id="sumReward">8 Credits</span>
+          </div>
+          <div class="sum-row">
+            <span class="k">Tạm tính</span>
+            <span class="v" id="sumSubtotal">160 Credits</span>
+          </div>
+          <div class="sum-row">
+            <span class="k">Phí nền tảng (2%)</span>
+            <span class="v" id="sumFee">3.2 Credits</span>
+          </div>
+          <div class="sum-divider"></div>
+          <div class="sum-row sum-total">
+            <span class="k">Tổng chi phí</span>
+            <span class="v" id="sumTotal">164 Credits</span>
+          </div>
+
+        </div>
+
+        <div class="summary-actions">
+          <button class="btn btn-primary" id="submitCreate" type="button">Tạo nhiệm vụ</button>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ============ LIST: CREATED TASKS ============ -->
+    <section aria-labelledby="createdTitle">
+      <div class="list-head">
+        <h2 class="list-title" id="createdTitle">Nhiệm vụ bạn đã tạo</h2>
+        <span class="list-count" id="createdCount">3 nhiệm vụ</span>
+      </div>
+
+      <div class="created-list" id="createdList">
+        <!-- Rows injected by JS -->
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ================= MODAL: CONFIRM CREATE ================= -->
+  <div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-box">
+      <button class="modal-close" data-close aria-label="Đóng">×</button>
+      <h3 id="confirmTitle">Xác nhận tạo nhiệm vụ</h3>
+      <p>Credits sẽ được trừ ngay khi nhiệm vụ được mở. Số lượng chưa làm sẽ được hoàn lại khi nhiệm vụ kết thúc.</p>
+      <div class="modal-summary">
+        <div class="modal-summary-row"><span class="k">Nhiệm vụ</span><span class="v" id="mTitle">—</span></div>
+        <div class="modal-summary-row"><span class="k">Link nội dung</span><span class="v" id="mPlatform"
+            style="word-break:break-all;font-size:.8rem">—</span></div>
+        <div class="modal-summary-row"><span class="k">Số suất</span><span class="v" id="mSlots">—</span></div>
+        <div class="modal-summary-row"><span class="k">Phần thưởng</span><span class="v" id="mReward">—</span>
+        </div>
+        <div class="modal-summary-row total"><span class="k">Tổng chi phí</span><span class="v" id="mTotal">—</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" data-close>Hủy</button>
+        <button class="btn btn-primary" id="confirmCreate">Tạo nhiệm vụ</button>
+      </div>
     </div>
   </div>
-</footer>
 
-<script>
-(function(){
-  'use strict';
+  <!-- ================= MODAL: TOP-UP ================= -->
+  <div class="modal-overlay" id="topupModal" role="dialog" aria-modal="true" aria-labelledby="topupTitle">
+    <div class="modal-box">
+      <button class="modal-close" data-close aria-label="Đóng">×</button>
+      <h3 id="topupTitle">Nạp Credits</h3>
+      <p>Credits dùng để mở nhiệm vụ cho nội dung của bạn. Chọn gói phù hợp.</p>
 
-  /* ============ STATE ============ */
-  const PLATFORM_NAMES = {
-    facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok',
-    youtube: 'YouTube', website: 'Website'
-  };
-  const PLATFORM_MARKS = {
-    facebook: 'FB', instagram: 'IG', tiktok: 'TT',
-    youtube: 'YT', website: 'WEB'
-  };
-  const TYPE_NAMES = {
-    follow: 'Theo dõi', like: 'Tương tác',
-    comment: 'Bình luận', visit: 'Truy cập'
-  };
-  const FEE_RATE = 0.02;
+      <div class="topup-grid" id="topupGrid">
+        <label class="topup-opt checked" data-topup="100">
+          <input type="radio" name="topup" value="100" checked />
+          <div class="topup-amt">100</div>
+          <div class="topup-price">50.000 ₫</div>
+        </label>
+        <label class="topup-opt" data-topup="250">
+          <input type="radio" name="topup" value="250" />
+          <div class="topup-amt">250</div>
+          <div class="topup-price">115.000 ₫</div>
+        </label>
+        <label class="topup-opt" data-topup="500">
+          <input type="radio" name="topup" value="500" />
+          <div class="topup-amt">500</div>
+          <div class="topup-price">220.000 ₫</div>
+        </label>
+        <label class="topup-opt" data-topup="1000">
+          <input type="radio" name="topup" value="1000" />
+          <div class="topup-amt">1.000</div>
+          <div class="topup-price">420.000 ₫</div>
+        </label>
+      </div>
 
-  let balance = {{ current_user.balance | int }};
+      <div class="modal-actions">
+        <button class="btn btn-secondary" data-close>Hủy</button>
+        <button class="btn btn-primary" id="confirmTopup">Nạp Credits</button>
+      </div>
+    </div>
+  </div>
 
-  let createdTasks = {{ my_jobs | tojson | safe }} || [];
+  <!-- ================= MODAL: LOGIN ================= -->
+  <div class="modal-overlay" id="modal-login" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button class="modal-close" data-close aria-label="Đóng">×</button>
+      <h3>Đăng nhập</h3>
+      <p>Chào mừng trở lại. Tiếp tục xây dựng uy tín của bạn.</p>
+      <form onsubmit="event.preventDefault(); alert('Demo: Đăng nhập thành công!'); closeModal('modal-login');">
+        <div class="field">
+          <label class="field-label" for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" required />
+        </div>
+        <div class="field">
+          <label class="field-label" for="loginPass">Mật khẩu</label>
+          <input type="password" id="loginPass" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Đăng nhập</button>
+      </form>
+    </div>
+  </div>
 
-  let nextId = createdTasks.length > 0 ? Math.max(...createdTasks.map(t => t.id)) + 1 : 100;
-  let pendingCreate = null;
+  <!-- ================= TOAST ================= -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="check">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+        <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </span>
+    <span id="toastMsg">Thành công</span>
+  </div>
 
-  /* ============ DOM ============ */
-  const platformSelect = document.getElementById('platformSelect');
-  const contentUrl = document.getElementById('contentUrl');
-  const taskDesc = document.getElementById('taskDesc');
-  const slotsInput = document.getElementById('slotsInput');
-  const rewardInput = document.getElementById('rewardInput');
-  const urlHint = document.getElementById('urlHint');
+  <!-- ============ FOOTER ============ -->
+  <footer class="bg-[#f4f2ee] border-t border-[#e3e0da]">
+    <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
+        <div>
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+          <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
+            Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
+          </p>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="/blog"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Khám phá</a>
+            </li>
+            <li><a href="/jobs"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Nhiệm vụ</a>
+            </li>
+            <li><a href="#"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Bảng xếp
+                hạng</a></li>
+            <li><a href="#"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trust
+                Score</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="#"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ
+                giúp</a></li>
+            <li><a href="#"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều
+                khoản</a></li>
+            <li><a href="#"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách
+                bảo mật</a></li>
+          </ul>
+        </div>
+      </div>
+      <div
+        class="mt-12 pt-6 border-t border-[#e3e0da] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        <p class="text-[0.8125rem] text-[#6b6b6b]">© 2026 TRAMTUONGTAC. Tất cả các quyền được bảo lưu.</p>
+        <p class="text-[0.8125rem] text-[#6b6b6b]">Made with care in Vietnam</p>
+      </div>
+    </div>
+  </footer>
 
-  const sumSlots = document.getElementById('sumSlots');
-  const sumReward = document.getElementById('sumReward');
-  const sumSubtotal = document.getElementById('sumSubtotal');
-  const sumFee = document.getElementById('sumFee');
-  const sumTotal = document.getElementById('sumTotal');
-  const balanceWarning = document.getElementById('balanceWarning');
-  const balanceMsg = document.getElementById('balanceMsg');
-  const submitCreate = document.getElementById('submitCreate');
+  <script>
+    (function () {
+      'use strict';
 
-  const confirmModal = document.getElementById('confirmModal');
-  const topupModal = document.getElementById('topupModal');
+      /* ============ STATE ============ */
+      const PLATFORM_NAMES = {
+        facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok',
+        youtube: 'YouTube', website: 'Website'
+      };
+      const PLATFORM_MARKS = {
+        facebook: 'FB', instagram: 'IG', tiktok: 'TT',
+        youtube: 'YT', website: 'WEB'
+      };
+      const TYPE_NAMES = {
+        follow: 'Theo dõi', like: 'Tương tác',
+        comment: 'Bình luận', visit: 'Truy cập'
+      };
+      const FEE_RATE = 0.02;
 
-  /* ============ TYPE CARDS ============ */
-  const typeCards = document.querySelectorAll('.type-card');
-  typeCards.forEach(card => {
-    const input = card.querySelector('input');
-    input.addEventListener('change', () => {
-      typeCards.forEach(c => c.classList.toggle('checked', c.querySelector('input').checked));
+      let balance = {{ current_user.balance | int
+    }};
+
+    let createdTasks = {{ my_jobs | tojson | safe }} || [];
+
+    let nextId = createdTasks.length > 0 ? Math.max(...createdTasks.map(t => t.id)) + 1 : 100;
+    let pendingCreate = null;
+
+    /* ============ DOM ============ */
+    const platformSelect = document.getElementById('platformSelect');
+    const contentUrl = document.getElementById('contentUrl');
+    const taskDesc = document.getElementById('taskDesc');
+    const slotsInput = document.getElementById('slotsInput');
+    const rewardInput = document.getElementById('rewardInput');
+    const urlHint = document.getElementById('urlHint');
+
+    const sumSlots = document.getElementById('sumSlots');
+    const sumReward = document.getElementById('sumReward');
+    const sumSubtotal = document.getElementById('sumSubtotal');
+    const sumFee = document.getElementById('sumFee');
+    const sumTotal = document.getElementById('sumTotal');
+    const balanceWarning = document.getElementById('balanceWarning');
+    const balanceMsg = document.getElementById('balanceMsg');
+    const submitCreate = document.getElementById('submitCreate');
+
+    const confirmModal = document.getElementById('confirmModal');
+    const topupModal = document.getElementById('topupModal');
+
+    /* ============ TYPE CARDS ============ */
+    const typeCards = document.querySelectorAll('.type-card');
+    typeCards.forEach(card => {
+      const input = card.querySelector('input');
+      input.addEventListener('change', () => {
+        typeCards.forEach(c => c.classList.toggle('checked', c.querySelector('input').checked));
+        updateSummary();
+      });
+    });
+
+    /* ============ PLATFORM CHANGE ============ */
+    platformSelect.addEventListener('change', () => {
+      const v = platformSelect.value;
+      if (v) {
+        urlHint.textContent = v === 'website'
+          ? 'Dán đường dẫn trang web công khai, bao gồm https://'
+          : 'Đường dẫn nên chứa ' + v + '.com — bao gồm https://';
+      } else {
+        urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';
+      }
       updateSummary();
     });
-  });
 
-  /* ============ PLATFORM CHANGE ============ */
-  platformSelect.addEventListener('change', () => {
-    const v = platformSelect.value;
-    if (v) {
-      urlHint.textContent = v === 'website'
-        ? 'Dán đường dẫn trang web công khai, bao gồm https://'
-        : 'Đường dẫn nên chứa ' + v + '.com — bao gồm https://';
-    } else {
-      urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';
-    }
-    updateSummary();
-  });
-
-  /* ============ STEPPERS ============ */
-  document.querySelectorAll('[data-step]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const target = btn.dataset.step === 'slots' ? slotsInput : rewardInput;
-      const dir = parseInt(btn.dataset.dir, 10);
-      const min = parseInt(target.min, 10) || 1;
-      const max = parseInt(target.max, 10) || 999;
-      let v = parseInt(target.value, 10) || min;
-      v = Math.max(min, Math.min(max, v + dir));
-      target.value = v;
-      updateSummary();
+    /* ============ STEPPERS ============ */
+    document.querySelectorAll('[data-step]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.step === 'slots' ? slotsInput : rewardInput;
+        const dir = parseInt(btn.dataset.dir, 10);
+        const min = parseInt(target.min, 10) || 1;
+        const max = parseInt(target.max, 10) || 999;
+        let v = parseInt(target.value, 10) || min;
+        v = Math.max(min, Math.min(max, v + dir));
+        target.value = v;
+        updateSummary();
+      });
     });
-  });
 
-  slotsInput.addEventListener('input', updateSummary);
-  rewardInput.addEventListener('input', updateSummary);
+    slotsInput.addEventListener('input', updateSummary);
+    rewardInput.addEventListener('input', updateSummary);
 
 
-  /* ============ FORM INPUT LISTENERS ============ */
-  [contentUrl, taskDesc].forEach(el => {
-    el.addEventListener('input', updateSummary);
-    el.addEventListener('change', updateSummary);
-  });
+    /* ============ FORM INPUT LISTENERS ============ */
+    [contentUrl, taskDesc].forEach(el => {
+      el.addEventListener('input', updateSummary);
+      el.addEventListener('change', updateSummary);
+    });
 
-  /* ============ UPDATE SUMMARY ============ */
-  function updateSummary() {
-    const slots = Math.max(1, parseInt(slotsInput.value, 10) || 0);
-    const reward = Math.max(1, parseInt(rewardInput.value, 10) || 0);
-    const subtotal = slots * reward;
-    const fee = Math.round(subtotal * FEE_RATE * 10) / 10;
-    const total = Math.round((subtotal + fee) * 10) / 10;
+    /* ============ UPDATE SUMMARY ============ */
+    function updateSummary() {
+      const slots = Math.max(1, parseInt(slotsInput.value, 10) || 0);
+      const reward = Math.max(1, parseInt(rewardInput.value, 10) || 0);
+      const subtotal = slots * reward;
+      const fee = Math.round(subtotal * FEE_RATE * 10) / 10;
+      const total = Math.round((subtotal + fee) * 10) / 10;
 
-    sumSlots.textContent = slots;
-    sumReward.textContent = reward + ' Credits';
-    sumSubtotal.textContent = subtotal + ' Credits';
-    sumFee.textContent = fee + ' Credits';
-    sumTotal.textContent = total + ' Credits';
+      sumSlots.textContent = slots;
+      sumReward.textContent = reward + ' Credits';
+      sumSubtotal.textContent = subtotal + ' Credits';
+      sumFee.textContent = fee + ' Credits';
+      sumTotal.textContent = total + ' Credits';
 
-    // Balance warning — only show when insufficient
-    const enough = balance >= total;
-    if (enough) {
-      balanceWarning.style.display = 'none';
-    } else {
-      balanceWarning.style.display = 'flex';
-      balanceMsg.textContent = 'Số dư không đủ. Cần thêm ' + (total - balance) + ' Credits.';
-    }
-    submitCreate.disabled = !enough;
-  }
-
-  /* ============ RENDER CREATED TASKS ============ */
-  const createdList = document.getElementById('createdList');
-  const createdCount = document.getElementById('createdCount');
-
-  function renderCreated() {
-    createdCount.textContent = createdTasks.length + ' nhiệm vụ';
-    if (!createdTasks.length) {
-      createdList.innerHTML =
-        '<div class="empty"><div class="empty-title">Chưa có nhiệm vụ nào</div>Tạo nhiệm vụ đầu tiên ở form phía trên.</div>';
-      return;
+      // Balance warning — only show when insufficient
+      const enough = balance >= total;
+      if (enough) {
+        balanceWarning.style.display = 'none';
+      } else {
+        balanceWarning.style.display = 'flex';
+        balanceMsg.textContent = 'Số dư không đủ. Cần thêm ' + (total - balance) + ' Credits.';
+      }
+      submitCreate.disabled = !enough;
     }
 
-    createdList.innerHTML = '';
-    createdTasks.forEach(t => {
-      const pct = t.slots > 0 ? Math.round((t.done / t.slots) * 100) : 0;
-      let statusCls = 'active';
-      let statusText = 'Đang chạy';
-      if (t.status === 'done') { statusCls = 'done'; statusText = 'Hoàn thành'; }
-      else if (t.status === 'paused') { statusCls = 'paused'; statusText = 'Tạm dừng'; }
+    /* ============ RENDER CREATED TASKS ============ */
+    const createdList = document.getElementById('createdList');
+    const createdCount = document.getElementById('createdCount');
 
-      const row = document.createElement('div');
-      row.className = 'created-row';
-      row.dataset.id = t.id;
-      row.innerHTML = `
+    function renderCreated() {
+      createdCount.textContent = createdTasks.length + ' nhiệm vụ';
+      if (!createdTasks.length) {
+        createdList.innerHTML =
+          '<div class="empty"><div class="empty-title">Chưa có nhiệm vụ nào</div>Tạo nhiệm vụ đầu tiên ở form phía trên.</div>';
+        return;
+      }
+
+      createdList.innerHTML = '';
+      createdTasks.forEach(t => {
+        const pct = t.slots > 0 ? Math.round((t.done / t.slots) * 100) : 0;
+        let statusCls = 'active';
+        let statusText = 'Đang chạy';
+        if (t.status === 'done') { statusCls = 'done'; statusText = 'Hoàn thành'; }
+        else if (t.status === 'paused') { statusCls = 'paused'; statusText = 'Tạm dừng'; }
+
+        const row = document.createElement('div');
+        row.className = 'created-row';
+        row.dataset.id = t.id;
+        row.innerHTML = `
         <div class="ct-info">
           <span class="platform-mark">${PLATFORM_MARKS[t.platform] || '??'}</span>
           <div class="ct-text">
@@ -566,243 +597,272 @@
         </div>
       `;
 
-      // toggle status
-      row.querySelector('[data-toggle-status]').addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (t.status === 'active') {
-          t.status = 'paused';
-          showToast('Đã tạm dừng nhiệm vụ');
-        } else if (t.status === 'paused') {
-          t.status = 'active';
-          showToast('Đã tiếp tục nhiệm vụ');
-        } else {
-          showToast('Nhiệm vụ đã hoàn thành, không thể thay đổi.');
-          return;
-        }
-        renderCreated();
-      });
+        // toggle status
+        row.querySelector('[data-toggle-status]').addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const btn = e.currentTarget;
+          if (t.status === 'done') {
+            showToast('Nhiệm vụ đã hoàn thành, không thể thay đổi.');
+            return;
+          }
+          
+          let newStatus = t.status === 'active' ? 'paused' : 'active';
+          btn.disabled = true;
 
-      createdList.appendChild(row);
-    });
-  }
-
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
-  /* ============ SUBMIT CREATE ============ */
-  submitCreate.addEventListener('click', () => {
-    if (!validateForm()) return;
-    openConfirm();
-  });
-
-  function validateForm() {
-    if (!platformSelect.value) {
-      showToast('Vui lòng chọn nền tảng');
-      platformSelect.focus();
-      return false;
-    }
-    const type = document.querySelector('input[name="taskType"]:checked');
-    if (!type) {
-      showToast('Vui lòng chọn loại nhiệm vụ');
-      return false;
-    }
-    if (!contentUrl.value.trim() || !/^https?:\/\/.+/.test(contentUrl.value.trim())) {
-      showToast('Đường dẫn nội dung không hợp lệ');
-      contentUrl.focus();
-      return false;
-    }
-    return true;
-  }
-
-  function openConfirm() {
-    const slots = parseInt(slotsInput.value, 10);
-    const reward = parseInt(rewardInput.value, 10);
-    const subtotal = slots * reward;
-    const fee = Math.round(subtotal * FEE_RATE * 10) / 10;
-    const total = Math.round((subtotal + fee) * 10) / 10;
-    const type = document.querySelector('input[name="taskType"]:checked');
-
-    pendingCreate = {
-      platform: platformSelect.value,
-      type: type.value,
-      desc: taskDesc.value.trim(),
-      url: contentUrl.value.trim(),
-      slots, reward, total
-    };
-
-    document.getElementById('mTitle').textContent =
-      PLATFORM_NAMES[pendingCreate.platform] + ' · ' + TYPE_NAMES[pendingCreate.type];
-    document.getElementById('mPlatform').textContent = pendingCreate.url;
-    document.getElementById('mSlots').textContent = slots;
-    document.getElementById('mReward').textContent = reward + ' Credits';
-    document.getElementById('mTotal').textContent = total + ' Credits';
-
-    confirmModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  document.getElementById('confirmCreate').addEventListener('click', async () => {
-    if (!pendingCreate) return;
-    const t = pendingCreate;
-    const btn = document.getElementById('confirmCreate');
-    btn.disabled = true;
-    btn.textContent = 'Đang xử lý...';
-
-    try {
-      const res = await fetch('/jobs/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(t)
-      });
-      const data = await res.json();
-      
-      if (data.success) {
-        balance = data.new_balance;
-        document.getElementById('balanceNum').textContent = balance;
-
-        createdTasks.unshift({
-          id: data.job.id,
-          platform: t.platform,
-          type: t.type,
-          title: PLATFORM_NAMES[t.platform] + ' · ' + TYPE_NAMES[t.type],
-          reward: t.reward,
-          slots: t.slots,
-          done: 0,
-          status: 'active',
-          createdAt: 'vừa xong'
+          try {
+            const response = await fetch(`/jobs/${t.id}/toggle`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status: newStatus })
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+              t.status = newStatus;
+              showToast(newStatus === 'paused' ? 'Đã tạm dừng nhiệm vụ' : 'Đã tiếp tục nhiệm vụ');
+              renderCreated();
+            } else {
+              showToast(data.message || 'Lỗi khi cập nhật trạng thái');
+            }
+          } catch (err) {
+            console.error(err);
+            showToast('Có lỗi xảy ra, vui lòng thử lại.');
+          } finally {
+            btn.disabled = false;
+          }
         });
 
-        closeModal('confirmModal');
-        resetForm();
-        renderCreated();
-        updateSummary();
-        showToast('Đã tạo nhiệm vụ thành công!');
-      } else {
-        showToast(data.message || 'Có lỗi xảy ra');
+        createdList.appendChild(row);
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    /* ============ SUBMIT CREATE ============ */
+    submitCreate.addEventListener('click', () => {
+      if (!validateForm()) return;
+      openConfirm();
+    });
+
+    function validateForm() {
+      if (!platformSelect.value) {
+        showToast('Vui lòng chọn nền tảng');
+        platformSelect.focus();
+        return false;
       }
-    } catch (err) {
-      showToast('Lỗi kết nối máy chủ');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Tạo nhiệm vụ';
+      const type = document.querySelector('input[name="taskType"]:checked');
+      if (!type) {
+        showToast('Vui lòng chọn loại nhiệm vụ');
+        return false;
+      }
+      if (!contentUrl.value.trim() || !/^https?:\/\/.+/.test(contentUrl.value.trim())) {
+        showToast('Đường dẫn nội dung không hợp lệ');
+        contentUrl.focus();
+        return false;
+      }
+      return true;
     }
-  });
 
-  /* ============ RESET FORM ============ */
-  function resetForm() {
-    document.getElementById('createForm').reset();
-    typeCards.forEach(c => c.classList.remove('checked'));
-    slotsInput.value = 20;
-    rewardInput.value = 5;
-    urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';
-    updateSummary();
-  }
+    function openConfirm() {
+      const slots = parseInt(slotsInput.value, 10);
+      const reward = parseInt(rewardInput.value, 10);
+      const subtotal = slots * reward;
+      const fee = Math.round(subtotal * FEE_RATE * 10) / 10;
+      const total = Math.round((subtotal + fee) * 10) / 10;
+      const type = document.querySelector('input[name="taskType"]:checked');
 
-  /* ============ TOP-UP ============ */
-  document.querySelectorAll('[data-modal="topup"]').forEach(b => {
-    b.addEventListener('click', () => {
-      topupModal.classList.add('active');
+      pendingCreate = {
+        platform: platformSelect.value,
+        type: type.value,
+        desc: taskDesc.value.trim(),
+        url: contentUrl.value.trim(),
+        slots, reward, total
+      };
+
+      document.getElementById('mTitle').textContent =
+        PLATFORM_NAMES[pendingCreate.platform] + ' · ' + TYPE_NAMES[pendingCreate.type];
+      document.getElementById('mPlatform').textContent = pendingCreate.url;
+      document.getElementById('mSlots').textContent = slots;
+      document.getElementById('mReward').textContent = reward + ' Credits';
+      document.getElementById('mTotal').textContent = total + ' Credits';
+
+      confirmModal.classList.add('active');
       document.body.style.overflow = 'hidden';
-    });
-  });
-
-  document.querySelectorAll('.topup-opt').forEach(opt => {
-    opt.addEventListener('click', () => {
-      document.querySelectorAll('.topup-opt').forEach(o => o.classList.remove('checked'));
-      opt.classList.add('checked');
-      opt.querySelector('input').checked = true;
-    });
-  });
-
-  document.getElementById('confirmTopup').addEventListener('click', () => {
-    const selected = document.querySelector('input[name="topup"]:checked');
-    const amount = selected ? parseInt(selected.value, 10) : 100;
-    balance += amount;
-    document.getElementById('balanceNum').textContent = balance;
-    document.getElementById('headerCredits').textContent = balance;
-    closeModal('topupModal');
-    updateSummary();
-    showToast('Đã nạp ' + amount + ' Credits vào tài khoản.');
-  });
-
-  /* ============ MODAL HELPERS ============ */
-  function closeModal(id) {
-    const el = document.getElementById(id);
-    if (el) el.classList.remove('active');
-    if (!document.querySelector('.modal-overlay.active')) {
-      document.body.style.overflow = '';
     }
-  }
-  window.closeModal = closeModal;
 
-  document.querySelectorAll('[data-close]').forEach(b => {
-    b.addEventListener('click', () => {
-      const overlay = b.closest('.modal-overlay');
-      if (overlay) closeModal(overlay.id);
-    });
-  });
-  document.querySelectorAll('.modal-overlay').forEach(o => {
-    o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
-  });
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
-    }
-  });
+    document.getElementById('confirmCreate').addEventListener('click', async () => {
+      if (!pendingCreate) return;
+      const t = pendingCreate;
 
-  /* ============ LOGIN MODAL ============ */
-  document.querySelectorAll('[data-modal="login"]').forEach(b => {
-    b.addEventListener('click', e => {
-      e.preventDefault();
-      document.getElementById('modal-login').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
-  });
+      const btn = document.getElementById('confirmCreate');
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Đang xử lý...';
 
-  /* ============ TOAST ============ */
-  const toast = document.getElementById('toast');
-  const toastMsg = document.getElementById('toastMsg');
-  let toastTimer;
-  function showToast(msg) {
-    toastMsg.textContent = msg;
-    toast.classList.add('on');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('on'), 2800);
-  }
+      try {
+        const response = await fetch('/jobs/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(t)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          balance = data.new_balance;
+          document.getElementById('balanceNum').textContent = balance;
+          
+          let platformKey = (data.job?.platform || t.platform || '').toLowerCase();
+          let typeKey = (data.job?.action_type || t.type || '').toLowerCase();
 
-  /* ============ HEADER USER MENU ============ */
-  const userAvatarBtn = document.getElementById('userAvatarBtn');
-  const userDropdownMenu = document.getElementById('userDropdownMenu');
-  if (userAvatarBtn && userDropdownMenu) {
-    userAvatarBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      userDropdownMenu.classList.toggle('show');
-    });
-    document.addEventListener('click', (e) => {
-      if (!userDropdownMenu.contains(e.target)) {
-        userDropdownMenu.classList.remove('show');
+          createdTasks.unshift({
+            id: data.job?.id || nextId++,
+            platform: platformKey,
+            type: typeKey,
+            title: (PLATFORM_NAMES[platformKey] || platformKey) + ' · ' + (TYPE_NAMES[typeKey] || typeKey),
+            reward: data.job?.price_per_action || t.reward,
+            slots: data.job?.quantity || t.slots,
+            done: 0,
+            status: 'active',
+            createdAt: 'vừa xong'
+          });
+
+          closeModal('confirmModal');
+          resetForm();
+          renderCreated();
+          updateSummary();
+          showToast('Đã tạo nhiệm vụ thành công!');
+        } else {
+          alert(data.message || 'Lỗi khi tạo nhiệm vụ');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Có lỗi xảy ra, vui lòng thử lại.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
       }
     });
-  }
 
-  /* ============ HEADER MOBILE MENU ============ */
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  hamburgerBtn.addEventListener('click', () => {
-    const open = mobileMenu.classList.toggle('open');
-    hamburgerBtn.classList.toggle('open', open);
-    hamburgerBtn.setAttribute('aria-expanded', open);
-  });
+    /* ============ RESET FORM ============ */
+    function resetForm() {
+      document.getElementById('createForm').reset();
+      typeCards.forEach(c => c.classList.remove('checked'));
+      slotsInput.value = 20;
+      rewardInput.value = 5;
+      urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';
+      updateSummary();
+    }
 
-  /* ============ INIT ============ */
-  renderCreated();
-  updateSummary();
+    /* ============ TOP-UP ============ */
+    document.querySelectorAll('[data-modal="topup"]').forEach(b => {
+      b.addEventListener('click', () => {
+        topupModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
 
-})();
-</script>
+    document.querySelectorAll('.topup-opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.topup-opt').forEach(o => o.classList.remove('checked'));
+        opt.classList.add('checked');
+        opt.querySelector('input').checked = true;
+      });
+    });
+
+    document.getElementById('confirmTopup').addEventListener('click', () => {
+      const selected = document.querySelector('input[name="topup"]:checked');
+      const amount = selected ? parseInt(selected.value, 10) : 100;
+      balance += amount;
+      document.getElementById('balanceNum').textContent = balance;
+      document.getElementById('headerCredits').textContent = balance;
+      closeModal('topupModal');
+      updateSummary();
+      showToast('Đã nạp ' + amount + ' Credits vào tài khoản.');
+    });
+
+    /* ============ MODAL HELPERS ============ */
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+      if (!document.querySelector('.modal-overlay.active')) {
+        document.body.style.overflow = '';
+      }
+    }
+    window.closeModal = closeModal;
+
+    document.querySelectorAll('[data-close]').forEach(b => {
+      b.addEventListener('click', () => {
+        const overlay = b.closest('.modal-overlay');
+        if (overlay) closeModal(overlay.id);
+      });
+    });
+    document.querySelectorAll('.modal-overlay').forEach(o => {
+      o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
+      }
+    });
+
+    /* ============ LOGIN MODAL ============ */
+    document.querySelectorAll('[data-modal="login"]').forEach(b => {
+      b.addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('modal-login').classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    /* ============ TOAST ============ */
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    let toastTimer;
+    function showToast(msg) {
+      toastMsg.textContent = msg;
+      toast.classList.add('on');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('on'), 2800);
+    }
+
+    /* ============ HEADER USER MENU ============ */
+    const userAvatarBtn = document.getElementById('userAvatarBtn');
+    const userDropdownMenu = document.getElementById('userDropdownMenu');
+    if (userAvatarBtn && userDropdownMenu) {
+      userAvatarBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        userDropdownMenu.classList.toggle('show');
+      });
+      document.addEventListener('click', (e) => {
+        if (!userDropdownMenu.contains(e.target)) {
+          userDropdownMenu.classList.remove('show');
+        }
+      });
+    }
+
+    /* ============ HEADER MOBILE MENU ============ */
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburgerBtn.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      hamburgerBtn.classList.toggle('open', open);
+      hamburgerBtn.setAttribute('aria-expanded', open);
+    });
+
+    /* ============ INIT ============ */
+    renderCreated();
+    updateSummary();
+
+}) ();
+  </script>
 
 </body>
+
 </html>

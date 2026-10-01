@@ -24,8 +24,9 @@ def user_create_job():
         action_type = data.get('type', '').upper()
         target_url = data.get('url')
         quantity = int(data.get('slots', 0))
-        price_per_action = float(data.get('reward', 0))
-        total_cost = float(data.get('total', 0))
+        from decimal import Decimal
+        price_per_action = Decimal(str(data.get('reward', 0)))
+        total_cost = Decimal(str(data.get('total', 0)))
         
         if current_user.balance < total_cost:
             return jsonify({'success': False, 'message': 'Không đủ Credits'}), 400
@@ -70,13 +71,33 @@ def user_create_job():
         
     return render_template('user/jobs/create_job.html', my_jobs=my_jobs_data)
 
+@user_bp.route('/jobs/<int:job_id>/toggle', methods=['POST'])
+@login_required
+def user_toggle_job(job_id):
+    job = Job.query.filter_by(id=job_id, user_id=current_user.id).first()
+    if not job:
+        return jsonify({'success': False, 'message': 'Không tìm thấy nhiệm vụ'}), 404
+        
+    data = request.get_json()
+    new_status = data.get('status')
+    
+    if new_status == 'paused':
+        job.status = 'PAUSED'
+    elif new_status == 'active':
+        job.status = 'RUNNING'
+        
+    db.session.commit()
+    return jsonify({'success': True, 'new_status': new_status})
+
 @user_bp.route('/jobs')
 @login_required
 def user_job_list():
+    from app.models.user import SocialAccount
+    has_accounts = SocialAccount.query.filter_by(user_id=current_user.id, is_deleted=False).first() is not None
     # Fetch running jobs that are not deleted
     db_jobs = Job.query.filter_by(status='RUNNING', is_deleted=False).all()
     jobs_data = [job.to_dict() for job in db_jobs]
-    return render_template('user/jobs/job_list.html', jobs_data=jobs_data)
+    return render_template('user/jobs/job_list.html', jobs_data=jobs_data, has_accounts=has_accounts)
 
 @user_bp.route('/api-docs')
 def user_api_docs():

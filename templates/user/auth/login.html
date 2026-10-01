@@ -14,6 +14,7 @@
     rel="stylesheet" />
   <link rel="stylesheet" href=".././../static/css/page/login/login.css">
 </head>
+
 <body>
   <div class="auth-shell">
     <!-- ================= LEFT: FORM ================= -->
@@ -302,20 +303,20 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email.value.trim(), password: pass.value })
         })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            showToast(data.message);
-            setTimeout(() => { window.location.href = data.redirect_url || '/home'; }, 1000);
-          } else {
-            setError('loginPassErr', true);
-            document.getElementById('loginPassErr').textContent = data.message;
-            pass.classList.add('invalid');
-          }
-        })
-        .catch(err => {
-          showToast('Đã xảy ra lỗi hệ thống, vui lòng thử lại.');
-        });
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              showToast(data.message);
+              setTimeout(() => { window.location.href = data.redirect_url || '/home'; }, 1000);
+            } else {
+              setError('loginPassErr', true);
+              document.getElementById('loginPassErr').textContent = data.message;
+              pass.classList.add('invalid');
+            }
+          })
+          .catch(err => {
+            showToast('Đã xảy ra lỗi hệ thống, vui lòng thử lại.');
+          });
       });
 
       /* ============ REGISTER SUBMIT ============ */
@@ -353,20 +354,20 @@
             terms: terms.checked
           })
         })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            showToast(data.message);
-            setTimeout(() => { switchTab('login'); }, 1400);
-          } else {
-            setError('regEmailErr', true);
-            document.getElementById('regEmailErr').textContent = data.message;
-            email.classList.add('invalid');
-          }
-        })
-        .catch(err => {
-          showToast('Đã xảy ra lỗi hệ thống, vui lòng thử lại.');
-        });
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              showToast(data.message);
+              setTimeout(() => { switchTab('login'); }, 1400);
+            } else {
+              setError('regEmailErr', true);
+              document.getElementById('regEmailErr').textContent = data.message;
+              email.classList.add('invalid');
+            }
+          })
+          .catch(err => {
+            showToast('Đã xảy ra lỗi hệ thống, vui lòng thử lại.');
+          });
       });
 
 

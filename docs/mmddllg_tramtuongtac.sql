@@ -37,7 +37,7 @@ CREATE TABLE `jobs` (
   `current_count` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `price_per_action` decimal(15,2) NOT NULL,
   `total_cost` decimal(15,2) NOT NULL,
-  `status` enum('RUNNING','COMPLETED','CANCELED') NOT NULL DEFAULT 'RUNNING',
+  `status` enum('RUNNING','COMPLETED','CANCELED','PAUSED') NOT NULL DEFAULT 'RUNNING',
   `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
