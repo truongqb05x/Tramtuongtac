@@ -349,13 +349,7 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  const ALL_REPORTS = [
-    { id: 'R-2841', accused: 'Trần Văn A', handle: '@tranvana', reasonType: 'Tài khoản ảo', desc: 'Dùng bot nhận 40 nhiệm vụ trong 2 giờ.', link: 'https://fb.com/fake.profile.123', severity: 'high', severityLabel: 'Nghiêm trọng', status: 'pending', statusLabel: 'Chờ xử lý' },
-    { id: 'R-2840', accused: 'Lê Thị B', handle: '@lethib', reasonType: 'Pháp luật', desc: 'Đăng tải nội dung đồi trụy / cờ bạc.', link: 'https://tiktok.com/@lethib/video1', severity: 'high', severityLabel: 'Nghiêm trọng', status: 'reviewing', statusLabel: 'Đang xem xét' },
-    { id: 'R-2839', accused: 'Phạm Văn C', handle: '@phamvanc', reasonType: 'Gian lận', desc: 'Cố tình hủy kết quả sau khi nhận tiền.', link: 'Nhiệm vụ #T-4910', severity: 'medium', severityLabel: 'Trung bình', status: 'reviewing', statusLabel: 'Đang xem xét' },
-    { id: 'R-2838', accused: 'Nguyễn Thị D', handle: '@nguyenthid', reasonType: 'Spam', desc: 'Spam comment giống hệt nhau liên tục.', link: 'Nhiệm vụ #T-4890', severity: 'low', severityLabel: 'Nhẹ', status: 'resolved', statusLabel: 'Đã xử lý' },
-    { id: 'R-2837', accused: 'Hoàng Văn E', handle: '@hoangvane', reasonType: 'Pháp luật', desc: 'Share bài viết lừa đảo chiếm đoạt tài sản.', link: 'https://fb.com/scam.post', severity: 'high', severityLabel: 'Nghiêm trọng', status: 'pending', statusLabel: 'Chờ xử lý' }
-  ];
+  const ALL_REPORTS = {{ reports_data | tojson | safe }} || [];
 
   function renderTable() {
     const q = (document.getElementById('searchReports').value || '').toLowerCase();

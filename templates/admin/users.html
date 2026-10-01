@@ -176,9 +176,10 @@
             <thead>
               <tr>
                 <th>Người dùng</th>
-                <th>Trust Score</th>
-                <th>Hoàn thành</th>
-                <th>Bị báo cáo</th>
+                <th>Vai trò</th>
+                <th>Số dư</th>
+                <th>Nhiệm vụ active</th>
+                <th>Ngày tham gia</th>
                 <th>Trạng thái</th>
                 <th class="right">Hành động</th>
               </tr>
@@ -342,15 +343,7 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  const ALL_USERS = [
-    { name: 'Trần Văn A', handle: '@tranvana', initials: 'TA', trust: 42, completed: '12 / 48', reports: 5, status: 'danger', statusLabel: 'Bị khóa' },
-    { name: 'Lê Thị B', handle: '@lethib', initials: 'LB', trust: 51, completed: '24 / 38', reports: 3, status: 'warn', statusLabel: 'Cần xem xét' },
-    { name: 'Phạm Văn C', handle: '@phamvanc', initials: 'PC', trust: 58, completed: '31 / 42', reports: 2, status: 'warn', statusLabel: 'Cần xem xét' },
-    { name: 'Nguyễn Thị D', handle: '@nguyenthid', initials: 'ND', trust: 63, completed: '48 / 56', reports: 1, status: 'info', statusLabel: 'Theo dõi' },
-    { name: 'Hoàng Văn E', handle: '@hoangvane', initials: 'HE', trust: 67, completed: '62 / 68', reports: 1, status: 'info', statusLabel: 'Theo dõi' },
-    { name: 'Vũ Thị F', handle: '@vuthif', initials: 'VF', trust: 92, completed: '120 / 125', reports: 0, status: 'ok', statusLabel: 'Hoạt động tốt' },
-    { name: 'Đặng Văn G', handle: '@dangvang', initials: 'DG', trust: 85, completed: '80 / 82', reports: 0, status: 'ok', statusLabel: 'Hoạt động tốt' }
-  ];
+  const ALL_USERS = {{ users_data | tojson | safe }} || [];
 
   function renderTable() {
     const q = (document.getElementById('searchUsers').value || '').toLowerCase();
@@ -358,35 +351,37 @@
 
     let list = ALL_USERS.slice();
     if(q) {
-      list = list.filter(x => x.name.toLowerCase().includes(q) || x.handle.toLowerCase().includes(q));
+      list = list.filter(x => x.name.toLowerCase().includes(q) || x.email.toLowerCase().includes(q));
     }
     if(stat) list = list.filter(x => x.status === stat);
 
     const tbody = document.getElementById('usersTableBody');
     if(!list.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8125rem">Không tìm thấy người dùng nào.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8125rem">Không tìm thấy người dùng nào.</td></tr>';
       return;
     }
 
     tbody.innerHTML = list.map(u => {
-      let trustStyle = u.trust < 50 ? 'color:var(--danger)' : (u.trust < 70 ? 'color:var(--warning)' : 'color:var(--success)');
+      let initials = u.name !== 'N/A' ? u.name.charAt(0).toUpperCase() : 'U';
+      let statusCls = u.status === 'active' ? 'ok' : 'danger';
       return `
         <tr>
           <td>
             <div class="user-cell">
-              <span class="mini-avatar">${escapeHtml(u.initials)}</span>
+              <span class="mini-avatar">${initials}</span>
               <div>
                 <div class="user-cell-name">${escapeHtml(u.name)}</div>
-                <div class="user-cell-handle">${escapeHtml(u.handle)}</div>
+                <div class="user-cell-handle">${escapeHtml(u.email)}</div>
               </div>
             </div>
           </td>
-          <td><span class="cell-strong" style="${trustStyle}">${u.trust}</span><span class="cell-mono"> / 100</span></td>
-          <td><span class="cell-mono">${escapeHtml(u.completed)}</span></td>
-          <td><span class="cell-strong">${u.reports}</span></td>
-          <td><span class="status-pill ${u.status}">${escapeHtml(u.statusLabel)}</span></td>
+          <td><span class="cell-strong">${u.role}</span></td>
+          <td><span class="cell-mono">${escapeHtml(u.balance)}</span></td>
+          <td><span class="cell-strong">${u.activeJobs}</span></td>
+          <td><span class="cell-mono">${escapeHtml(u.joinDate)}</span></td>
+          <td><span class="status-pill ${statusCls}">${escapeHtml(u.statusLabel)}</span></td>
           <td class="cell-right">
-            <button class="btn btn-secondary btn-sm" onclick="showToast('Đang mở hồ sơ ${u.handle}')">Chi tiết</button>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('Đang mở hồ sơ ${u.email}')">Chi tiết</button>
           </td>
         </tr>
       `;

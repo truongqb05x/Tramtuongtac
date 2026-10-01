@@ -353,14 +353,7 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  const ALL_ACCOUNTS = [
-    { id: 'A-101', owner: 'Trần Văn A', handle: '@tranvana', platform: 'Facebook', linkedName: 'Tran Van A Real', link: 'https://fb.com/profile.php?id=10008...', sysCheck: 'Nghi ngờ Clone (Avatar trống, 0 bạn bè)', sysCode: 'clone', status: 'pending', statusLabel: 'Chờ duyệt' },
-    { id: 'A-102', owner: 'Lê Thị B', handle: '@lethib', platform: 'TikTok', linkedName: 'lethiB_dance', link: 'https://tiktok.com/@lethib_dance', sysCheck: 'Bình thường (10k Followers)', sysCode: 'ok', status: 'pending', statusLabel: 'Chờ duyệt' },
-    { id: 'A-103', owner: 'Phạm Văn C', handle: '@phamvanc', platform: 'Instagram', linkedName: 'pham.c_99', link: 'https://instagram.com/pham.c_99', sysCheck: 'Bình thường', sysCode: 'ok', status: 'approved', statusLabel: 'Đã duyệt' },
-    { id: 'A-104', owner: 'Nguyễn Thị D', handle: '@nguyenthid', platform: 'Youtube', linkedName: 'Nguyen Thi D Vlogs', link: 'https://youtube.com/channel/UC...', sysCheck: 'Bình thường', sysCode: 'ok', status: 'approved', statusLabel: 'Đã duyệt' },
-    { id: 'A-105', owner: 'Hoàng Văn E', handle: '@hoangvane', platform: 'Facebook', linkedName: 'User123456', link: 'https://fb.com/user123456', sysCheck: 'Nghi ngờ Clone (Tên không hợp lệ, mới tạo 1 ngày)', sysCode: 'clone', status: 'pending', statusLabel: 'Chờ duyệt' },
-    { id: 'A-106', owner: 'Vũ Thị F', handle: '@vuthif', platform: 'TikTok', linkedName: 'bot_spam_001', link: 'https://tiktok.com/@bot_spam_001', sysCheck: 'Clone (Trùng IP với 5 tài khoản khác)', sysCode: 'clone', status: 'rejected', statusLabel: 'Bị khóa' }
-  ];
+  const ALL_ACCOUNTS = {{ accounts_data | tojson | safe }} || [];
 
   function renderTable() {
     const q = (document.getElementById('searchAccounts').value || '').toLowerCase();
@@ -370,7 +363,7 @@
 
     let list = ALL_ACCOUNTS.slice();
     if(q) {
-      list = list.filter(x => x.owner.toLowerCase().includes(q) || x.handle.toLowerCase().includes(q) || x.linkedName.toLowerCase().includes(q));
+      list = list.filter(x => x.owner.toLowerCase().includes(q) || x.email.toLowerCase().includes(q) || x.linkedName.toLowerCase().includes(q));
     }
     if(plat) list = list.filter(x => x.platform === plat);
     if(sys) list = list.filter(x => x.sysCode === sys);
@@ -410,10 +403,10 @@
         <tr>
           <td>
             <div class="user-cell">
-              <span class="mini-avatar">${escapeHtml(a.owner.charAt(0))}</span>
+              <span class="mini-avatar">${escapeHtml(a.owner !== 'N/A' ? a.owner.charAt(0).toUpperCase() : 'U')}</span>
               <div>
                 <div class="user-cell-name">${escapeHtml(a.owner)}</div>
-                <div class="user-cell-handle">${escapeHtml(a.handle)}</div>
+                <div class="user-cell-handle">${escapeHtml(a.email)}</div>
               </div>
             </div>
           </td>

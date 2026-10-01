@@ -1,0 +1,59 @@
+from flask import Flask, render_template
+from app.extensions import db, bcrypt, login_manager
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+def create_app():
+    app = Flask(__name__, template_folder='../templates', static_folder='../static')
+    
+    # Configuration
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default_secret_key_if_not_set')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', 'sqlite:///app.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    # Initialize Extensions
+    db.init_app(app)
+    bcrypt.init_app(app)
+    login_manager.init_app(app)
+    
+    # Register Blueprints
+    from app.controllers.auth_ctrl import auth_bp
+    from app.controllers.user_ctrl import user_bp
+    from app.controllers.admin_ctrl import admin_bp
+    
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(admin_bp)
+    app.register_blueprint(user_bp)
+    
+    # We will temporarily keep the root routes here to avoid breaking everything at once
+    @app.route('/')
+    def index():
+        return render_template('user/index.html')
+        
+    from flask_login import login_required
+    @app.route('/home')
+    @login_required
+    def user_home():
+        return render_template('user/home.html')
+        
+    from flask import redirect, url_for
+    @app.route('/login')
+    def user_login():
+        return redirect(url_for('auth.login'))
+        
+    @app.route('/register')
+    def user_register():
+        # Because we only have /auth/login rendering the html in auth_bp and switching via JS hash or we can just redirect to login
+        return redirect(url_for('auth.login', _anchor='register'))
+        
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('user/errors/404.html'), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template('user/errors/500.html'), 500
+        
+    return app

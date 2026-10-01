@@ -157,12 +157,12 @@
         <div class="kpi-grid">
           <div class="kpi-cell">
             <div class="kpi-label">Người dùng</div>
-            <div class="kpi-value">12,480</div>
+            <div class="kpi-value">{{ user_count }}</div>
             <div class="kpi-delta up">↑ 3.2% tuần này</div>
           </div>
           <div class="kpi-cell">
-            <div class="kpi-label">Nhiệm vụ hôm nay</div>
-            <div class="kpi-value">842</div>
+            <div class="kpi-label">Nhiệm vụ hệ thống</div>
+            <div class="kpi-value">{{ job_count }}</div>
             <div class="kpi-delta up">↑ 12% so hôm qua</div>
           </div>
           <div class="kpi-cell">
@@ -521,26 +521,11 @@
   }
 
   /* ============ DATA ============ */
-  const TASKS = [
-    { id: '#T-4912', creator: 'Trần Văn A', platform: 'Facebook', req: 'Like & Follow fanpage', reward: '120 Credits', status: 'pending', statusLabel: 'Chờ duyệt' },
-    { id: '#T-4911', creator: 'Lê Thị B', platform: 'TikTok', req: 'Thả tim & Comment', reward: '80 Credits', status: 'running', statusLabel: 'Đang chạy' },
-    { id: '#T-4910', creator: 'Phạm Văn C', platform: 'Instagram', req: 'Follow tài khoản', reward: '50 Credits', status: 'pending', statusLabel: 'Chờ duyệt' },
-    { id: '#T-4909', creator: 'Nguyễn Thị D', platform: 'Youtube', req: 'Sub channel', reward: '200 Credits', status: 'running', statusLabel: 'Đang chạy' }
-  ];
+  const TASKS = {{ recent_jobs_data | tojson | safe }} || [];
 
-  const TRANSACTIONS = [
-    { id: '#TX-819', user: 'Hoàng Văn E', amount: '200,000 VND', credits: '+10,000', time: '10 phút trước', status: 'ok', statusLabel: 'Thành công' },
-    { id: '#TX-818', user: 'Trần Văn A', amount: '50,000 VND', credits: '+2,500', time: '1 giờ trước', status: 'ok', statusLabel: 'Thành công' },
-    { id: '#TX-817', user: 'Vũ Thị F', amount: '100,000 VND', credits: '+5,000', time: '3 giờ trước', status: 'warn', statusLabel: 'Chờ xử lý' },
-    { id: '#TX-816', user: 'Lê Thị B', amount: '500,000 VND', credits: '+25,000', time: '1 ngày trước', status: 'ok', statusLabel: 'Thành công' }
-  ];
+  const TRANSACTIONS = {{ recent_txs_data | tojson | safe }} || [];
 
-  const STATS = [
-    { platform: 'Facebook', active: '450', total: '1,200', reward: '14,500', fee: '290', status: 'ok', statusLabel: 'Ổn định' },
-    { platform: 'TikTok', active: '320', total: '980', reward: '9,800', fee: '196', status: 'ok', statusLabel: 'Ổn định' },
-    { platform: 'Instagram', active: '210', total: '640', reward: '6,400', fee: '128', status: 'ok', statusLabel: 'Ổn định' },
-    { platform: 'Youtube', active: '85', total: '150', reward: '3,000', fee: '60', status: 'warn', statusLabel: 'Cần chú ý' }
-  ];
+  const STATS = {{ stats_data | tojson | safe }} || [];
 
   const SEVERITY_MAP = {
     high: { cls: 'danger', label: 'Nghiêm trọng' },
@@ -566,6 +551,10 @@
   /* ============ RENDER TASKS ============ */
   function renderTasks() {
     const tbody = document.querySelectorAll('.data-table-admin tbody')[0];
+    if (TASKS.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8125rem">Chưa có dữ liệu nhiệm vụ.</td></tr>';
+      return;
+    }
     tbody.innerHTML = TASKS.map(t => {
       const stCls = t.status === 'pending' ? 'warn' : 'info';
       return `
@@ -587,6 +576,10 @@
   /* ============ RENDER TRANSACTIONS ============ */
   function renderTransactions() {
     const tbody = document.querySelectorAll('.data-table-admin tbody')[1];
+    if (TRANSACTIONS.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8125rem">Chưa có giao dịch nạp tiền.</td></tr>';
+      return;
+    }
     tbody.innerHTML = TRANSACTIONS.map(tx => {
       return `
         <tr>
@@ -604,6 +597,10 @@
   /* ============ RENDER STATS ============ */
   function renderStats() {
     const tbody = document.getElementById('statsBody');
+    if (STATS.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8125rem">Chưa có dữ liệu.</td></tr>';
+      return;
+    }
     tbody.innerHTML = STATS.map(s => `
       <tr>
         <td>

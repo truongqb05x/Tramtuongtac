@@ -160,7 +160,7 @@
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
               <div style="font-size: .8125rem; font-weight: 500; color: var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem;">Tổng Doanh Thu Nạp</div>
-              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">245.5M ₫</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">{{ total_revenue }} ₫</div>
               <div style="font-size: .8125rem; font-weight: 500; color: var(--success); display:flex; align-items:center; gap:4px; margin-top:.5rem;">
                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 12V2M7 2L3 6M7 2L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 +12.5% so với tháng trước
@@ -176,7 +176,7 @@
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
               <div style="font-size: .8125rem; font-weight: 500; color: var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem;">Lợi nhuận (Phí nền tảng)</div>
-              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">24.5M ₫</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">{{ total_fee }} ₫</div>
               <div style="font-size: .8125rem; font-weight: 500; color: var(--success); display:flex; align-items:center; gap:4px; margin-top:.5rem;">
                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 12V2M7 2L3 6M7 2L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 +8.2% so với tháng trước
@@ -192,7 +192,7 @@
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
               <div style="font-size: .8125rem; font-weight: 500; color: var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem;">Tổng số Users</div>
-              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">12,480</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">{{ user_count }}</div>
               <div style="font-size: .8125rem; font-weight: 500; color: var(--success); display:flex; align-items:center; gap:4px; margin-top:.5rem;">
                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 12V2M7 2L3 6M7 2L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 +1,200 user mới
@@ -208,7 +208,7 @@
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
               <div style="font-size: .8125rem; font-weight: 500; color: var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem;">Nhiệm vụ hoàn thành</div>
-              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">854,020</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--ink);">{{ completed_tasks }}</div>
               <div style="font-size: .8125rem; font-weight: 500; color: var(--danger); display:flex; align-items:center; gap:4px; margin-top:.5rem;">
                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M7 12L3 8M7 12L11 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 -2.1% so với tháng trước
@@ -239,58 +239,23 @@
                 </tr>
               </thead>
               <tbody>
+                {% for u in top_users %}
                 <tr>
                   <td>
                     <div class="user-cell">
-                      <span class="mini-avatar">T</span>
+                      <span class="mini-avatar">{{ u.initials }}</span>
                       <div>
-                        <div class="user-cell-name">Trần Văn A</div>
-                        <div class="user-cell-handle">@tranvana</div>
+                        <div class="user-cell-name">{{ u.name }}</div>
+                        <div class="user-cell-handle">{{ u.email }}</div>
                       </div>
                     </div>
                   </td>
-                  <td><span style="font-weight:500;">15,500,000</span></td>
-                  <td class="right"><span class="cell-mono">14,200,000</span></td>
+                  <td><span style="font-weight:500;">{{ u.revenue }}</span></td>
+                  <td class="right"><span class="cell-mono">{{ u.spent }}</span></td>
                 </tr>
-                <tr>
-                  <td>
-                    <div class="user-cell">
-                      <span class="mini-avatar">H</span>
-                      <div>
-                        <div class="user-cell-name">Hoàng Ngọc H</div>
-                        <div class="user-cell-handle">@hoangh99</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span style="font-weight:500;">9,800,000</span></td>
-                  <td class="right"><span class="cell-mono">9,500,000</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="user-cell">
-                      <span class="mini-avatar">L</span>
-                      <div>
-                        <div class="user-cell-name">Lê Thị Mai</div>
-                        <div class="user-cell-handle">@lemai88</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span style="font-weight:500;">6,200,000</span></td>
-                  <td class="right"><span class="cell-mono">5,800,000</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="user-cell">
-                      <span class="mini-avatar" style="background:var(--warning-soft);color:var(--warning)">P</span>
-                      <div>
-                        <div class="user-cell-name">Phạm Tuấn</div>
-                        <div class="user-cell-handle">@tuanpham</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span style="font-weight:500;">4,100,000</span></td>
-                  <td class="right"><span class="cell-mono">1,100,000</span></td>
-                </tr>
+                {% else %}
+                <tr><td colspan="3" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8125rem">Chưa có dữ liệu.</td></tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>
@@ -306,40 +271,30 @@
             <div style="margin-bottom: 1.25rem;">
               <div style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: .875rem; font-weight:500; color:var(--ink);">
                 <span>Facebook</span>
-                <span>45%</span>
+                <span>{{ plat_stats.fb }}%</span>
               </div>
               <div style="height:8px; width:100%; background:var(--bg-alt); border-radius:4px; overflow:hidden;">
-                <div style="height:100%; width:45%; background:#1877F2; border-radius:4px;"></div>
+                <div style="height:100%; width:{{ plat_stats.fb }}%; background:#1877F2; border-radius:4px;"></div>
               </div>
             </div>
 
             <div style="margin-bottom: 1.25rem;">
               <div style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: .875rem; font-weight:500; color:var(--ink);">
                 <span>TikTok</span>
-                <span>35%</span>
+                <span>{{ plat_stats.tt }}%</span>
               </div>
               <div style="height:8px; width:100%; background:var(--bg-alt); border-radius:4px; overflow:hidden;">
-                <div style="height:100%; width:35%; background:#000000; border-radius:4px;"></div>
+                <div style="height:100%; width:{{ plat_stats.tt }}%; background:#000000; border-radius:4px;"></div>
               </div>
             </div>
 
             <div style="margin-bottom: 1.25rem;">
               <div style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: .875rem; font-weight:500; color:var(--ink);">
                 <span>Instagram</span>
-                <span>12%</span>
+                <span>{{ plat_stats.ig }}%</span>
               </div>
               <div style="height:8px; width:100%; background:var(--bg-alt); border-radius:4px; overflow:hidden;">
-                <div style="height:100%; width:12%; background:#E4405F; border-radius:4px;"></div>
-              </div>
-            </div>
-
-            <div style="margin-bottom: 0;">
-              <div style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: .875rem; font-weight:500; color:var(--ink);">
-                <span>Khác (Youtube, Shopee...)</span>
-                <span>8%</span>
-              </div>
-              <div style="height:8px; width:100%; background:var(--bg-alt); border-radius:4px; overflow:hidden;">
-                <div style="height:100%; width:8%; background:var(--accent); border-radius:4px;"></div>
+                <div style="height:100%; width:{{ plat_stats.ig }}%; background:#E4405F; border-radius:4px;"></div>
               </div>
             </div>
 
