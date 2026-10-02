@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Duyệt tài khoản liên kết - Admin Console</title>
+<title>Duyệt tài khoản liên kết | Admin Console</title>
+<link rel="shortcut icon" href="../../static/img/logo.png" type="image/x-icon">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -378,23 +379,25 @@
     tbody.innerHTML = list.map(a => {
       let stClass = 'mute';
       if(a.status === 'pending') stClass = 'warn';
-      if(a.status === 'approved') stClass = 'ok';
-      if(a.status === 'rejected') stClass = 'danger';
+      if(a.status === 'active') stClass = 'ok';
+      if(a.status === 'blocked') stClass = 'danger';
 
       let sysClass = a.sysCode === 'clone' ? 'color:var(--danger);font-weight:500' : 'color:var(--success);';
 
       let actions = '';
       if(a.status === 'pending') {
         actions = `
-          <button class="btn btn-success btn-sm" onclick="showToast('Đã duyệt tài khoản ${a.linkedName}')">Duyệt</button>
-          <button class="btn btn-danger btn-sm" onclick="showToast('Từ chối/Khóa tài khoản ${a.linkedName}')">Từ chối / Khóa</button>
+          <button class="btn btn-success btn-sm" onclick="approveAccount(${a.raw_id})">Duyệt</button>
+          <button class="btn btn-danger btn-sm" onclick="blockAccount(${a.raw_id})">Từ chối / Vô hiệu hóa</button>
         `;
-      } else if (a.status === 'approved') {
+      } else if (a.status === 'active') {
         actions = `
-          <button class="btn btn-danger btn-sm" onclick="showToast('Đã khóa tài khoản ${a.linkedName}')">Khóa tài khoản này</button>
+          <button class="btn btn-danger btn-sm" onclick="blockAccount(${a.raw_id})">Vô hiệu hóa tài khoản này</button>
         `;
       } else {
-        actions = `<span class="cell-mono" style="color:var(--muted)">Đã khóa</span>`;
+        actions = `
+          <button class="btn btn-success btn-sm" onclick="approveAccount(${a.raw_id})">Khôi phục</button>
+        `;
       }
 
       let linkDisplay = `<a href="${a.link}" target="_blank" style="color:var(--accent);text-decoration:underline;">${escapeHtml(a.linkedName)}</a>`;
@@ -432,6 +435,34 @@
   document.getElementById('filterStatus').addEventListener('change', renderTable);
 
   renderTable();
+
+  window.approveAccount = function(id) {
+    if(!confirm("Bạn có chắc muốn duyệt/khôi phục tài khoản này?")) return;
+    fetch(`/admin/api/social-accounts/${id}/approve`, { method: 'POST' })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success) {
+          showToast("Thành công!");
+          setTimeout(() => location.reload(), 1000);
+        } else {
+          alert("Lỗi: " + data.message);
+        }
+      }).catch(() => alert("Lỗi kết nối!"));
+  };
+
+  window.blockAccount = function(id) {
+    if(!confirm("Bạn có chắc muốn vô hiệu hóa tài khoản này?")) return;
+    fetch(`/admin/api/social-accounts/${id}/block`, { method: 'POST' })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success) {
+          showToast("Đã vô hiệu hóa thành công!");
+          setTimeout(() => location.reload(), 1000);
+        } else {
+          alert("Lỗi: " + data.message);
+        }
+      }).catch(() => alert("Lỗi kết nối!"));
+  };
 })();
 </script>
 

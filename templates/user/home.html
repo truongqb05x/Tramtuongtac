@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../../static/css/layout/header.css" />
 <link rel="stylesheet" href="../../static/css/layout/notice.css" />
 <link rel="stylesheet" href="../../static/css/page/home.css">
+<link rel="shortcut icon" href="../../static/img/logo.png" type="image/x-icon">
 </head>
 <body>
 <!-- ================= HEADER ================= -->
@@ -37,8 +38,11 @@
           <div class="user-dropdown-menu" id="userDropdownMenu">
             <a href="/settings/account">Hồ sơ</a>
             <a href="/settings/config">Cài đặt</a>
+            {% if current_user.role == 'ADMIN' %}
+            <a href="/admin">Quản trị</a>
+            {% endif %}
             <div class="divider"></div>
-            <a href="/auth/logout" class="text-danger">Đăng xuất</a>
+            <a href="/" class="text-danger">Đăng xuất</a>
           </div>
         </div>
       </div>
@@ -55,7 +59,7 @@
     <a href="/jobs/create">Tạo Tương Tác</a>
     <a href="/api-docs">Tài liệu API</a>
     <div class="p-4 flex flex-col gap-2.5">
-      <a href="/auth/logout" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
+      <a href="/" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
     </div>
   </div>
 </header>
@@ -141,7 +145,7 @@
             <h3 class="quick-title">Tài khoản MXH</h3>
             <p class="quick-desc">Quản lý FB, TikTok, IG để làm nhiệm vụ</p>
             <div class="quick-stat">
-              <span>Đã liên kết: <strong>0</strong></span>
+              <span>Đã liên kết: <strong>{{ current_user.social_accounts.filter_by(is_deleted=False).count() }}</strong></span>
             </div>
           </a>
 
@@ -297,9 +301,9 @@
       <div>
         <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
         <ul class="space-y-2.5 list-none p-0 m-0">
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ giúp</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều khoản</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách bảo mật</a></li>
+          <li><a href="/faq" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ giúp</a></li>
+          <li><a href="/terms" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều khoản</a></li>
+          <li><a href="/privacy" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách bảo mật</a></li>
         </ul>
       </div>
     </div>

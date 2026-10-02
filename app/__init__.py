@@ -27,6 +27,24 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(user_bp)
     
+    from flask import request
+    from flask_login import current_user
+    from app.services.system_cfg import load_system_config
+    
+    @app.before_request
+    def check_maintenance():
+        if request.path.startswith('/static') or request.path.startswith('/admin'):
+            return
+            
+        config = load_system_config()
+        if config.get('maintenance_mode', False):
+            if current_user.is_authenticated and current_user.role == 'ADMIN':
+                return
+            # Chỉ cho phép các đường dẫn liên quan đến việc Đăng nhập để Admin có thể login
+            if request.path in ['/auth/login', '/auth/api/login', '/login']:
+                return
+            return render_template('user/errors/503.html'), 503
+
     # We will temporarily keep the root routes here to avoid breaking everything at once
     @app.route('/')
     def index():

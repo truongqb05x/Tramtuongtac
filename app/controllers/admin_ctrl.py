@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, jsonify, request
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -26,8 +26,39 @@ from sqlalchemy import func
 @admin_required
 def admin_dashboard():
     # KPI Grid
-    user_count = User.query.count()
-    job_count = Job.query.count()
+    user_count = db.session.query(func.count(User.id)).scalar() or 0
+    job_count = db.session.query(func.count(Job.id)).scalar() or 0
+    circulating_credits = db.session.query(func.sum(User.balance)).scalar() or 0
+
+    job_stats = db.session.query(Job.status, func.count(Job.id), func.sum(Job.total_cost)).group_by(Job.status).all()
+    running_jobs = 0
+    completed_jobs = 0
+    total_cost_all = 0
+    for status, count, cost in job_stats:
+        if status == 'RUNNING':
+            running_jobs += count
+        elif status == 'COMPLETED':
+            completed_jobs += count
+        total_cost_all += float(cost or 0)
+        
+    completion_rate = round((completed_jobs / job_count * 100), 1) if job_count > 0 else 0
+    revenue = total_cost_all * 0.02 # 2% fee
+
+    def format_num(n):
+        if n >= 1_000_000:
+            return f"{n/1_000_000:.1f}M"
+        elif n >= 1_000:
+            return f"{n/1_000:.1f}k"
+        return str(int(n))
+
+    kpi = {
+        'users': format_num(user_count),
+        'jobs': format_num(job_count),
+        'completion_rate': f"{completion_rate}%",
+        'credits': format_num(circulating_credits),
+        'revenue': format_num(revenue),
+        'running_jobs': format_num(running_jobs)
+    }
     
     # Recent Tasks (Jobs)
     recent_jobs = Job.query.order_by(Job.id.desc()).limit(5).all()
@@ -53,7 +84,7 @@ def admin_dashboard():
             'id': f'#TX-{tx.id}',
             'user': user.full_name if user else 'Unknown',
             'amount': f'{int(tx.amount)} VND',
-            'credits': f'+{int(tx.amount/10)}', # assuming 10 VND = 1 Credit
+            'credits': f'+{int(float(tx.amount)/10)}', # assuming 10 VND = 1 Credit
             'time': tx.created_at.strftime('%d/%m/%Y'),
             'status': 'ok' if tx.status == 'SUCCESS' else ('warn' if tx.status == 'PENDING' else 'danger'),
             'statusLabel': 'Thành công' if tx.status == 'SUCCESS' else ('Chờ xử lý' if tx.status == 'PENDING' else 'Thất bại')
@@ -66,7 +97,7 @@ def admin_dashboard():
         plat_jobs = Job.query.filter_by(platform=plat).all()
         total_jobs = len(plat_jobs)
         running = len([j for j in plat_jobs if j.status == 'RUNNING'])
-        total_reward = sum([j.total_cost for j in plat_jobs])
+        total_reward = sum([float(j.total_cost) for j in plat_jobs])
         total_fee = total_reward * 0.02 # Assuming 2% fee for now
         stats_data.append({
             'platform': plat.capitalize(),
@@ -79,16 +110,72 @@ def admin_dashboard():
         })
         
     return render_template('admin/Admin.html', 
-        user_count=user_count, 
-        job_count=job_count,
+        kpi=kpi,
         recent_jobs_data=recent_jobs_data,
         recent_txs_data=recent_txs_data,
         stats_data=stats_data
     )
 
 @admin_bp.route('/tasks')
+@login_required
+@admin_required
 def admin_tasks():
-    return render_template('admin/tasks.html')
+    import json
+    jobs = Job.query.order_by(Job.id.desc()).all()
+    tasks_data = []
+    for j in jobs:
+        user = j.user
+        status = j.status.lower()
+        if status == 'running':
+            status_label = 'Đang chạy'
+            st_cls = 'running'
+        elif status == 'completed':
+            status_label = 'Hoàn thành'
+            st_cls = 'completed'
+        elif status == 'canceled':
+            status_label = 'Đã hủy'
+            st_cls = 'rejected'
+        else:
+            status_label = status
+            st_cls = 'pending'
+
+        tasks_data.append({
+            'raw_id': j.id,
+            'id': f'#J-{j.id}',
+            'creator': user.full_name if user else 'Unknown',
+            'handle': user.email if user else '',
+            'platform': j.platform.capitalize(),
+            'req': j.action_type,
+            'reward': str(int(j.price_per_action)),
+            'qty': str(j.quantity),
+            'status': st_cls,
+            'statusLabel': status_label
+        })
+    return render_template('admin/tasks.html', tasks_data=json.dumps(tasks_data))
+
+@admin_bp.route('/api/jobs/<int:job_id>/cancel', methods=['POST'])
+@login_required
+@admin_required
+def admin_cancel_job(job_id):
+    job = Job.query.get_or_404(job_id)
+    if job.status == 'CANCELED':
+        return jsonify({'success': False, 'message': 'Nhiệm vụ đã bị hủy trước đó.'}), 400
+        
+    job.status = 'CANCELED'
+    db.session.commit()
+    return jsonify({'success': True, 'message': 'Đã hủy nhiệm vụ.'})
+
+@admin_bp.route('/api/jobs/<int:job_id>/restore', methods=['POST'])
+@login_required
+@admin_required
+def admin_restore_job(job_id):
+    job = Job.query.get_or_404(job_id)
+    if job.status != 'CANCELED':
+        return jsonify({'success': False, 'message': 'Chỉ có thể khôi phục nhiệm vụ đã hủy.'}), 400
+        
+    job.status = 'RUNNING'
+    db.session.commit()
+    return jsonify({'success': True, 'message': 'Đã khôi phục nhiệm vụ.'})
 
 @admin_bp.route('/transactions')
 @login_required
@@ -151,6 +238,7 @@ def admin_user_config():
     for a in accounts:
         u = User.query.get(a.user_id)
         accounts_data.append({
+            'raw_id': a.id,
             'id': f'A-{a.id}',
             'owner': u.full_name or 'N/A',
             'email': u.email,
@@ -159,14 +247,75 @@ def admin_user_config():
             'link': a.profile_url or '#',
             'sysCheck': 'Bình thường',
             'sysCode': 'ok',
-            'status': a.status.lower(),
-            'statusLabel': 'Chờ duyệt' if a.status == 'PENDING' else ('Đã duyệt' if a.status == 'ACTIVE' else 'Bị khóa')
+            'status': 'blocked' if a.status == 'BLOCKED' else a.status.lower(),
+            'statusLabel': 'Chờ duyệt' if a.status == 'PENDING' else ('Đã duyệt' if a.status == 'ACTIVE' else 'Đã bị vô hiệu hóa')
         })
     return render_template('admin/user_config.html', accounts_data=accounts_data)
 
+@admin_bp.route('/api/social-accounts/<int:account_id>/block', methods=['POST'])
+@login_required
+@admin_required
+def admin_block_account(account_id):
+    account = SocialAccount.query.get_or_404(account_id)
+    if account.status == 'BLOCKED':
+        return jsonify({'success': False, 'message': 'Tài khoản đã bị vô hiệu hóa trước đó.'}), 400
+        
+    account.status = 'BLOCKED'
+    account.is_selected = False
+    db.session.commit()
+    return jsonify({'success': True, 'message': 'Đã vô hiệu hóa tài khoản liên kết.'})
+
+@admin_bp.route('/api/social-accounts/<int:account_id>/approve', methods=['POST'])
+@login_required
+@admin_required
+def admin_approve_account(account_id):
+    account = SocialAccount.query.get_or_404(account_id)
+    if account.status == 'ACTIVE':
+        return jsonify({'success': False, 'message': 'Tài khoản đã được duyệt trước đó.'}), 400
+        
+    account.status = 'ACTIVE'
+    db.session.commit()
+    return jsonify({'success': True, 'message': 'Đã duyệt tài khoản liên kết.'})
+
+from app.services.platform_cfg import load_platforms, save_platforms
+
 @admin_bp.route('/config')
+@login_required
+@admin_required
 def admin_config():
-    return render_template('admin/config.html')
+    platforms = load_platforms()
+    system_config = load_system_config()
+    return render_template('admin/config.html', platforms=platforms, system_config=system_config)
+
+@admin_bp.route('/api/platforms', methods=['POST'])
+@login_required
+@admin_required
+def api_save_platforms():
+    data = request.get_json()
+    save_platforms(data)
+    return jsonify({'success': True})
+
+from app.services.system_cfg import load_system_config, save_system_config, update_system_field
+
+@admin_bp.route('/api/system', methods=['POST'])
+@login_required
+@admin_required
+def api_save_system():
+    data = request.get_json()
+    save_system_config(data)
+    return jsonify({'success': True})
+
+@admin_bp.route('/api/system/field', methods=['POST'])
+@login_required
+@admin_required
+def api_save_system_field():
+    data = request.get_json()
+    key = data.get('key')
+    value = data.get('value')
+    if not key:
+        return jsonify({'success': False, 'message': 'Thiếu key'}), 400
+    update_system_field(key, value)
+    return jsonify({'success': True})
 
 @admin_bp.route('/logs')
 def admin_logs():

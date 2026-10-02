@@ -258,6 +258,7 @@
   .status-badge.active { color: var(--success); background: var(--success-soft); }
   .status-badge.done { color: var(--muted); background: var(--bg-alt); }
   .status-badge.paused { color: var(--warning); background: var(--warning-soft); }
+  .status-badge.canceled { color: var(--danger); background: var(--danger-soft); }
   .status-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
   .row-actions { display: flex; gap: .375rem; justify-content: flex-end; }

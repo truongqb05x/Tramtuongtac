@@ -13,7 +13,7 @@ class Job(db.Model):
     current_count = db.Column(db.Integer, nullable=False, default=0)
     price_per_action = db.Column(db.Numeric(15, 2), nullable=False)
     total_cost = db.Column(db.Numeric(15, 2), nullable=False)
-    status = db.Column(db.Enum('RUNNING', 'COMPLETED', 'CANCELED', 'PAUSED', name='job_status_enum'), nullable=False, default='RUNNING')
+    status = db.Column(db.Enum('RUNNING', 'COMPLETED', 'CANCELED', 'PAUSED', name='job_status_enum'), nullable=False, default='RUNNING', index=True)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)

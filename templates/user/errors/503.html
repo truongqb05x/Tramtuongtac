@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Đang bảo trì — TRAODOI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf9f7;
+    --bg-alt: #f4f2ee;
+    --bg-hover: #fcfbf9;
+    --ink: #1e1e1e;
+    --ink-soft: #3d3d3d;
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --border: #e3e0da;
+    --border-strong: #d0ccc4;
+    --accent: #1e3a5f;
+    --accent-hover: #162c47;
+    --accent-soft: #e8edf3;
+    --success: #2f6b4f;
+    --success-soft: #e8f0eb;
+    --warning: #8a6a1f;
+    --warning-soft: #f4edda;
+    --danger: #8a2f2f;
+    --danger-soft: #f4e5e5;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .font-serif { font-family: 'IBM Plex Serif', Georgia, serif; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* ---------- Header ---------- */
+  .top {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .top .wrap { max-width: 1160px; margin: 0 auto; padding: 0 1.5rem; }
+  @media (min-width: 768px) { .top .wrap { padding: 0 2.5rem; } }
+  .brand {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.375rem; font-weight: 500;
+    letter-spacing: -.01em;
+  }
+  .brand-sub {
+    font-size: .75rem; color: var(--muted);
+    margin-left: .625rem;
+    letter-spacing: .04em;
+  }
+
+  /* ---------- Status pill header ---------- */
+  .status-pill-header {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .3125rem .625rem;
+    background: var(--warning-soft);
+    border: 1px solid #e6d9b8;
+    border-radius: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    color: var(--warning);
+  }
+  .status-pill-header .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--warning);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .35; }
+  }
+
+  /* ---------- Main layout ---------- */
+  .main {
+    flex: 1;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+    width: 100%;
+  }
+  @media (min-width: 768px) {
+    .main { padding: 4rem 2.5rem 5rem; }
+  }
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  @media (min-width: 1024px) {
+    .main-grid {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 4rem;
+      align-items: start;
+    }
+  }
+
+  /* ---------- Left column ---------- */
+  .err-eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--warning);
+    margin-bottom: 1.5rem;
+  }
+  .err-eyebrow::before {
+    content: ''; width: 20px; height: 1px; background: var(--warning);
+  }
+
+  .err-code {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: clamp(4.5rem, 14vw, 8rem);
+    font-weight: 500;
+    line-height: .88;
+    letter-spacing: -.05em;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    margin: 0 0 .75rem;
+    display: block;
+  }
+  .err-code .accent { color: var(--warning); }
+
+  .err-title {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 1.5rem; font-weight: 500;
+    line-height: 1.25; letter-spacing: -.015em;
+    color: var(--ink);
+    margin: 0 0 1rem;
+    max-width: 520px;
+  }
+  @media (min-width: 768px) { .err-title { font-size: 2rem; } }
+
+  .err-lede {
+    font-size: 1.0625rem; line-height: 1.65;
+    color: var(--ink-soft);
+    margin: 0 0 2rem;
+    max-width: 520px;
+  }
+
+  /* ---------- Countdown ---------- */
+  .countdown-section {
+    margin-bottom: 2rem;
+  }
+  .countdown-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .75rem;
+  }
+  .countdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: .75rem;
+    max-width: 460px;
+  }
+  .countdown-cell {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem .5rem;
+    text-align: center;
+  }
+  .countdown-num {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 2rem; font-weight: 500;
+    line-height: 1;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    display: block;
+  }
+  @media (min-width: 768px) {
+    .countdown-num { font-size: 2.5rem; }
+  }
+  .countdown-unit {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted);
+    margin-top: .375rem;
+    display: block;
+  }
+
+  /* ---------- Info box ---------- */
+  .info-box {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .info-box-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .75rem;
+  }
+  .info-row {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    padding: .625rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: .8125rem;
+  }
+  @media (min-width: 480px) {
+    .info-row {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 1.5rem;
+    }
+  }
+  .info-row:first-of-type { padding-top: 0; }
+  .info-row:last-of-type { padding-bottom: 0; border-bottom: none; }
+  .info-key {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem;
+    font-weight: 500;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    min-width: 110px;
+    flex-shrink: 0;
+  }
+  .info-val {
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .8125rem;
+    word-break: break-word;
+  }
+
+  /* ---------- Actions ---------- */
+  .err-actions {
+    display: flex; flex-wrap: wrap; gap: .625rem;
+    margin-bottom: 2rem;
+  }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    font-weight: 500; font-size: .9375rem; line-height: 1;
+    padding: .75rem 1.5rem; border-radius: 6px;
+    border: 1px solid transparent; cursor: pointer; text-decoration: none;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    white-space: nowrap; font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+  .btn-secondary:hover { background: var(--bg-alt); border-color: var(--muted); }
+
+  /* ---------- Notice bar (subscribe) ---------- */
+  .subscribe-inline {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    padding: 1rem 1.25rem;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+  }
+  @media (min-width: 640px) {
+    .subscribe-inline {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+  .subscribe-inline-text {
+    flex: 1;
+    font-size: .875rem;
+    color: var(--accent);
+    line-height: 1.5;
+  }
+  .subscribe-inline-text strong {
+    color: var(--ink); font-weight: 500;
+  }
+  .subscribe-inline-form {
+    display: flex;
+    gap: .375rem;
+    flex-shrink: 0;
+  }
+  @media (max-width: 640px) {
+    .subscribe-inline-form { width: 100%; }
+  }
+  .subscribe-inline-form input {
+    padding: .5rem .75rem;
+    font-size: .8125rem;
+    font-family: inherit;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    min-width: 200px;
+  }
+  @media (max-width: 640px) {
+    .subscribe-inline-form input { flex: 1; min-width: 0; }
+  }
+  .subscribe-inline-form input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.08);
+  }
+  .subscribe-inline-form button {
+    padding: .5rem .875rem;
+    font-size: .8125rem;
+    font-weight: 500;
+    font-family: inherit;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
+    white-space: nowrap;
+  }
+  .subscribe-inline-form button:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+
+  /* ---------- Right column: status panel ---------- */
+  .status-panel {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    position: sticky;
+    top: 96px;
+  }
+  @media (max-width: 1023px) {
+    .status-panel { position: static; }
+  }
+  .status-panel-head {
+    padding: 1rem 1.25rem;
+    background: var(--warning-soft);
+    border-bottom: 1px solid #e6d9b8;
+    display: flex;
+    align-items: center;
+    gap: .625rem;
+  }
+  .status-panel-head-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.7);
+    color: var(--warning);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .status-panel-head-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: #5c4715;
+  }
+
+  .status-panel-body {
+    padding: 1.5rem 1.5rem 1.25rem;
+  }
+
+  /* Service list */
+  .service-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .service-item {
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr) auto;
+    gap: .875rem;
+    padding: .75rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+  .service-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .service-item:first-child {
+    padding-top: 0;
+  }
+
+  .service-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .service-dot.ok {
+    background: var(--success);
+    box-shadow: 0 0 0 3px rgba(47,107,79,.15);
+  }
+  .service-dot.maintenance {
+    background: var(--warning);
+    box-shadow: 0 0 0 3px rgba(138,106,31,.15);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .service-dot.down {
+    background: var(--danger);
+    box-shadow: 0 0 0 3px rgba(138,47,47,.15);
+  }
+
+  .service-info { min-width: 0; }
+  .service-name {
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 .125rem;
+    line-height: 1.4;
+  }
+  .service-desc {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .service-status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: .1875rem .5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .service-status.ok {
+    color: var(--success);
+    background: var(--success-soft);
+  }
+  .service-status.maintenance {
+    color: var(--warning);
+    background: var(--warning-soft);
+  }
+  .service-status.down {
+    color: var(--danger);
+    background: var(--danger-soft);
+  }
+
+  /* Divider */
+  .status-panel-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.25rem 0;
+  }
+
+  /* Support */
+  .status-panel-support {
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+  .status-panel-support-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .75rem;
+  }
+  .support-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--border);
+  }
+  .support-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .625rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: .8125rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color .15s ease;
+  }
+  .support-link:last-child { border-bottom: none; }
+  .support-link:hover { color: var(--accent); }
+  .support-link-left {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .support-link-left svg {
+    color: var(--muted-2);
+    flex-shrink: 0;
+    transition: color .15s ease;
+  }
+  .support-link:hover .support-link-left svg { color: var(--accent); }
+  .support-link-arrow {
+    color: var(--muted-2);
+    transition: transform .15s ease, color .15s ease;
+  }
+  .support-link:hover .support-link-arrow {
+    color: var(--accent);
+    transform: translateX(2px);
+  }
+
+  /* ---------- Footer ---------- */
+  .err-footer {
+    border-top: 1px solid var(--border);
+    padding: 1.75rem 1.5rem;
+    background: var(--bg-alt);
+    text-align: center;
+  }
+  @media (min-width: 768px) {
+    .err-footer { padding: 2rem 2.5rem; }
+  }
+  .err-footer-text {
+    font-size: .8125rem;
+    color: var(--muted);
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    justify-content: center;
+    align-items: center;
+  }
+  .err-footer-text .sep { color: var(--border-strong); }
+  .err-footer-text a {
+    color: var(--muted);
+    transition: color .15s ease;
+  }
+  .err-footer-text a:hover { color: var(--ink); }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: #fff; font-size: .875rem;
+    padding: .75rem 1.25rem; border-radius: 6px; z-index: 120;
+    box-shadow: 0 4px 16px rgba(0,0,0,.15);
+    transition: transform .25s ease;
+    display: flex; align-items: center; gap: .625rem;
+    max-width: calc(100vw - 2rem);
+  }
+  .toast.on { transform: translateX(-50%) translateY(0); }
+  .toast .check {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--success);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    .status-pill-header .dot, .service-dot.maintenance { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="top">
+  <div class="wrap">
+    <div class="flex items-center justify-between h-[68px]">
+      <a href="#" class="brand">
+        TRAODOI
+        <span class="brand-sub">/ Trao đổi tương tác</span>
+      </a>
+
+      <span class="status-pill-header">
+        <span class="dot"></span>
+        Đang bảo trì
+      </span>
+    </div>
+  </div>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main class="main">
+
+  <div class="main-grid">
+
+    <!-- ============ LEFT: MAIN INFO ============ -->
+    <div>
+
+      <span class="err-eyebrow">Lỗi 503 · Tạm ngưng dịch vụ</span>
+
+      <div class="err-code">5<span class="accent">0</span>3</div>
+
+      <h1 class="err-title">
+        Hệ thống đang được bảo trì định kỳ
+      </h1>
+
+      <p class="err-lede">
+        Chúng tôi đang nâng cấp hạ tầng để cải thiện hiệu suất và bảo mật. Trong thời gian này, bạn không thể truy cập nền tảng. Xin lỗi vì sự bất tiện.
+      </p>
+
+      <!-- Countdown -->
+      <div class="countdown-section">
+        <div class="countdown-label">Dự kiến hoàn tất sau</div>
+        <div class="countdown" id="countdown">
+          <div class="countdown-cell">
+            <span class="countdown-num" id="cdHours">02</span>
+            <span class="countdown-unit">Giờ</span>
+          </div>
+          <div class="countdown-cell">
+            <span class="countdown-num" id="cdMinutes">47</span>
+            <span class="countdown-unit">Phút</span>
+          </div>
+          <div class="countdown-cell">
+            <span class="countdown-num" id="cdSeconds">12</span>
+            <span class="countdown-unit">Giây</span>
+          </div>
+          <div class="countdown-cell">
+            <span class="countdown-num" id="cdPercent">74</span>
+            <span class="countdown-unit">% xong</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info box -->
+      <div class="info-box">
+        <div class="info-box-title">Thông tin bảo trì</div>
+        <div class="info-row">
+          <span class="info-key">Bắt đầu</span>
+          <span class="info-val" id="startTime">03/10/2026 · 02:00</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Dự kiến xong</span>
+          <span class="info-val" id="endTime">03/10/2026 · 04:00</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Loại bảo trì</span>
+          <span class="info-val">Định kỳ · Nâng cấp hạ tầng</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Ảnh hưởng</span>
+          <span class="info-val">Toàn bộ người dùng, tất cả dịch vụ</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Mã tham chiếu</span>
+          <span class="info-val" id="refCode">#MNT-2026-1003-001</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="err-actions">
+        <a href="#" class="btn btn-primary" id="statusPageBtn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M7 4V7L9 8.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          Trang trạng thái
+        </a>
+        <button class="btn btn-secondary" id="retryBtn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M12 7C12 9.8 9.8 12 7 12C4.2 12 2 9.8 2 7C2 4.2 4.2 2 7 2C9 2 10.7 3.1 11.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M12 2V5H9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Kiểm tra lại
+        </button>
+      </div>
+
+      <!-- Subscribe -->
+      <div class="subscribe-inline">
+        <div class="subscribe-inline-text">
+          <strong>Nhận thông báo khi hệ thống hoạt động trở lại.</strong><br>
+          Chúng tôi sẽ gửi email cho bạn ngay khi bảo trì xong.
+        </div>
+        <form class="subscribe-inline-form" id="subscribeForm">
+          <input type="email" id="subscribeEmail" placeholder="you@example.com" required />
+          <button type="submit">Đăng ký</button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- ============ RIGHT: STATUS PANEL ============ -->
+    <aside>
+      <div class="status-panel">
+
+        <!-- Head -->
+        <div class="status-panel-head">
+          <span class="status-panel-head-icon">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M7 3V7M7 10H7.01M2 7C2 4.2 4.2 2 7 2C9.8 2 12 4.2 12 7C12 9.8 9.8 12 7 12C4.2 12 2 9.8 2 7Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="status-panel-head-text">Trạng thái dịch vụ</span>
+        </div>
+
+        <!-- Body -->
+        <div class="status-panel-body">
+
+          <div class="service-list">
+
+            <div class="service-item">
+              <span class="service-dot maintenance"></span>
+              <div class="service-info">
+                <p class="service-name">API Gateway</p>
+                <div class="service-desc">api.traodoi.app</div>
+              </div>
+              <span class="service-status maintenance">Bảo trì</span>
+            </div>
+
+            <div class="service-item">
+              <span class="service-dot maintenance"></span>
+              <div class="service-info">
+                <p class="service-name">Task Service</p>
+                <div class="service-desc">tasks.traodoi.app</div>
+              </div>
+              <span class="service-status maintenance">Bảo trì</span>
+            </div>
+
+            <div class="service-item">
+              <span class="service-dot maintenance"></span>
+              <div class="service-info">
+                <p class="service-name">Credits Ledger</p>
+                <div class="service-desc">ledger.traodoi.app</div>
+              </div>
+              <span class="service-status maintenance">Bảo trì</span>
+            </div>
+
+            <div class="service-item">
+              <span class="service-dot down"></span>
+              <div class="service-info">
+                <p class="service-name">Verification Worker</p>
+                <div class="service-desc">Máy chủ xác minh tương tác</div>
+              </div>
+              <span class="service-status down">Tạm dừng</span>
+            </div>
+
+            <div class="service-item">
+              <span class="service-dot ok"></span>
+              <div class="service-info">
+                <p class="service-name">Status Page</p>
+                <div class="service-desc">status.traodoi.app</div>
+              </div>
+              <span class="service-status ok">Hoạt động</span>
+            </div>
+
+            <div class="service-item">
+              <span class="service-dot ok"></span>
+              <div class="service-info">
+                <p class="service-name">Email Service</p>
+                <div class="service-desc">Gửi thông báo bảo trì</div>
+              </div>
+              <span class="service-status ok">Hoạt động</span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Support -->
+        <div class="status-panel-support">
+          <div class="status-panel-support-title">Cần hỗ trợ?</div>
+          <div class="support-links">
+
+            <a href="#" class="support-link">
+              <span class="support-link-left">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M7 12.5C7 12.5 1.5 9 1.5 5.5C1.5 3.5 3 2 5 2C6 2 6.7 2.5 7 3C7.3 2.5 8 2 9 2C11 2 12.5 3.5 12.5 5.5C12.5 9 7 12.5 7 12.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+                </svg>
+                Ủng hộ hệ thống
+              </span>
+              <span class="support-link-arrow">›</span>
+            </a>
+
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="err-footer">
+  <p class="err-footer-text">
+    <span>© 2026 TRAODOI</span>
+    <span class="sep">·</span>
+    <a href="#">Điều khoản</a>
+    <span class="sep">·</span>
+    <a href="#">Chính sách bảo mật</a>
+    <span class="sep">·</span>
+    <a href="#">Trang trạng thái</a>
+    <span class="sep">·</span>
+    <a href="mailto:hello@traodoi.app">hello@traodoi.app</a>
+  </p>
+</footer>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Thành công</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ COUNTDOWN ============ */
+  // Demo: 2 giờ 47 phút 12 giây
+  let remaining = 2 * 3600 + 47 * 60 + 12;
+  const totalDuration = remaining; // Để tính % xong
+
+  const cdHours = document.getElementById('cdHours');
+  const cdMinutes = document.getElementById('cdMinutes');
+  const cdSeconds = document.getElementById('cdSeconds');
+  const cdPercent = document.getElementById('cdPercent');
+
+  function updateCountdown() {
+    if (remaining <= 0) {
+      cdHours.textContent = '00';
+      cdMinutes.textContent = '00';
+      cdSeconds.textContent = '00';
+      cdPercent.textContent = '100';
+      return;
+    }
+    const h = Math.floor(remaining / 3600);
+    const m = Math.floor((remaining % 3600) / 60);
+    const s = remaining % 60;
+    cdHours.textContent = String(h).padStart(2, '0');
+    cdMinutes.textContent = String(m).padStart(2, '0');
+    cdSeconds.textContent = String(s).padStart(2, '0');
+
+    // % xong = (total - remaining) / total
+    const percent = Math.floor((totalDuration - remaining) / totalDuration * 100);
+    cdPercent.textContent = percent;
+
+    remaining--;
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  /* ============ RETRY ============ */
+  document.getElementById('retryBtn').addEventListener('click', function() {
+    const original = this.innerHTML;
+    this.disabled = true;
+    this.innerHTML = 'Đang kiểm tra…';
+    this.style.opacity = '.6';
+    setTimeout(() => {
+      this.innerHTML = original;
+      this.disabled = false;
+      this.style.opacity = '';
+      showToast('Hệ thống vẫn đang bảo trì. Vui lòng quay lại sau ít phút.');
+    }, 1500);
+  });
+
+  /* ============ STATUS PAGE ============ */
+  document.getElementById('statusPageBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    showToast('Đang mở trang trạng thái hệ thống…');
+  });
+
+  /* ============ SUBSCRIBE ============ */
+  document.getElementById('subscribeForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('subscribeEmail').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast('Email không hợp lệ.');
+      return;
+    }
+    document.getElementById('subscribeEmail').value = '';
+    showToast('Đã đăng ký. Bạn sẽ nhận email khi hệ thống hoạt động trở lại.');
+  });
+
+  /* ============ TOAST ============ */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('on'), 3000);
+  }
+
+})();
+</script>
+
+</body>
+</html>

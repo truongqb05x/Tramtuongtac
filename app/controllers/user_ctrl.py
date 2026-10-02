@@ -28,9 +28,16 @@ def user_create_job():
         price_per_action = Decimal(str(data.get('reward', 0)))
         total_cost = Decimal(str(data.get('total', 0)))
         
+        if quantity < 5:
+            return jsonify({'success': False, 'message': 'Số lượng tối thiểu phải từ 5 trở lên'}), 400
+            
         if current_user.balance < total_cost:
             return jsonify({'success': False, 'message': 'Không đủ Credits'}), 400
             
+        from app.services.system_cfg import load_system_config
+        config = load_system_config()
+        initial_status = 'PAUSED' if config.get('safe_mode', False) else 'RUNNING'
+
         # Create job
         new_job = Job(
             user_id=current_user.id,
@@ -40,7 +47,7 @@ def user_create_job():
             quantity=quantity,
             price_per_action=price_per_action,
             total_cost=total_cost,
-            status='RUNNING'
+            status=initial_status
         )
         
         # Deduct balance
@@ -66,10 +73,19 @@ def user_create_job():
         d['type'] = j.action_type.lower()
         d['platform'] = j.platform.lower()
         d['createdAt'] = j.created_at.strftime('%Y-%m-%d %H:%M:%S')
-        d['status'] = 'active' if j.status == 'RUNNING' else ('done' if j.status == 'COMPLETED' else 'paused')
+        if j.status == 'RUNNING':
+            d['status'] = 'active'
+        elif j.status == 'COMPLETED':
+            d['status'] = 'done'
+        elif j.status == 'CANCELED':
+            d['status'] = 'canceled'
+        else:
+            d['status'] = 'paused'
         my_jobs_data.append(d)
         
-    return render_template('user/jobs/create_job.html', my_jobs=my_jobs_data)
+    from app.services.system_cfg import load_system_config
+    system_config = load_system_config()
+    return render_template('user/jobs/create_job.html', my_jobs=my_jobs_data, system_config=system_config)
 
 @user_bp.route('/jobs/<int:job_id>/toggle', methods=['POST'])
 @login_required
@@ -97,7 +113,9 @@ def user_job_list():
     # Fetch running jobs that are not deleted
     db_jobs = Job.query.filter_by(status='RUNNING', is_deleted=False).all()
     jobs_data = [job.to_dict() for job in db_jobs]
-    return render_template('user/jobs/job_list.html', jobs_data=jobs_data, has_accounts=has_accounts)
+    from app.services.system_cfg import load_system_config
+    system_config = load_system_config()
+    return render_template('user/jobs/job_list.html', jobs_data=jobs_data, has_accounts=has_accounts, system_config=system_config)
 
 @user_bp.route('/api-docs')
 def user_api_docs():
@@ -132,13 +150,13 @@ def user_settings_account():
         if not current_pass or not new_pass:
             return jsonify({'success': False, 'message': 'Vui lòng nhập đủ thông tin.'}), 400
             
-        if not check_password_hash(current_user.password, current_pass):
+        if not check_password_hash(current_user.password_hash, current_pass):
             return jsonify({'success': False, 'message': 'Mật khẩu hiện tại không đúng.'}), 400
             
-        if len(new_pass) < 8:
-            return jsonify({'success': False, 'message': 'Mật khẩu mới phải có ít nhất 8 ký tự.'}), 400
+        if len(new_pass) < 6:
+            return jsonify({'success': False, 'message': 'Mật khẩu mới phải có ít nhất 6 ký tự.'}), 400
             
-        current_user.password = generate_password_hash(new_pass).decode('utf-8')
+        current_user.password_hash = generate_password_hash(new_pass).decode('utf-8')
         db.session.commit()
         return jsonify({'success': True, 'message': 'Đổi mật khẩu thành công.'})
         
@@ -159,12 +177,22 @@ def user_settings_config():
         # extract social_id (just last part of URL for now)
         social_id = url.rstrip('/').split('/')[-1]
         
+        # Check if it already exists
+        existing_acc = SocialAccount.query.filter_by(platform=platform, social_id=social_id).first()
+        if existing_acc:
+            return jsonify({'success': False, 'message': 'Tài khoản này đã tồn tại trong hệ thống'}), 400
+        
+        from app.services.system_cfg import load_system_config
+        config = load_system_config()
+        is_safe_mode = config.get('safe_mode', False)
+        initial_status = 'PENDING' if is_safe_mode else 'ACTIVE'
+
         acc = SocialAccount(
             user_id=current_user.id,
             platform=platform,
             profile_url=url,
             social_id=social_id,
-            status='ACTIVE'
+            status=initial_status
         )
         db.session.add(acc)
         db.session.commit()
@@ -175,8 +203,9 @@ def user_settings_config():
                 'platform': acc.platform.lower(),
                 'url': acc.profile_url,
                 'name': acc.social_id,
-                'verified': acc.status == 'ACTIVE',
-                'active': True,
+                'verified': not is_safe_mode,
+                'status': initial_status.lower(),
+                'active': False,
                 'addedAt': acc.created_at.strftime('%Y-%m-%d')
             }
         })
@@ -201,10 +230,38 @@ def user_settings_config():
             'url': a.profile_url,
             'name': a.social_id,
             'verified': a.status == 'ACTIVE',
-            'active': False, # just a frontend state
+            'status': a.status.lower(),
+            'active': a.is_selected,
             'addedAt': a.created_at.strftime('%Y-%m-%d')
         })
-    if len(accounts_data) > 0:
-        accounts_data[0]['active'] = True
         
     return render_template('user/settings/config.html', accounts_data=accounts_data)
+
+@user_bp.route('/settings/config/select', methods=['POST'])
+@login_required
+def user_settings_config_select():
+    data = request.get_json()
+    acc_id = data.get('id')
+    
+    acc = SocialAccount.query.filter_by(id=acc_id, user_id=current_user.id).first()
+    if not acc:
+        return jsonify({'success': False, 'message': 'Không tìm thấy tài khoản'}), 404
+        
+    if acc.status == 'BLOCKED':
+        return jsonify({'success': False, 'message': 'Tài khoản đã bị vô hiệu hóa'}), 400
+        
+    # Deselect all other accounts of this user
+    SocialAccount.query.filter_by(user_id=current_user.id).update({'is_selected': False})
+    
+    # Select this account
+    acc.is_selected = True
+    db.session.commit()
+    
+    return jsonify({'success': True})
+
+from app.services.platform_cfg import load_platforms
+
+@user_bp.route('/api/platforms', methods=['GET'])
+@login_required
+def get_platforms():
+    return jsonify({'success': True, 'data': load_platforms()})

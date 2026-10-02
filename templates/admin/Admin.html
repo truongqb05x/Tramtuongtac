@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Dashboard - Admin Console</title>
+<title>Dashboard | Admin Console</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../../static/css/layout/layout_admin/admin.css">
-
+<link rel="shortcut icon" href="../../static/img/logo.png" type="image/x-icon">
 </head>
 <body>
 
@@ -44,7 +44,7 @@
             <path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </span>
-        Danh sách nhiệm vụ
+        Quản lý nhiệm vụ
       </button>
     </div>
 
@@ -157,34 +157,34 @@
         <div class="kpi-grid">
           <div class="kpi-cell">
             <div class="kpi-label">Người dùng</div>
-            <div class="kpi-value">{{ user_count }}</div>
-            <div class="kpi-delta up">↑ 3.2% tuần này</div>
+            <div class="kpi-value">{{ kpi.users }}</div>
+            <div class="kpi-delta flat">— Toàn hệ thống</div>
           </div>
           <div class="kpi-cell">
             <div class="kpi-label">Nhiệm vụ hệ thống</div>
-            <div class="kpi-value">{{ job_count }}</div>
-            <div class="kpi-delta up">↑ 12% so hôm qua</div>
+            <div class="kpi-value">{{ kpi.jobs }}</div>
+            <div class="kpi-delta flat">— Toàn hệ thống</div>
           </div>
           <div class="kpi-cell">
             <div class="kpi-label">Tỷ lệ hoàn thành</div>
-            <div class="kpi-value">98.4<small>%</small></div>
+            <div class="kpi-value">{{ kpi.completion_rate }}</div>
             <div class="kpi-delta flat">— ổn định</div>
           </div>
 
           <div class="kpi-cell">
             <div class="kpi-label">Credits lưu hành</div>
-            <div class="kpi-value">2.4<small>M</small></div>
-            <div class="kpi-delta up">↑ 48k hôm nay</div>
+            <div class="kpi-value">{{ kpi.credits }}</div>
+            <div class="kpi-delta flat">— Từ người dùng</div>
           </div>
           <div class="kpi-cell">
             <div class="kpi-label">Doanh thu</div>
-            <div class="kpi-value">42.5<small>k</small></div>
-            <div class="kpi-delta up">↑ 5.2% tuần này</div>
+            <div class="kpi-value">{{ kpi.revenue }}</div>
+            <div class="kpi-delta flat">— Tích luỹ</div>
           </div>
           <div class="kpi-cell">
             <div class="kpi-label">Nhiệm vụ đang chạy</div>
-            <div class="kpi-value">1,240</div>
-            <div class="kpi-delta flat">— ổn định</div>
+            <div class="kpi-value">{{ kpi.running_jobs }}</div>
+            <div class="kpi-delta flat">— Toàn hệ thống</div>
           </div>
         </div>
       </section>

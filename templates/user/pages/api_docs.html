@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>API Documentation — TRAODOI Developers</title>
+<title>API Documentation | TRAMTUONGTAC</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="shortcut icon" href="../../../static/img/logo.png" type="image/x-icon">
 <style>
   :root {
     --bg: #faf9f7;
@@ -658,7 +659,7 @@
   <div class="wrap">
     <div class="flex items-center justify-between h-[64px]">
       <div class="flex items-center gap-3">
-        <a href="#" class="font-serif text-[1.25rem] font-medium tracking-[-.01em]">TRAODOI</a>
+        <a href="#" class="font-serif text-[1.25rem] font-medium tracking-[-.01em]">TRAMTUONGTAC</a>
         <span style="color:var(--border-strong)">/</span>
         <span class="text-[.875rem] font-medium" style="color:var(--ink-soft)">Developers</span>
         <span class="api-version">v1 · ổn định</span>
@@ -814,15 +815,15 @@
     <!-- ============ INTRO ============ -->
     <section class="doc-hero" id="intro">
       <span class="doc-hero-eyebrow">REST API v1</span>
-      <h1 class="doc-hero-title">TRAODOI API Reference</h1>
+      <h1 class="doc-hero-title">TRAMTUONGTAC API Reference</h1>
       <p class="doc-hero-lede">
-        API REST để tích hợp TRAODOI vào ứng dụng của bạn. Xác thực qua Bearer token, tất cả request và response đều ở định dạng JSON. Endpoint ổn định, không có breaking change trong minor version.
+        API REST để tích hợp TRAMTUONGTAC vào ứng dụng của bạn. Xác thực qua Bearer token, tất cả request và response đều ở định dạng JSON. Endpoint ổn định, không có breaking change trong minor version.
       </p>
 
       <div class="base-url-box">
         <span class="base-url-label">Base URL</span>
-        <span class="base-url-value">https://api.traodoi.app/v1</span>
-        <button class="copy-btn" data-copy="https://api.traodoi.app/v1">Copy</button>
+        <span class="base-url-value">https://api.TRAMTUONGTAC.app/v1</span>
+        <button class="copy-btn" data-copy="https://api.TRAMTUONGTAC.app/v1">Copy</button>
       </div>
     </section>
 
@@ -926,7 +927,7 @@
               <button class="code-tab">Python</button>
             </div>
           </div>
-          <pre class="code-body"><span class="c-key">curl</span> -X POST https://api.traodoi.app/v1/auth/token \
+          <pre class="code-body"><span class="c-key">curl</span> -X POST https://api.TRAMTUONGTAC.app/v1/auth/token \
   -H <span class="c-str">"Content-Type: application/json"</span> \
   -d <span class="c-str">'{
     "api_key": "tk_live_a1b2c3d4e5f6",
@@ -1020,7 +1021,7 @@
           <div class="code-head">
             <span class="code-head-label">cURL</span>
           </div>
-          <pre class="code-body"><span class="c-key">curl</span> <span class="c-str">"https://api.traodoi.app/v1/tasks?platform=facebook&min_reward=10&sort=reward_desc"</span> \
+          <pre class="code-body"><span class="c-key">curl</span> <span class="c-str">"https://api.TRAMTUONGTAC.app/v1/tasks?platform=facebook&min_reward=10&sort=reward_desc"</span> \
   -H <span class="c-str">"Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."</span></pre>
         </div>
       </div>
@@ -1232,7 +1233,7 @@
           <div class="code-head">
             <span class="code-head-label">cURL</span>
           </div>
-          <pre class="code-body"><span class="c-key">curl</span> -X POST https://api.traodoi.app/v1/tasks/T-2101/complete \
+          <pre class="code-body"><span class="c-key">curl</span> -X POST https://api.TRAMTUONGTAC.app/v1/tasks/T-2101/complete \
   -H <span class="c-str">"Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."</span> \
   -H <span class="c-str">"Content-Type: application/json"</span> \
   -H <span class="c-str">"Idempotency-Key: 6f8a9c2e-4b1d-4a5e-8c7f-9d2e3a1b5c4f"</span> \

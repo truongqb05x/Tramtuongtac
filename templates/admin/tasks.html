@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Quản lý nhiệm vụ - Admin Console</title>
+<title>Quản lý nhiệm vụ | Admin Console</title>
+<link rel="shortcut icon" href="../../static/img/logo.png" type="image/x-icon">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -352,14 +353,7 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  const ALL_TASKS = [
-    { id: '#T-4912', creator: 'Trần Văn A', handle: '@tranvana', platform: 'Facebook', req: 'Like & Follow fanpage', reward: '120', qty: '1000', status: 'pending', statusLabel: 'Chờ duyệt' },
-    { id: '#T-4911', creator: 'Lê Thị B', handle: '@lethib', platform: 'TikTok', req: 'Thả tim & Comment', reward: '80', qty: '500', status: 'running', statusLabel: 'Đang chạy' },
-    { id: '#T-4910', creator: 'Phạm Văn C', handle: '@phamvanc', platform: 'Instagram', req: 'Follow tài khoản', reward: '50', qty: '200', status: 'pending', statusLabel: 'Chờ duyệt' },
-    { id: '#T-4909', creator: 'Nguyễn Thị D', handle: '@nguyenthid', platform: 'Youtube', req: 'Sub channel', reward: '200', qty: '150', status: 'running', statusLabel: 'Đang chạy' },
-    { id: '#T-4908', creator: 'Hoàng Văn E', handle: '@hoangvane', platform: 'Facebook', req: 'Share bài viết', reward: '150', qty: '300', status: 'completed', statusLabel: 'Hoàn thành' },
-    { id: '#T-4907', creator: 'Vũ Thị F', handle: '@vuthif', platform: 'TikTok', req: 'Share video', reward: '70', qty: '1000', status: 'rejected', statusLabel: 'Từ chối' }
-  ];
+  const ALL_TASKS = {{ tasks_data | safe }};
 
   function renderTable() {
     const q = (document.getElementById('searchTasks').value || '').toLowerCase();
@@ -388,10 +382,15 @@
 
       let actions = '';
       if(t.status === 'pending') {
-        actions = `<button class="btn btn-success btn-sm" onclick="showToast('Đã duyệt nhiệm vụ ${t.id}')">Duyệt</button>
-                   <button class="btn btn-danger btn-sm" onclick="showToast('Đã từ chối nhiệm vụ ${t.id}')">Từ chối</button>`;
+        actions += `<button class="btn btn-success btn-sm" onclick="showToast('Đã duyệt nhiệm vụ ${t.id}')">Duyệt</button>`;
       } else {
-        actions = `<button class="btn btn-secondary btn-sm" onclick="showToast('Đang xem chi tiết ${t.id}')">Chi tiết</button>`;
+        actions += `<button class="btn btn-secondary btn-sm" onclick="showToast('Đang xem chi tiết ${t.id}')">Chi tiết</button>`;
+      }
+
+      if(t.status !== 'rejected') {
+          actions += `<button class="btn btn-danger btn-sm" style="margin-left:5px" onclick="cancelJob(${t.raw_id})">Hủy</button>`;
+      } else {
+          actions += `<button class="btn btn-success btn-sm" style="margin-left:5px" onclick="restoreJob(${t.raw_id})">Khôi phục</button>`;
       }
 
       return `
@@ -426,6 +425,42 @@
   document.getElementById('filterStatus').addEventListener('change', renderTable);
 
   renderTable();
+
+  window.cancelJob = function(jobId) {
+      if(!confirm("Bạn có chắc muốn hủy nhiệm vụ này do vi phạm không?")) return;
+      fetch(`/admin/api/jobs/${jobId}/cancel`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => res.json())
+      .then(data => {
+          if(data.success) {
+              showToast("Đã hủy nhiệm vụ thành công!");
+              setTimeout(() => location.reload(), 1000);
+          } else {
+              alert("Lỗi: " + data.message);
+          }
+      })
+      .catch(err => alert("Lỗi kết nối!"));
+  }
+  
+  window.restoreJob = function(jobId) {
+      if(!confirm("Bạn có chắc muốn khôi phục nhiệm vụ này không?")) return;
+      fetch(`/admin/api/jobs/${jobId}/restore`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => res.json())
+      .then(data => {
+          if(data.success) {
+              showToast("Đã khôi phục nhiệm vụ thành công!");
+              setTimeout(() => location.reload(), 1000);
+          } else {
+              alert("Lỗi: " + data.message);
+          }
+      })
+      .catch(err => alert("Lỗi kết nối!"));
+  }
 })();
 </script>
 

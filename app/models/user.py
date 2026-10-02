@@ -19,6 +19,8 @@ class User(db.Model, UserMixin):
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    social_accounts = db.relationship('SocialAccount', backref='user', lazy='dynamic')
 
 class SocialAccount(db.Model):
     __tablename__ = 'social_accounts'
@@ -29,5 +31,6 @@ class SocialAccount(db.Model):
     social_id = db.Column(db.String(255), nullable=False)
     profile_url = db.Column(db.String(500), nullable=True)
     status = db.Column(db.Enum('PENDING', 'ACTIVE', 'BLOCKED', name='status_enum'), nullable=False, default='PENDING')
+    is_selected = db.Column(db.Boolean, nullable=False, default=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

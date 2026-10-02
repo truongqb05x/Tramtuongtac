@@ -41,8 +41,11 @@
           <div class="user-dropdown-menu" id="userDropdownMenu">
             <a href="/settings/account">Hồ sơ</a>
             <a href="/settings/config">Cài đặt</a>
+            {% if current_user.role == 'ADMIN' %}
+            <a href="/admin">Quản trị</a>
+            {% endif %}
             <div class="divider"></div>
-            <a href="/auth/logout" class="text-danger">Đăng xuất</a>
+            <a href="/" class="text-danger">Đăng xuất</a>
           </div>
         </div>
       </div>
@@ -59,7 +62,7 @@
     <a href="/jobs/create">Tạo Tương Tác</a>
     <a href="/blog">Khám Phá</a>
     <div class="p-4 flex flex-col gap-2.5">
-      <a href="/auth/logout" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
+      <a href="/" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
     </div>
   </div>
 </header>
@@ -167,9 +170,9 @@
       <div>
         <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
         <ul class="space-y-2.5 list-none p-0 m-0">
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ giúp</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều khoản</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách bảo mật</a></li>
+          <li><a href="/faq" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ giúp</a></li>
+          <li><a href="/terms" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều khoản</a></li>
+          <li><a href="/privacy" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách bảo mật</a></li>
         </ul>
       </div>
     </div>
@@ -255,6 +258,29 @@
       : 'Dán đường dẫn trang web công khai';
   });
 
+  /* ============ PROFILE URL FORMAT ============ */
+  profileUrl.addEventListener('input', () => {
+    let val = profileUrl.value.trim();
+    if (!val) return;
+    try {
+      // Allow parsing even if user pasted without http://
+      let parseUrl = val.startsWith('http') ? val : 'https://' + val;
+      const u = new URL(parseUrl);
+      if (u.hostname.includes('facebook.com')) {
+        // If already profile.php?id=xxx, just clean it up (optional)
+        if (u.pathname.includes('profile.php') && u.searchParams.get('id')) {
+          profileUrl.value = 'https://www.facebook.com/profile.php?id=' + u.searchParams.get('id');
+        } else {
+          // If it's facebook.com/61560807310583
+          const match = u.pathname.match(/^\/(\d+)\/?$/);
+          if (match) {
+            profileUrl.value = 'https://www.facebook.com/profile.php?id=' + match[1];
+          }
+        }
+      }
+    } catch(e) {}
+  });
+
   /* ============ RENDER LIST ============ */
   function renderList() {
     listCount.textContent = accounts.length + ' tài khoản';
@@ -276,9 +302,14 @@
       row.className = 'account-row' + (acc.active ? ' active' : '');
       row.dataset.id = acc.id;
 
-      const verifyBadge = acc.verified
-        ? '<span class="badge badge-verified"><span class="badge-dot"></span>Đã xác minh</span>'
-        : '<span class="badge badge-pending"><span class="badge-dot"></span>Chờ xác minh</span>';
+      let verifyBadge;
+      if (acc.status === 'blocked') {
+        verifyBadge = '<span class="badge badge-pending" style="color:var(--danger);background:var(--danger-soft);border-color:var(--danger)"><span class="badge-dot" style="background:var(--danger)"></span>Đã bị vô hiệu hóa</span>';
+      } else if (acc.verified) {
+        verifyBadge = '<span class="badge badge-verified"><span class="badge-dot"></span>Đã xác minh</span>';
+      } else {
+        verifyBadge = '<span class="badge badge-pending"><span class="badge-dot"></span>Chờ xác minh</span>';
+      }
 
       const activeBadge = acc.active
         ? '<span class="badge badge-active"><span class="badge-dot"></span>Đang dùng</span>'
@@ -286,7 +317,7 @@
 
       row.innerHTML = `
         <div class="check-cell" data-label="Dùng để làm nhiệm vụ">
-          <input type="checkbox" class="check" ${acc.active ? 'checked' : ''} aria-label="Dùng tài khoản này để làm nhiệm vụ" />
+          <input type="checkbox" class="check" ${acc.active ? 'checked' : ''} ${acc.status === 'blocked' ? 'disabled' : ''} aria-label="Dùng tài khoản này để làm nhiệm vụ" />
         </div>
 
         <div class="acc-info">
@@ -315,19 +346,46 @@
       `;
 
       // checkbox toggle
-      row.querySelector('.check').addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        if (isChecked) {
-          accounts.forEach(a => {
-            if (a.id !== acc.id) a.active = false;
-          });
+      row.querySelector('.check').addEventListener('change', async (e) => {
+        if (acc.status === 'blocked') {
+            e.preventDefault();
+            e.target.checked = false;
+            showToast('Tài khoản này đã bị vô hiệu hóa');
+            return;
         }
-        acc.active = isChecked;
-        
-        renderList();
-        showToast(acc.active
-          ? 'Đã chọn tài khoản này để làm nhiệm vụ'
-          : 'Đã bỏ chọn tài khoản khỏi danh sách');
+        const isChecked = e.target.checked;
+        if (!isChecked) {
+           // We do not allow deselecting directly, or if we do, it just clears.
+           // Actually, let's keep it simple. If they uncheck, we just visually uncheck it.
+           // In backend, maybe we should also unselect, but the API doesn't handle deselect all yet.
+        }
+
+        try {
+            const res = await fetch('/settings/config/select', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: acc.id })
+            });
+            const data = await res.json();
+            if (data.success) {
+                if (isChecked) {
+                  accounts.forEach(a => {
+                    if (a.id !== acc.id) a.active = false;
+                  });
+                }
+                acc.active = isChecked;
+                renderList();
+                showToast(acc.active
+                  ? 'Đã chọn tài khoản này để làm nhiệm vụ'
+                  : 'Đã bỏ chọn tài khoản khỏi danh sách');
+            } else {
+                e.target.checked = !isChecked; // revert
+                showToast(data.message || 'Lỗi khi chọn tài khoản');
+            }
+        } catch(err) {
+            e.target.checked = !isChecked; // revert
+            showToast('Lỗi kết nối máy chủ');
+        }
       });
 
       // delete
@@ -394,7 +452,7 @@
         urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';
 
         renderList();
-        showToast('Đã thêm tài khoản. Hệ thống sẽ xác minh trong vài phút.');
+        showToast('Thêm tài khoản thành công!');
 
         if (window.innerWidth < 1024) {
           document.getElementById('listTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });

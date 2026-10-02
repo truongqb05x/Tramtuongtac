@@ -44,8 +44,11 @@
             <div class="user-dropdown-menu" id="userDropdownMenu">
               <a href="/settings/account">Hồ sơ</a>
               <a href="/settings/config">Cài đặt</a>
+              {% if current_user.role == 'ADMIN' %}
+              <a href="/admin">Quản trị</a>
+              {% endif %}
               <div class="divider"></div>
-              <a href="/auth/logout" class="text-danger">Đăng xuất</a>
+              <a href="/" class="text-danger">Đăng xuất</a>
             </div>
           </div>
         </div>
@@ -62,7 +65,7 @@
       <a href="/jobs/create">Tạo Tương Tác</a>
       <a href="/api-docs">Tài liệu API</a>
       <div class="p-4 flex flex-col gap-2.5">
-        <a href="/auth/logout" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
+        <a href="/" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
       </div>
     </div>
   </header>
@@ -255,10 +258,12 @@
 
       /* ============ DATA ============ */
       const TASKS = {{ jobs_data | tojson | safe }} || [];
+      const DAILY_LIMIT = {{ system_config.get('daily_task_limit', 200) }};
 
       const ACCEPTED = new Set();
       const IN_PROGRESS = new Set();
       let selectedTask = null;
+      let acceptedToday = 0; // In a real system, this would come from the server
 
       /* ============ RENDER TABLE ============ */
       const taskBody = document.getElementById('taskBody');
@@ -302,9 +307,14 @@
             if (isAccepted) return;
             if (IN_PROGRESS.has(t.id)) {
               ACCEPTED.add(t.id);
+              acceptedToday++;
               showToast('Đã nhận thành công Credit!');
               renderTasks(getFiltered());
             } else {
+              if (acceptedToday >= DAILY_LIMIT) {
+                showToast(`Bạn đã đạt giới hạn ${DAILY_LIMIT} nhiệm vụ/ngày. Quay lại vào ngày mai!`);
+                return;
+              }
               window.open('https://example.com/demo-task', '_blank');
               IN_PROGRESS.add(t.id);
               renderTasks(getFiltered());

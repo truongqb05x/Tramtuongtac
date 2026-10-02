@@ -26,6 +26,8 @@ Lưu trữ các tài khoản mạng xã hội (Facebook, TikTok) mà user liên 
 - `social_id`: String (ID UID của nền tảng)
 - `profile_url`: String
 - `status`: Enum ('PENDING', 'ACTIVE', 'BLOCKED') (Chờ duyệt, đã duyệt, bị admin khóa)
+- `is_selected`: Boolean (Được user chọn làm tài khoản mặc định đi thực hiện nhiệm vụ)
+- `is_deleted`: Boolean (Soft delete)
 - `created_at`: DateTime
 
 ## 2. Khối Nhiệm Vụ (Jobs & Tasks)
@@ -42,6 +44,9 @@ Lưu thông tin một gói nhiệm vụ do người dùng (Advertiser) tạo ra 
 - `price_per_action`: Decimal (Giá trả cho 1 lần tương tác)
 - `total_cost`: Decimal (Tổng tiền = quantity * price_per_action)
 - `status`: Enum ('RUNNING', 'COMPLETED', 'CANCELED')
+- `is_deleted`: Boolean (Soft delete)
+- `created_at`: DateTime
+- `updated_at`: DateTime
 
 ### Bảng `tasks`
 Lưu trữ lịch sử thực hiện nhiệm vụ của người dùng (Worker) đi cày thuê.
@@ -52,6 +57,8 @@ Lưu trữ lịch sử thực hiện nhiệm vụ của người dùng (Worker) 
 - `reward`: Decimal (Tiền công nhận được)
 - `status`: Enum ('PENDING', 'VERIFIED', 'REJECTED') (Đang chờ hệ thống check, hoặc admin duyệt)
 - `completed_at`: DateTime
+- `is_deleted`: Boolean (Soft delete)
+- `created_at`: DateTime
 
 ## 3. Khối Tài Chính (Giao dịch)
 
@@ -69,6 +76,7 @@ Lưu vết 100% dòng tiền ra/vào hệ thống (Nạp tiền, rút tiền, tr
 ## 4. Các Lưu Ý Về Database (Best Practices)
 
 1. **ACID Transactions**: Mọi thao tác đụng đến tiền (Ví dụ: User bấm Tạo Nhiệm Vụ -> Trừ tiền trong `users` + Tạo record trong `jobs` + Tạo record trong `transactions`) PHẢI được bọc trong một Database Transaction (`db.session.commit()` một lần duy nhất). Nếu 1 trong 3 bước lỗi, phải `db.session.rollback()` toàn bộ.
-2. **Indexing (Đánh chỉ mục)**: Cần tạo Index cho các cột thường xuyên tìm kiếm như `users.email`, `jobs.status`, `transactions.user_id`.
-3. **Kiểu dữ liệu tiền tệ**: Tuyệt đối không dùng kiểu `Float` hay `Real` để lưu tiền (vì sai số nhị phân). Hãy dùng `Numeric(15, 2)` (PostgreSQL) hoặc `Decimal`.
-4. **Soft Delete**: Hạn chế dùng lệnh `DELETE` record trong DB. Nên thêm cột `is_deleted = Boolean` để ẩn dữ liệu (Soft delete) nhằm giữ lại lịch sử đối soát sau này.
+2. **Indexing (Đánh chỉ mục)**: Cần tạo Index cho các cột thường xuyên tìm kiếm hoặc dùng làm khóa ngoại như `users.email`, `jobs.status`, `transactions.user_id`, `transactions.type`, `transactions.status`, `tasks.job_id`, `tasks.worker_id`, `tasks.social_account_id`, và `tasks.status`.
+3. **Kiểu dữ liệu tiền tệ**: Tuyệt đối không dùng kiểu `Float` hay `Real` để lưu tiền (vì sai số nhị phân). Hãy dùng `Numeric(15, 2)` (PostgreSQL) hoặc `Decimal`. Khi tính toán lưu ý phải đưa về cùng kiểu (float hoặc Decimal).
+4. **Soft Delete**: Hạn chế dùng lệnh `DELETE` record trong DB. Thêm cột `is_deleted = Boolean` để ẩn dữ liệu (Soft delete) nhằm giữ lại lịch sử đối soát sau này.
+5. **Relationships (ORM)**: Thiết lập sẵn các `db.relationship` với `lazy='dynamic'` để có thể trực tiếp query qua liên kết (ví dụ: `current_user.social_accounts.filter_by(...)`) mà không cần join thủ công ở Controller, giúp tối ưu và làm sạch code ở View/Template.
