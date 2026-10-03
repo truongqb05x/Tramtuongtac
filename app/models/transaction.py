@@ -7,7 +7,7 @@ class Transaction(db.Model):
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
     amount = db.Column(db.Numeric(15, 2), nullable=False)
-    type = db.Column(db.Enum('DEPOSIT', 'WITHDRAW', 'CREATE_JOB', 'TASK_REWARD', 'REFUND', name='transaction_type_enum'), nullable=False, index=True)
+    type = db.Column(db.Enum('DEPOSIT', 'WITHDRAW', 'CREATE_JOB', 'TASK_REWARD', 'REFUND', 'TRANSFER_IN', 'TRANSFER_OUT', name='transaction_type_enum'), nullable=False, index=True)
     status = db.Column(db.Enum('PENDING', 'SUCCESS', 'FAILED', name='transaction_status_enum'), nullable=False, default='PENDING', index=True)
     reference_code = db.Column(db.String(255), unique=True, nullable=True)
     description = db.Column(db.String(1000), nullable=True)

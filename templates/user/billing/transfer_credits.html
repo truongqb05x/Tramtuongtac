@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chuyển Credits | TRAMTUONGTAC</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+  rel="stylesheet" />
+<link rel="shortcut icon" href="../../../static/img/logo.png" type="image/x-icon">
+<link rel="stylesheet" href="../../../static/css/layout/base.css">
+<link rel="stylesheet" href="../../../static/css/layout/header.css" />
+<link rel="stylesheet" href="../../../static/css/layout/notice.css" />
+<link rel="stylesheet" href="../../../static/css/layout/page-layout.css" />
+<link rel="stylesheet" href="../../../static/css/layout/form.css" />
+<link rel="stylesheet" href="../../../static/css/layout/pagination.css" />
+<link rel="stylesheet" href="../../../static/css/page/buy_credits/transfer_credits.css">
+</head>
+<body>
+<!-- ================= HEADER ================= -->
+<header class="top">
+    <div class="wrap">
+      <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+        <a href="/" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+          <a href="/settings/config" class="nav-link">Cấu hình</a>
+          <a href="/jobs" class="nav-link">Làm Nhiệm Vụ</a>
+          <a href="/jobs/create" class="nav-link">Tạo Tương Tác</a>
+          <a href="/billing/transfer" class="nav-link active">Chuyển Credits</a>
+        </nav>
+
+        <div class="hidden md:flex items-center gap-3">
+          <div class="user-dropdown-wrap">
+            <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
+              <img src="https://ui-avatars.com/api/?name=User&background=1e3a5f&color=fff" alt="Avatar" />
+            </button>
+            <div class="user-dropdown-menu" id="userDropdownMenu">
+              <a href="/settings/account">Hồ sơ</a>
+              <a href="/settings/config">Cài đặt</a>
+              {% if current_user.role == 'ADMIN' %}
+              <a href="/admin">Quản trị</a>
+              {% endif %}
+              <div class="divider"></div>
+              <a href="/login" class="text-danger">Đăng xuất</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-menu md:hidden" id="mobileMenu">
+      <a href="/settings/config">Cấu hình</a>
+      <a href="/jobs">Làm Nhiệm Vụ</a>
+      <a href="/jobs/create">Tạo Tương Tác</a>
+      <a href="/billing/transfer" style="font-weight:500;color:var(--ink)">Chuyển Credits</a>
+      <a href="/api-docs">Tài liệu API</a>
+      <div class="p-4 flex flex-col gap-2.5">
+        <a href="/login" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng
+          xuất</a>
+      </div>
+    </div>
+  </header>
+
+<!-- ================= PAGE ================= -->
+<div class="page">
+  <!-- Page head -->
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Chuyển Credits cho người khác</h1>
+      <p class="page-sub">
+        Gửi Credits trực tiếp cho một người dùng khác trên hệ thống. Người nhận sẽ thấy Credits trong ví ngay sau khi bạn xác nhận.
+      </p>
+    </div>
+  </div>
+
+  <!-- Main grid -->
+  <div class="transfer-layout">
+
+    <!-- ============ LEFT: FORM ============ -->
+    <main>
+
+      <!-- Form card -->
+      <div class="form-card">
+
+        <!-- Info banner -->
+        <div class="info-banner">
+          <span class="info-banner-icon">i</span>
+          <p class="info-banner-body">
+            <strong>Lưu ý quan trọng:</strong> Giao dịch chuyển Credits là <strong>không thể hoàn tác</strong>. Hãy kiểm tra kỹ thông tin người nhận và số Credits trước khi gửi.
+          </p>
+        </div>
+
+        <!-- Step 1: Search recipient -->
+        <div class="field">
+          <label class="field-label" for="recipientSearch">
+            <span>Người nhận <span class="req">*</span></span>
+            <span class="hint">Tìm theo email</span>
+          </label>
+
+          <div class="search-wrap">
+            <div class="search-input-wrap" id="searchInputWrap">
+              <span class="search-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/>
+                  <path d="M10.5 10.5L13.5 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <input type="text" id="recipientSearch" placeholder="Nhập email người nhận…" autocomplete="off" />
+              <button type="button" class="search-clear" id="searchClear" aria-label="Xóa">×</button>
+            </div>
+
+            <!-- Suggestions -->
+            <div class="suggestions" id="suggestions">
+              <!-- injected by JS -->
+            </div>
+          </div>
+
+          <!-- Selected user -->
+          <div class="selected-user" id="selectedUser">
+            <!-- injected by JS -->
+          </div>
+
+          <p class="field-hint" id="recipientHint">
+            Bắt đầu nhập email để xem gợi ý người nhận.
+          </p>
+        </div>
+
+        <!-- Step 2: Amount -->
+        <div class="field">
+          <label class="field-label" for="amountInput">
+            <span>Số Credits muốn gửi <span class="req">*</span></span>
+            <span class="hint">Tối thiểu 50 · Tối đa <span id="maxTransferHint"></span></span>
+          </label>
+
+          <div class="credit-input-wrap">
+            <div class="number-input">
+              <button type="button" id="amountMinus" aria-label="Giảm">−</button>
+              <input type="number" id="amountInput" min="50" step="10" value="50" />
+              <button type="button" id="amountPlus" aria-label="Tăng">+</button>
+              <span class="suffix">Credits</span>
+            </div>
+
+
+          </div>
+          <p class="field-hint">
+            Số dư khả dụng: <strong id="availableBalance">{{ current_user.balance | int }}</strong> Credits
+          </p>
+        </div>
+        <!-- Balance warning -->
+        <div class="balance-warning" id="balanceWarning">
+          <span class="balance-warning-icon">!</span>
+          <span id="balanceWarningText">Số dư không đủ để thực hiện giao dịch này.</span>
+        </div>
+        <!-- Submit -->
+        <button class="btn btn-primary btn-lg btn-block" id="submitBtn" disabled>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7L12 7M8 3L12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Gửi Credits
+        </button>
+      </div>
+      <!-- History -->
+      <section class="section" style="margin-top:2.5rem">
+        <div class="section-head">
+          <h2 class="section-title">Lịch sử giao dịch</h2>
+        </div>
+        <div class="history-list">
+          <div class="history-tabs" id="historyTabs">
+            <button class="history-tab active" data-tab="all">
+              Tất cả <span class="tab-count" data-count="all">8</span>
+            </button>
+            <button class="history-tab" data-tab="out">
+              Đã gửi <span class="tab-count" data-count="out">5</span>
+            </button>
+            <button class="history-tab" data-tab="in">
+              Đã nhận <span class="tab-count" data-count="in">3</span>
+            </button>
+          </div>
+          <div id="historyList">
+            <!-- injected by JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- ============ RIGHT: SIDEBAR ============ -->
+    <aside>
+      <!-- Balance -->
+      <div class="balance-side">
+        <div class="balance-side-inner">
+          <div class="balance-side-label">Số dư khả dụng</div>
+          <div class="balance-side-value" id="sidebarBalance">{{ current_user.balance | int }}<small>Credits</small></div>
+          <p class="balance-side-sub">Có thể chuyển tối đa toàn bộ số Credits khả dụng</p>
+        </div>
+      </div>
+
+      <!-- Rules -->
+      <div class="side-panel">
+        <div class="side-head">Quy định chuyển Credits</div>
+        <div class="side-body">
+          <div class="rules-list">
+
+            <div class="rule-item">
+              <span class="rule-num">01</span>
+              <p class="rule-text">
+                <strong>Miễn phí hoàn toàn.</strong> Không có phí giao dịch khi chuyển Credits cho người dùng khác.
+              </p>
+            </div>
+
+            <div class="rule-item">
+              <span class="rule-num">02</span>
+              <p class="rule-text">
+                <strong>Mỗi giao dịch phải chuyển ít nhất 50 Credits.</strong>
+              </p>
+            </div>
+
+
+            <div class="rule-item">
+              <span class="rule-num">03</span>
+              <p class="rule-text">
+                <strong>Không thể hoàn tác.</strong> Sau khi xác nhận, giao dịch không thể hủy.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </aside>
+  </div>
+
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-[#f4f2ee] border-t border-[#e3e0da]">
+  <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
+    <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
+      <div>
+        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+          style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+        <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
+          Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
+        </p>
+      </div>
+      <div>
+        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
+        <ul class="space-y-2.5 list-none p-0 m-0">
+          <li><a href="/blog"
+              class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Khám phá</a>
+          </li>
+          <li><a href="/jobs"
+              class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Nhiệm vụ</a>
+          </li>
+          <li><a href="#"
+              class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Bảng xếp
+              hạng</a></li>
+          <li><a href="#"
+              class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trust
+              Score</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
+        <ul class="space-y-2.5 list-none p-0 m-0">
+          <li><a href="/faq" target="_blank" rel="noopener noreferrer"
+              class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ
+              giúp</a></li>
+          <li><a href="/terms" target="_blank" rel="noopener noreferrer"
+              class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều
+              khoản</a></li>
+          <li><a href="/privacy" target="_blank" rel="noopener noreferrer"
+              class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách
+              bảo mật</a></li>
+          <li><a href="/api-docs" target="_blank" rel="noopener noreferrer"
+              class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Tài Liệu API</a></li>
+        </ul>
+      </div>
+    </div>
+    <div
+      class="mt-12 pt-6 border-t border-[#e3e0da] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+      <p class="text-[0.8125rem] text-[#6b6b6b]">© 2026 TRAMTUONGTAC. Tất cả các quyền được bảo lưu.</p>
+      <p class="text-[0.8125rem] text-[#6b6b6b]">Made with care in Vietnam</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= CONFIRM MODAL ================= -->
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="modal-box">
+    <button class="modal-close" data-close aria-label="Đóng">×</button>
+
+
+    <h3 id="confirmTitle">Xác nhận chuyển Credits</h3>
+    <p>Kiểm tra kỹ thông tin bên dưới. Giao dịch không thể hoàn tác sau khi xác nhận.</p>
+
+    <div class="confirm-summary">
+      <div class="confirm-row">
+        <span class="k">Email nhận</span>
+        <span class="v mono" id="confirmEmail">—</span>
+      </div>
+      <div class="confirm-row">
+        <span class="k">Số Credits</span>
+        <span class="v" id="confirmAmount">—</span>
+      </div>
+      <div class="confirm-row">
+        <span class="k">Phí dịch vụ (0%)</span>
+        <span class="v" id="confirmFee">0 Credits</span>
+      </div>
+      <div class="confirm-row total">
+        <span class="k">Tổng cộng trừ ví</span>
+        <span class="v" id="confirmTotal">—</span>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" data-close>Hủy</button>
+      <button class="btn btn-primary" id="confirmSubmit">Xác nhận gửi</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span id="toastMsg">Thành công</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============ STATE ============ */
+  let currentBalance = parseFloat('{{ current_user.balance }}');
+  let selectedUser = null;
+  let currentHistoryTab = 'all';
+
+  let currentSearchResults = [];
+
+  /* ============ HISTORY ============ */
+  const HISTORY = {{ history_data_json | safe }};
+
+  /* ============ HELPERS ============ */
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function formatNumber(n) {
+    return Number(n).toLocaleString('vi-VN');
+  }
+
+  /* ============ SEARCH & SUGGESTIONS ============ */
+  const searchInput = document.getElementById('recipientSearch');
+  const searchInputWrap = document.getElementById('searchInputWrap');
+  const searchClear = document.getElementById('searchClear');
+  const suggestions = document.getElementById('suggestions');
+  const selectedUserEl = document.getElementById('selectedUser');
+  const recipientHint = document.getElementById('recipientHint');
+
+  let searchTimeout = null;
+
+  function renderSuggestions(query) {
+    const q = (query || '').toLowerCase().trim();
+    if (!q) {
+      suggestions.classList.remove('on');
+      return;
+    }
+    
+    // Show loading text if we want, or just wait
+    if (searchTimeout) clearTimeout(searchTimeout);
+    
+    searchTimeout = setTimeout(() => {
+      fetch('/api/users/search?q=' + encodeURIComponent(q))
+        .then(res => res.json())
+        .then(data => {
+          if (!data.success) return;
+          const matches = data.data;
+          currentSearchResults = matches;
+          
+          if (!matches.length) {
+            suggestions.innerHTML = `
+              <div class="suggestions-empty">
+                <strong>Không tìm thấy người dùng</strong>
+                Không có tài khoản nào khớp với "${escapeHtml(query)}". Hãy kiểm tra lại email.
+              </div>
+            `;
+            suggestions.classList.add('on');
+            return;
+          }
+
+          suggestions.innerHTML = matches.map(u => `
+            <div class="suggestion-item" data-user-id="${u.id}">
+              <div class="suggestion-info">
+                <div class="suggestion-email">${escapeHtml(u.email)}</div>
+              </div>
+            </div>
+          `).join('');
+
+          suggestions.classList.add('on');
+
+          // Bind clicks
+          suggestions.querySelectorAll('[data-user-id]').forEach(item => {
+            item.addEventListener('click', () => {
+              const user = currentSearchResults.find(u => u.id == item.dataset.userId);
+              if (user) selectUser(user);
+            });
+          });
+        });
+    }, 300);
+  }
+
+  function selectUser(user) {
+    selectedUser = user;
+    searchInput.value = '';
+    suggestions.classList.remove('on');
+    searchInputWrap.classList.remove('has-value');
+
+    renderSelectedUser();
+    validateForm();
+
+    // Hide hint
+    recipientHint.style.display = 'none';
+  }
+
+  function renderSelectedUser() {
+    if (!selectedUser) {
+      selectedUserEl.classList.remove('on');
+      selectedUserEl.innerHTML = '';
+      return;
+    }
+
+    selectedUserEl.classList.add('on');
+    selectedUserEl.innerHTML = `
+      <div class="selected-info">
+        <div class="selected-email">${escapeHtml(selectedUser.email)}</div>
+      </div>
+      <button type="button" class="selected-remove" id="removeSelected" aria-label="Bỏ chọn">×</button>
+    `;
+
+    document.getElementById('removeSelected').addEventListener('click', () => {
+      selectedUser = null;
+      renderSelectedUser();
+        validateForm();
+      recipientHint.style.display = 'block';
+      searchInput.focus();
+    });
+  }
+
+  searchInput.addEventListener('input', (e) => {
+    const val = e.target.value;
+    searchInputWrap.classList.toggle('has-value', val.length > 0);
+    renderSuggestions(val);
+  });
+
+  searchInput.addEventListener('focus', () => {
+    if (searchInput.value.trim()) {
+      renderSuggestions(searchInput.value);
+    }
+  });
+
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    searchInputWrap.classList.remove('has-value');
+    suggestions.classList.remove('on');
+    searchInput.focus();
+  });
+
+  // Close suggestions on outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-wrap')) {
+      suggestions.classList.remove('on');
+    }
+  });
+
+  /* ============ AMOUNT INPUT ============ */
+  const amountInput = document.getElementById('amountInput');
+  const amountMinus = document.getElementById('amountMinus');
+  const amountPlus = document.getElementById('amountPlus');
+
+  function getAvailableBalance() {
+    return currentBalance;
+  }
+
+  function getMaxTransfer() {
+    return currentBalance;
+  }
+
+  amountMinus.addEventListener('click', () => {
+    const v = parseInt(amountInput.value, 10) || 50;
+    amountInput.value = Math.max(50, v - 10);
+    validateForm();
+  });
+
+  amountPlus.addEventListener('click', () => {
+    const v = parseInt(amountInput.value, 10) || 50;
+    const max = getMaxTransfer();
+    amountInput.value = Math.min(max, v + 10);
+    validateForm();
+  });
+
+  amountInput.addEventListener('input', () => {
+    let v = parseInt(amountInput.value, 10);
+    if (isNaN(v)) v = 0;
+    if (v < 0) v = 0;
+    validateForm();
+  });
+
+  amountInput.addEventListener('change', () => {
+    let v = parseInt(amountInput.value, 10) || 50;
+    if (v < 50) {
+      amountInput.value = 50;
+      window.showToast('Số lượng tối thiểu là 50 Credits');
+    }
+    validateForm();
+  });
+
+
+
+  /* ============ VALIDATION ============ */
+  const submitBtn = document.getElementById('submitBtn');
+  const balanceWarning = document.getElementById('balanceWarning');
+  const balanceWarningText = document.getElementById('balanceWarningText');
+
+  function validateForm() {
+    const amount = parseInt(amountInput.value, 10) || 0;
+
+    // Check balance warning
+    let warningOn = false;
+    if (amount > currentBalance) {
+      warningOn = true;
+      balanceWarningText.textContent = `Số dư không đủ. Bạn có ${formatNumber(currentBalance)} Credits nhưng đang cố gửi ${formatNumber(amount)} Credits.`;
+    }
+    balanceWarning.classList.toggle('on', warningOn);
+
+    // Enable submit only if all valid
+    const valid = selectedUser && amount >= 50 && amount <= getMaxTransfer() && !warningOn;
+    submitBtn.disabled = !valid;
+  }
+
+  /* ============ CONFIRM MODAL ============ */
+  const confirmModal = document.getElementById('confirmModal');
+  const confirmSubmit = document.getElementById('confirmSubmit');
+
+  submitBtn.addEventListener('click', () => {
+    if (!selectedUser) return;
+    const amount = parseInt(amountInput.value, 10) || 0;
+
+    document.getElementById('confirmEmail').textContent = selectedUser.email;
+    document.getElementById('confirmAmount').textContent = formatNumber(amount) + ' Credits';
+    document.getElementById('confirmTotal').textContent = formatNumber(amount) + ' Credits';
+
+    confirmSubmit.disabled = false;
+
+    confirmModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+
+  confirmSubmit.addEventListener('click', () => {
+    if (!selectedUser) return;
+    const amount = parseInt(amountInput.value, 10) || 0;
+
+    confirmSubmit.disabled = true;
+    confirmSubmit.textContent = 'Đang xử lý...';
+
+    fetch('/api/transfer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        recipient_id: selectedUser.id,
+        amount: amount
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      confirmSubmit.textContent = 'Xác nhận chuyển';
+      confirmModal.classList.remove('active');
+      document.body.style.overflow = '';
+      
+      if (data.success) {
+        currentBalance = data.new_balance;
+        const headerEl = document.getElementById('headerBalance') || document.getElementById('headerCredits');
+        if (headerEl) headerEl.textContent = formatNumber(currentBalance);
+        
+        const availableEl = document.getElementById('availableBalance');
+        if (availableEl) availableEl.textContent = formatNumber(currentBalance);
+        
+        const sidebarEl = document.getElementById('sidebarBalance');
+        if (sidebarEl) sidebarEl.innerHTML = formatNumber(currentBalance) + '<small>Credits</small>';
+        
+        const maxHintEl = document.getElementById('maxTransferHint');
+        if (maxHintEl) maxHintEl.textContent = formatNumber(getMaxTransfer());
+
+        // Thêm vào history
+        const newTx = {
+          id: 'Mới',
+          type: 'out',
+          user: {
+            email: selectedUser.email
+          },
+          amount: amount,
+          time: 'vừa xong',
+          ts: Date.now()
+        };
+        HISTORY.unshift(newTx);
+
+        renderHistory();
+        const recipientEmail = selectedUser.email;
+        resetForm();
+
+        window.showToast('Đã gửi ' + formatNumber(amount) + ' Credits cho ' + recipientEmail + '.');
+      } else {
+        alert(data.message || 'Có lỗi xảy ra.');
+        confirmSubmit.disabled = false;
+      }
+    })
+    .catch(err => {
+      confirmSubmit.textContent = 'Xác nhận chuyển';
+      confirmSubmit.disabled = false;
+      alert('Lỗi kết nối máy chủ');
+    });
+  });
+
+
+
+  function resetForm() {
+    selectedUser = null;
+    searchInput.value = '';
+    searchInputWrap.classList.remove('has-value');
+    amountInput.value = 50;
+
+    renderSelectedUser();
+    validateForm();
+    recipientHint.style.display = 'block';
+  }
+
+  /* ============ MODAL CLOSE ============ */
+  document.querySelectorAll('[data-close]').forEach(b => {
+    b.addEventListener('click', () => {
+      const overlay = b.closest('.modal-overlay');
+      if (overlay) {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+
+  [confirmModal].forEach(m => {
+    m.addEventListener('click', e => {
+      if (e.target === m) {
+        m.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+
+  /* ============ HISTORY ============ */
+  const historyList = document.getElementById('historyList');
+
+  function renderHistory() {
+    let list = HISTORY.slice();
+    if (currentHistoryTab === 'out') list = list.filter(h => h.type === 'out');
+    else if (currentHistoryTab === 'in') list = list.filter(h => h.type === 'in');
+
+    // Update tab counts
+    document.querySelector('[data-count="all"]').textContent = HISTORY.length;
+    document.querySelector('[data-count="out"]').textContent = HISTORY.filter(h => h.type === 'out').length;
+    document.querySelector('[data-count="in"]').textContent = HISTORY.filter(h => h.type === 'in').length;
+
+    if (!list.length) {
+      historyList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <path d="M4 6H18V16H4V6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M4 10H18" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <h3 class="empty-title">Chưa có giao dịch nào</h3>
+          <p class="empty-desc">Các giao dịch chuyển và nhận Credits sẽ xuất hiện ở đây.</p>
+        </div>
+      `;
+      return;
+    }
+
+    historyList.innerHTML = list.map(h => {
+      const isOut = h.type === 'out';
+      const sign = isOut ? '−' : '+';
+      return `
+        <div class="history-row">
+          <div class="history-info">
+            <div class="history-name">
+              ${isOut ? 'Gửi cho' : 'Nhận từ'} ${escapeHtml(h.user.email)}
+            </div>
+            <div class="history-desc">
+              <span>${escapeHtml(h.id)}</span>
+            </div>
+          </div>
+          <div class="history-amount-cell">
+            <div class="history-amount ${h.type}">
+              ${sign}${formatNumber(h.amount)}<small>Credits</small>
+            </div>
+            <div class="history-time">${escapeHtml(h.time)}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  document.querySelectorAll('.history-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.history-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentHistoryTab = tab.dataset.tab;
+      renderHistory();
+    });
+  });
+
+  /* ============ ESC ============ */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(m => {
+        m.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+      suggestions.classList.remove('on');
+    }
+  });
+
+
+  /* ============ INIT ============ */
+  document.getElementById('maxTransferHint').textContent = formatNumber(getMaxTransfer());
+
+  validateForm();
+  renderHistory();
+
+
+})();
+</script>
+
+<script src="/static/js/utils.js"></script>
+</body>
+</html>

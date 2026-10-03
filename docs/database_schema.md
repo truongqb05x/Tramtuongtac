@@ -68,7 +68,7 @@ Lưu vết 100% dòng tiền ra/vào hệ thống (Nạp tiền, rút tiền, tr
 - `id`: Integer (Primary Key)
 - `user_id`: Integer (Foreign Key -> users.id)
 - `amount`: Decimal (Số tiền, có thể âm hoặc dương)
-- `type`: Enum ('DEPOSIT', 'WITHDRAW', 'CREATE_JOB', 'TASK_REWARD', 'REFUND')
+- `type`: Enum ('DEPOSIT', 'WITHDRAW', 'CREATE_JOB', 'TASK_REWARD', 'REFUND', 'TRANSFER_IN', 'TRANSFER_OUT')
 - `status`: Enum ('PENDING', 'SUCCESS', 'FAILED')
 - `reference_code`: String (Mã giao dịch ngân hàng / MoMo nếu có)
 - `description`: String (Ghi chú)

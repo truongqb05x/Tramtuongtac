@@ -9,6 +9,126 @@ user_bp = Blueprint('user', __name__)
 def user_buy_credits():
     return render_template('user/billing/buy_credits.html')
 
+from sqlalchemy import or_
+
+@user_bp.route('/billing/transfer-credits')
+@login_required
+def user_transfer_credits():
+    from app.models.transaction import Transaction
+    
+    # Get transfer history for this user
+    # A transaction where type is TRANSFER_OUT (user sent to someone) or TRANSFER_IN (user received from someone)
+    db_history = Transaction.query.filter(
+        Transaction.user_id == current_user.id,
+        Transaction.type.in_(['TRANSFER_IN', 'TRANSFER_OUT'])
+    ).order_by(Transaction.id.desc()).limit(5).all()
+    
+    history_data = []
+    # We need to know who the other party was. We can parse it from description or add a column.
+    # To keep schema changes minimal, let's parse from description which can be "Chuyển tiền cho abc@xyz.com"
+    import re
+    for tx in db_history:
+        other_email = "Unknown"
+        match = re.search(r'([\w\.-]+@[\w\.-]+)', tx.description or '')
+        if match:
+            other_email = match.group(1)
+            
+        import time
+        history_data.append({
+            'id': f'TX-{tx.id}',
+            'type': 'out' if tx.type == 'TRANSFER_OUT' else 'in',
+            'user': {'email': other_email},
+            'amount': float(tx.amount),
+            'note': tx.description,
+            'time': tx.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'ts': int(tx.created_at.timestamp() * 1000)
+        })
+    
+    import json
+    return render_template('user/billing/transfer_credits.html', history_data_json=json.dumps(history_data))
+
+@user_bp.route('/api/users/search')
+@login_required
+def api_search_users():
+    from app.models.user import User
+    query = request.args.get('q', '').strip()
+    if not query:
+        return jsonify({'success': True, 'data': []})
+    
+    # Don't show current user in search results
+    users = User.query.filter(
+        User.email.ilike(f'%{query}%'),
+        User.id != current_user.id
+    ).limit(6).all()
+    
+    results = [{'id': u.id, 'email': u.email} for u in users]
+    return jsonify({'success': True, 'data': results})
+
+@user_bp.route('/api/transfer', methods=['POST'])
+@login_required
+def api_transfer_credits():
+    data = request.get_json()
+    if not data:
+        return jsonify({'success': False, 'message': 'Thiếu dữ liệu'}), 400
+        
+    recipient_id = data.get('recipient_id')
+    amount = data.get('amount')
+    
+    if not recipient_id or not amount:
+        return jsonify({'success': False, 'message': 'Thiếu thông tin người nhận hoặc số tiền'}), 400
+        
+    try:
+        amount = int(amount)
+        recipient_id = int(recipient_id)
+    except ValueError:
+        return jsonify({'success': False, 'message': 'Số tiền hoặc ID không hợp lệ'}), 400
+        
+    if amount < 50:
+        return jsonify({'success': False, 'message': 'Số lượng tối thiểu là 50 Credits'}), 400
+        
+    if current_user.balance < amount:
+        return jsonify({'success': False, 'message': 'Số dư không đủ'}), 400
+        
+    from app.models.user import User
+    from app.models.transaction import Transaction
+    
+    recipient = User.query.get(recipient_id)
+    if not recipient:
+        return jsonify({'success': False, 'message': 'Không tìm thấy người nhận'}), 404
+        
+    try:
+        # Deduct from sender
+        current_user.balance -= amount
+        tx_out = Transaction(
+            user_id=current_user.id,
+            amount=amount,
+            type='TRANSFER_OUT',
+            status='SUCCESS',
+            description=f'Chuyển tiền cho {recipient.email}'
+        )
+        db.session.add(tx_out)
+        
+        # Add to receiver
+        recipient.balance += amount
+        tx_in = Transaction(
+            user_id=recipient.id,
+            amount=amount,
+            type='TRANSFER_IN',
+            status='SUCCESS',
+            description=f'Nhận tiền từ {current_user.email}'
+        )
+        db.session.add(tx_in)
+        
+        db.session.commit()
+        return jsonify({
+            'success': True, 
+            'message': 'Giao dịch thành công!',
+            'new_balance': current_user.balance
+        })
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': 'Lỗi hệ thống khi chuyển tiền: ' + str(e)}), 500
+
 from flask import request, jsonify
 from app.extensions import db
 
