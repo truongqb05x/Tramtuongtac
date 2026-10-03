@@ -1,349 +1,385 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Trang chủ | TRAMTUONGTAC</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="../../static/css/layout/base.css" />
-<link rel="stylesheet" href="../../static/css/layout/header.css" />
-<link rel="stylesheet" href="../../static/css/layout/notice.css" />
-<link rel="stylesheet" href="../../static/css/page/home.css">
-<link rel="shortcut icon" href="../../static/img/logo.png" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trang chủ | TRAMTUONGTAC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../../static/css/layout/base.css" />
+  <link rel="stylesheet" href="../../static/css/layout/header.css" />
+  <link rel="stylesheet" href="../../static/css/layout/notice.css" />
+  <link rel="stylesheet" href="../../static/css/page/home.css">
+  <link rel="shortcut icon" href="../../static/img/logo.png" type="image/x-icon">
 </head>
+
 <body>
-<!-- ================= HEADER ================= -->
-<header class="top">
-  <div class="wrap">
-    <div class="flex items-center justify-between h-[64px] md:h-[72px]">
-      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
-        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]" style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
-      </a>
+  <!-- ================= HEADER ================= -->
+  <header class="top">
+    <div class="wrap">
+      <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+        <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+        </a>
 
-      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
-        <a href="/home" class="nav-link active">Trang chủ</a>
-        <a href="/jobs" class="nav-link">Làm Nhiệm Vụ</a>
-        <a href="/jobs/create" class="nav-link">Tạo Tương Tác</a>
-        <a href="/api-docs" class="nav-link">Tài liệu API</a>
-      </nav>
+        <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+          <a href="/home" class="nav-link active">Trang chủ</a>
+          <a href="/jobs" class="nav-link">Làm Nhiệm Vụ</a>
+          <a href="/jobs/create" class="nav-link">Tạo Tương Tác</a>
+        </nav>
 
-      <div class="hidden md:flex items-center gap-3">
-        <div class="user-dropdown-wrap">
-          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
-            <img src="https://ui-avatars.com/api/?name=User&background=1e3a5f&color=fff" alt="Avatar" />
-          </button>
-          <div class="user-dropdown-menu" id="userDropdownMenu">
-            <a href="/settings/account">Hồ sơ</a>
-            <a href="/settings/config">Cài đặt</a>
-            {% if current_user.role == 'ADMIN' %}
-            <a href="/admin">Quản trị</a>
-            {% endif %}
-            <div class="divider"></div>
-            <a href="/" class="text-danger">Đăng xuất</a>
+        <div class="hidden md:flex items-center gap-3">
+          <div class="user-dropdown-wrap">
+            <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
+              <img src="https://ui-avatars.com/api/?name=User&background=1e3a5f&color=fff" alt="Avatar" />
+            </button>
+            <div class="user-dropdown-menu" id="userDropdownMenu">
+              <a href="/settings/account">Hồ sơ</a>
+              <a href="/settings/config">Cài đặt</a>
+              {% if current_user.role == 'ADMIN' %}
+              <a href="/admin">Quản trị</a>
+              {% endif %}
+              <div class="divider"></div>
+              <a href="/" class="text-danger">Đăng xuất</a>
+            </div>
           </div>
         </div>
+
+        <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
       </div>
-
-      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
     </div>
-  </div>
 
-  <div class="mobile-menu md:hidden" id="mobileMenu">
-    <a href="/home" style="font-weight:500;color:var(--ink)">Trang chủ</a>
-    <a href="/jobs">Làm Nhiệm Vụ</a>
-    <a href="/jobs/create">Tạo Tương Tác</a>
-    <a href="/api-docs">Tài liệu API</a>
-    <div class="p-4 flex flex-col gap-2.5">
-      <a href="/" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
+    <div class="mobile-menu md:hidden" id="mobileMenu">
+      <a href="/home" style="font-weight:500;color:var(--ink)">Trang chủ</a>
+      <a href="/jobs">Làm Nhiệm Vụ</a>
+      <a href="/jobs/create">Tạo Tương Tác</a>
+      <a href="/api-docs">Tài liệu API</a>
+      <div class="p-4 flex flex-col gap-2.5">
+        <a href="/" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng
+          xuất</a>
+      </div>
     </div>
-  </div>
-</header>
+  </header>
 
-<!-- ================= PAGE ================= -->
-<div class="page">
+  <!-- ================= PAGE ================= -->
+  <div class="page">
 
-  <!-- Welcome -->
-  <section class="welcome-bar">
-    <h1 class="welcome-title">
-      Chào mừng trở lại, <em>{{ current_user.full_name or current_user.email }}</em>.
-    </h1>
-    <p class="welcome-sub">
-      Nơi trao đổi tương tác minh bạch và an toàn. Tích lũy <strong>Credits</strong> bằng cách hỗ trợ người khác để thu hút lại lượng tương tác thật cho bạn.
-    </p>
-  </section>
+    <!-- Welcome -->
+    <section class="welcome-bar">
+      <h1 class="welcome-title">
+        Chào mừng trở lại, <em>{{ current_user.full_name or current_user.email }}</em>.
+      </h1>
+      <p class="welcome-sub">
+        Nơi trao đổi tương tác minh bạch và an toàn. Tích lũy <strong>Credits</strong> bằng cách hỗ trợ người khác để
+        thu hút lại lượng tương tác thật cho bạn.
+      </p>
+    </section>
 
 
 
-  <!-- Main grid -->
-  <div class="home-layout">
+    <!-- Main grid -->
+    <div class="home-layout">
 
-    <!-- ============ LEFT: MAIN ============ -->
-    <main>
+      <!-- ============ LEFT: MAIN ============ -->
+      <main>
 
-      <!-- Quick actions -->
-      <section class="home-section">
-        <div class="home-section-head">
-          <h2 class="home-section-title">Lối vào nhanh</h2>
-        </div>
+        <!-- Quick actions -->
+        <section class="home-section">
+          <div class="home-section-head">
+            <h2 class="home-section-title">Lối vào nhanh</h2>
+          </div>
 
-        <div class="quick-grid">
+          <div class="quick-grid">
 
-          <a href="#" class="quick-card">
-            <span class="quick-icon">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M11 11L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-            </span>
-            <h3 class="quick-title">Nhận nhiệm vụ</h3>
-            <p class="quick-desc">Duyệt sổ nhiệm vụ và chọn việc phù hợp</p>
-            <div class="quick-stat">
-              <span class="up">●</span>
-              <span><strong>47</strong> đang mở</span>
+            <a href="#" class="quick-card">
+              <span class="quick-icon">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                  <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5" />
+                  <path d="M11 11L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+              </span>
+              <h3 class="quick-title">Nhận nhiệm vụ</h3>
+              <p class="quick-desc">Duyệt sổ nhiệm vụ và chọn việc phù hợp</p>
+              <div class="quick-stat">
+                <span class="up">●</span>
+                <span><strong>{{ open_jobs_count }}</strong> đang mở</span>
+              </div>
+            </a>
+
+            <a href="#" class="quick-card">
+              <span class="quick-icon green">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                  <path d="M9 2V16M2 9H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+              </span>
+              <h3 class="quick-title">Tạo nhiệm vụ</h3>
+              <p class="quick-desc">Mở nhiệm vụ cho nội dung của bạn</p>
+              <div class="quick-stat">
+                <span>Số dư: <strong>{{ current_user.balance | int }}</strong> Credits</span>
+              </div>
+            </a>
+
+            <a href="#" class="quick-card">
+              <span class="quick-icon amber">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                  <path d="M2 5H16V14H2V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                  <path d="M2 9H16" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+              </span>
+              <h3 class="quick-title">Ví Credits</h3>
+              <p class="quick-desc">Xem số dư và lịch sử giao dịch</p>
+              <div class="quick-stat">
+                <span>Số dư: <strong>{{ current_user.balance | int }}</strong> Credits</span>
+              </div>
+            </a>
+
+            <a href="#" class="quick-card">
+              <span class="quick-icon purple">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                  <circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.5" />
+                  <path d="M3 15C3 12 5 11 9 11C13 11 15 12 15 15" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" />
+                </svg>
+              </span>
+              <h3 class="quick-title">Tài khoản MXH</h3>
+              <p class="quick-desc">Quản lý FB, TikTok, IG để làm nhiệm vụ</p>
+              <div class="quick-stat">
+                <span>Đã liên kết: <strong>{{ current_user.social_accounts.filter_by(is_deleted=False).count()
+                    }}</strong></span>
+              </div>
+            </a>
+
+          </div>
+        </section>
+
+
+
+        <!-- Guide -->
+        <section class="home-section">
+          <div class="home-section-head">
+            <h2 class="home-section-title">Bắt đầu như thế nào</h2>
+
+          </div>
+
+          <div class="guide-list">
+
+            <a href="#" class="guide-item">
+              <span class="guide-num">01</span>
+              <div class="guide-body">
+                <h3 class="guide-title">Cấu hình tài khoản mạng xã hội</p>
+                  <p class="guide-desc">Khai báo tài khoản Facebook, Instagram, TikTok… để hệ thống đối chiếu khi bạn
+                    làm nhiệm vụ.</p>
+              </div>
+              <span class="guide-arrow">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </a>
+
+            <a href="#" class="guide-item">
+              <span class="guide-num">02</span>
+              <div class="guide-body">
+                <h3 class="guide-title">Nhận và hoàn thành nhiệm vụ đầu tiên</p>
+                  <p class="guide-desc">Chọn nhiệm vụ phù hợp, hoàn thành đúng yêu cầu, và nhận Credits sau khi hệ thống
+                    xác minh.</p>
+              </div>
+              <span class="guide-arrow">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </a>
+
+            <a href="#" class="guide-item">
+              <span class="guide-num">03</span>
+              <div class="guide-body">
+                <h3 class="guide-title">Dùng Credits để mở nhiệm vụ của bạn</p>
+                  <p class="guide-desc">Khi có đủ Credits, bạn có thể mở nhiệm vụ cho nội dung của mình để cộng đồng
+                    tương tác.</p>
+              </div>
+              <span class="guide-arrow">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </a>
+
+          </div>
+        </section>
+
+      </main>
+
+      <!-- ============ RIGHT: SIDEBAR ============ -->
+      <aside>
+
+        <!-- Balance -->
+        <div class="balance-card">
+          <div class="balance-inner">
+            <div class="balance-label">Số dư hiện tại</div>
+            <div class="balance-value">{{ current_user.balance | int }}<small>Credits</small></div>
+            <div class="balance-actions">
+              <button class="balance-btn" type="button" data-action="topup">Nạp Credits</button>
+              <button class="balance-btn" type="button" data-action="history">Xem lịch sử</button>
             </div>
-          </a>
-
-          <a href="#" class="quick-card">
-            <span class="quick-icon green">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                <path d="M9 2V16M2 9H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-            </span>
-            <h3 class="quick-title">Tạo nhiệm vụ</h3>
-            <p class="quick-desc">Mở nhiệm vụ cho nội dung của bạn</p>
-            <div class="quick-stat">
-              <span>Số dư: <strong>{{ current_user.balance | int }}</strong> Credits</span>
-            </div>
-          </a>
-
-          <a href="#" class="quick-card">
-            <span class="quick-icon amber">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                <path d="M2 5H16V14H2V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                <path d="M2 9H16" stroke="currentColor" stroke-width="1.5"/>
-              </svg>
-            </span>
-            <h3 class="quick-title">Ví Credits</h3>
-            <p class="quick-desc">Xem số dư và lịch sử giao dịch</p>
-            <div class="quick-stat">
-              <span>Số dư: <strong>{{ current_user.balance | int }}</strong> Credits</span>
-            </div>
-          </a>
-
-          <a href="#" class="quick-card">
-            <span class="quick-icon purple">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                <circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M3 15C3 12 5 11 9 11C13 11 15 12 15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-            </span>
-            <h3 class="quick-title">Tài khoản MXH</h3>
-            <p class="quick-desc">Quản lý FB, TikTok, IG để làm nhiệm vụ</p>
-            <div class="quick-stat">
-              <span>Đã liên kết: <strong>{{ current_user.social_accounts.filter_by(is_deleted=False).count() }}</strong></span>
-            </div>
-          </a>
-
-        </div>
-      </section>
-
-
-
-      <!-- Guide -->
-      <section class="home-section">
-        <div class="home-section-head">
-          <h2 class="home-section-title">Bắt đầu như thế nào</h2>
-
-        </div>
-
-        <div class="guide-list">
-
-          <a href="#" class="guide-item">
-            <span class="guide-num">01</span>
-            <div class="guide-body">
-              <h3 class="guide-title">Cấu hình tài khoản mạng xã hội</p>
-              <p class="guide-desc">Khai báo tài khoản Facebook, Instagram, TikTok… để hệ thống đối chiếu khi bạn làm nhiệm vụ.</p>
-            </div>
-            <span class="guide-arrow">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </a>
-
-          <a href="#" class="guide-item">
-            <span class="guide-num">02</span>
-            <div class="guide-body">
-              <h3 class="guide-title">Nhận và hoàn thành nhiệm vụ đầu tiên</p>
-              <p class="guide-desc">Chọn nhiệm vụ phù hợp, hoàn thành đúng yêu cầu, và nhận Credits sau khi hệ thống xác minh.</p>
-            </div>
-            <span class="guide-arrow">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </a>
-
-          <a href="#" class="guide-item">
-            <span class="guide-num">03</span>
-            <div class="guide-body">
-              <h3 class="guide-title">Dùng Credits để mở nhiệm vụ của bạn</p>
-              <p class="guide-desc">Khi có đủ Credits, bạn có thể mở nhiệm vụ cho nội dung của mình để cộng đồng tương tác.</p>
-            </div>
-            <span class="guide-arrow">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </a>
-
-        </div>
-      </section>
-
-    </main>
-
-    <!-- ============ RIGHT: SIDEBAR ============ -->
-    <aside>
-
-      <!-- Balance -->
-      <div class="balance-card">
-        <div class="balance-inner">
-          <div class="balance-label">Số dư hiện tại</div>
-          <div class="balance-value">{{ current_user.balance | int }}<small>Credits</small></div>
-          <div class="balance-actions">
-            <button class="balance-btn" type="button" data-action="topup">Nạp Credits</button>
-            <button class="balance-btn" type="button" data-action="history">Xem lịch sử</button>
           </div>
         </div>
-      </div>
 
-      <!-- Support -->
-      <div class="side-panel">
-        <div class="side-head">Hỗ trợ</div>
-        <div class="side-body tight">
+        <!-- Support -->
+        <div class="side-panel">
+          <div class="side-head">Hỗ trợ</div>
+          <div class="side-body tight">
 
-          <a href="#" class="support-link">
-            <span class="support-link-left">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M20 4L2 12L8 14L10 21L14 16L19 20L20 4Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" transform="scale(0.6)"/>
-              </svg>
-              Nhóm Telegram hỗ trợ
-            </span>
-            <span class="support-arrow">›</span>
-          </a>
+            <a href="#" class="support-link">
+              <span class="support-link-left">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M20 4L2 12L8 14L10 21L14 16L19 20L20 4Z" stroke="currentColor" stroke-width="1.4"
+                    stroke-linejoin="round" transform="scale(0.6)" />
+                </svg>
+                Nhóm Telegram hỗ trợ
+              </span>
+              <span class="support-arrow">›</span>
+            </a>
 
-          <a href="#" class="support-link">
-            <span class="support-link-left">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/>
-                <path d="M7 4V7L9 8.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-              </svg>
-              Câu hỏi thường gặp
-            </span>
-            <span class="support-arrow">›</span>
-          </a>
+            <a href="#" class="support-link">
+              <span class="support-link-left">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3" />
+                  <path d="M7 4V7L9 8.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+                </svg>
+                Câu hỏi thường gặp
+              </span>
+              <span class="support-arrow">›</span>
+            </a>
 
-          <a href="#" class="support-link">
-            <span class="support-link-left">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <rect x="2" y="4" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1.3"/>
-                <path d="M2 6L7 9L12 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-              </svg>
-              Liên hệ qua email
-            </span>
-            <span class="support-arrow">›</span>
-          </a>
+            <a href="#" class="support-link">
+              <span class="support-link-left">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <rect x="2" y="4" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1.3" />
+                  <path d="M2 6L7 9L12 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+                </svg>
+                Liên hệ qua email
+              </span>
+              <span class="support-arrow">›</span>
+            </a>
 
-          <a href="#" class="support-link">
-            <span class="support-link-left">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M7 12.5C7 12.5 1.5 9 1.5 5.5C1.5 3.5 3 2 5 2C6 2 6.7 2.5 7 3C7.3 2.5 8 2 9 2C11 2 12.5 3.5 12.5 5.5C12.5 9 7 12.5 7 12.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
-              </svg>
-              Ủng hộ hệ thống
-            </span>
-            <span class="support-arrow">›</span>
-          </a>
+            <a href="#" class="support-link">
+              <span class="support-link-left">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path
+                    d="M7 12.5C7 12.5 1.5 9 1.5 5.5C1.5 3.5 3 2 5 2C6 2 6.7 2.5 7 3C7.3 2.5 8 2 9 2C11 2 12.5 3.5 12.5 5.5C12.5 9 7 12.5 7 12.5Z"
+                    stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+                </svg>
+                Ủng hộ hệ thống
+              </span>
+              <span class="support-arrow">›</span>
+            </a>
 
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="bg-[#f4f2ee] border-t border-[#e3e0da]">
+    <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
+        <div>
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+          <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
+            Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
+          </p>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="/blog"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Khám phá</a>
+            </li>
+            <li><a href="/jobs"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Nhiệm vụ</a>
+            </li>
+            <li><a href="#"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Bảng xếp
+                hạng</a></li>
+            <li><a href="#"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trust
+                Score</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="/faq" target="_blank" rel="noopener noreferrer"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ
+                giúp</a></li>
+            <li><a href="/terms" target="_blank" rel="noopener noreferrer"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều
+                khoản</a></li>
+            <li><a href="/privacy" target="_blank" rel="noopener noreferrer"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách
+                bảo mật</a></li>
+            <li><a href="/api-docs" target="_blank" rel="noopener noreferrer"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Tài Liệu
+                API</a></li>
+          </ul>
         </div>
       </div>
-
-    </aside>
-
-  </div>
-
-</div>
-
-<!-- ============ FOOTER ============ -->
-<footer class="bg-[#f4f2ee] border-t border-[#e3e0da]">
-  <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
-    <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
-      <div>
-        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
-          style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
-        <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
-          Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
-        </p>
-      </div>
-      <div>
-        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
-        <ul class="space-y-2.5 list-none p-0 m-0">
-          <li><a href="/blog" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Khám phá</a></li>
-          <li><a href="/jobs" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Nhiệm vụ</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Bảng xếp hạng</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trust Score</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
-        <ul class="space-y-2.5 list-none p-0 m-0">
-          <li><a href="/faq" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ giúp</a></li>
-          <li><a href="/terms" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều khoản</a></li>
-          <li><a href="/privacy" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách bảo mật</a></li>
-        </ul>
+      <div
+        class="mt-12 pt-6 border-t border-[#e3e0da] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        <p class="text-[0.8125rem] text-[#6b6b6b]">© 2026 TRAMTUONGTAC. Tất cả các quyền được bảo lưu.</p>
+        <p class="text-[0.8125rem] text-[#6b6b6b]">Made with care in Vietnam</p>
       </div>
     </div>
-    <div class="mt-12 pt-6 border-t border-[#e3e0da] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-      <p class="text-[0.8125rem] text-[#6b6b6b]">© 2026 TRAMTUONGTAC. Tất cả các quyền được bảo lưu.</p>
-      <p class="text-[0.8125rem] text-[#6b6b6b]">Made with care in Vietnam</p>
-    </div>
+  </footer>
+
+  <!-- ================= TOAST ================= -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="check">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+        <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </span>
+    <span id="toastMsg">Thành công</span>
   </div>
-</footer>
 
-<!-- ================= TOAST ================= -->
-<div class="toast" id="toast" role="status" aria-live="polite">
-  <span class="check">
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </span>
-  <span id="toastMsg">Thành công</span>
-</div>
+  <script>
+    (function () {
+      'use strict';
 
-<script>
-(function(){
-  'use strict';
+      /* ============ BALANCE ACTIONS ============ */
+      document.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const action = btn.dataset.action;
+          if (action === 'topup') showToast('Tính năng đang phát triển...');
+          else if (action === 'history') showToast('Tính năng đang phát triển...');
+        });
+      });
 
-  /* ============ BALANCE ACTIONS ============ */
-  document.querySelectorAll('[data-action]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const action = btn.dataset.action;
-      if (action === 'topup') showToast('Đang mở trang nạp Credits…');
-      else if (action === 'history') showToast('Đang mở lịch sử giao dịch…');
-    });
-  });
 
-  
 
-  
 
-})();
-</script>
+
+    })();
+  </script>
 
   <script src="/static/js/utils.js"></script>
 </body>
+
 </html>

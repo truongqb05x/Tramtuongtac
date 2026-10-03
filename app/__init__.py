@@ -56,7 +56,9 @@ def create_app():
     @app.route('/home')
     @login_required
     def user_home():
-        return render_template('user/home.html')
+        from app.models.job import Job
+        open_jobs_count = Job.query.filter_by(status='RUNNING', is_deleted=False).count()
+        return render_template('user/home.html', open_jobs_count=open_jobs_count)
         
     from flask import redirect, url_for
     @app.route('/login')

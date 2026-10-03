@@ -228,34 +228,58 @@ def user_settings_config():
         # extract social_id (just last part of URL for now)
         social_id = url.rstrip('/').split('/')[-1]
         
+        import urllib.parse
+        import re
+        parsed_url = urllib.parse.urlparse(url)
+        if 'profile.php' in parsed_url.path:
+            qs = urllib.parse.parse_qs(parsed_url.query)
+            if 'id' in qs:
+                social_id = qs['id'][0]
+        else:
+            match = re.search(r'/(\d+)/?$', parsed_url.path)
+            if match:
+                social_id = match.group(1)
+        
         account_name = None
         if platform == 'FACEBOOK':
             from app.services.facebook import get_facebook_profile
             fb_info = get_facebook_profile(url)
-            if fb_info.get('uid'):
-                social_id = fb_info['uid']
-                url = fb_info.get('url', url)
-                account_name = fb_info.get('name')
+            account_name = fb_info.get('name')
                 
-        # Check if it already exists
-        existing_acc = SocialAccount.query.filter_by(platform=platform, social_id=social_id).first()
-        if existing_acc:
-            return jsonify({'success': False, 'message': 'Tài khoản này đã tồn tại trong hệ thống'}), 400
-        
         from app.services.system_cfg import load_system_config
         config = load_system_config()
         is_safe_mode = config.get('safe_mode', False)
         initial_status = 'PENDING' if is_safe_mode else 'ACTIVE'
 
-        acc = SocialAccount(
-            user_id=current_user.id,
-            platform=platform,
-            profile_url=url,
-            social_id=social_id,
-            account_name=account_name,
-            status=initial_status
-        )
-        db.session.add(acc)
+        # Check if user has other accounts for this platform
+        has_other = SocialAccount.query.filter(
+            SocialAccount.user_id == current_user.id,
+            SocialAccount.platform == platform,
+            SocialAccount.social_id != social_id
+        ).first()
+        is_first = (has_other is None)
+
+        # Check if it already exists
+        existing_acc = SocialAccount.query.filter_by(platform=platform, social_id=social_id).first()
+        if existing_acc:
+            existing_acc.user_id = current_user.id
+            existing_acc.profile_url = url
+            existing_acc.account_name = account_name
+            existing_acc.status = initial_status
+            existing_acc.is_selected = is_first
+            existing_acc.is_deleted = False
+            acc = existing_acc
+        else:
+            acc = SocialAccount(
+                user_id=current_user.id,
+                platform=platform,
+                profile_url=url,
+                social_id=social_id,
+                account_name=account_name,
+                status=initial_status,
+                is_selected=is_first
+            )
+            db.session.add(acc)
         db.session.commit()
         return jsonify({
             'success': True,
@@ -266,7 +290,7 @@ def user_settings_config():
                 'name': acc.account_name if acc.account_name else acc.social_id,
                 'verified': not is_safe_mode,
                 'status': initial_status.lower(),
-                'active': False,
+                'active': acc.is_selected,
                 'addedAt': acc.created_at.strftime('%Y-%m-%d')
             }
         })
@@ -276,7 +300,7 @@ def user_settings_config():
         acc_id = data.get('id')
         acc = SocialAccount.query.filter_by(id=acc_id, user_id=current_user.id).first()
         if acc:
-            db.session.delete(acc)
+            acc.is_deleted = True
             db.session.commit()
             return jsonify({'success': True})
         return jsonify({'success': False, 'message': 'Không tìm thấy tài khoản'}), 404

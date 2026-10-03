@@ -1,319 +1,352 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Cấu hình tài khoản | TRAMTUONGTAC</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="../../static/css/layout/base.css" />
-<link rel="stylesheet" href="../../static/css/layout/header.css" />
-<link rel="stylesheet" href="../../static/css/layout/notice.css" />
-<link rel="stylesheet" href="../../static/css/layout/page-layout.css" />
-<link rel="stylesheet" href="../../static/css/layout/form.css" />
-<link rel="stylesheet" href="../../../static/css/page/settings/config.css">
-<link rel="shortcut icon" href="../../../static/img/logo.png" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cấu hình tài khoản | TRAMTUONGTAC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../../static/css/layout/base.css" />
+  <link rel="stylesheet" href="../../static/css/layout/header.css" />
+  <link rel="stylesheet" href="../../static/css/layout/notice.css" />
+  <link rel="stylesheet" href="../../static/css/layout/page-layout.css" />
+  <link rel="stylesheet" href="../../static/css/layout/form.css" />
+  <link rel="stylesheet" href="../../../static/css/page/settings/config.css">
+  <link rel="shortcut icon" href="../../../static/img/logo.png" type="image/x-icon">
 </head>
+
 <body>
 
-<!-- ================= HEADER ================= -->
-<header class="top">
-  <div class="wrap">
-    <div class="flex items-center justify-between h-[64px] md:h-[72px]">
-      <a href="#" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
-        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]" style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
-      </a>
+  <!-- ================= HEADER ================= -->
+  <header class="top">
+    <div class="wrap">
+      <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+        <a href="/" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+        </a>
 
-      <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
-        <a href="/settings/config" class="nav-link active">Cấu hình</a>
-        <a href="/jobs" class="nav-link">Làm Nhiệm Vụ</a>
-        <a href="/jobs/create" class="nav-link">Tạo Tương Tác</a>
-        <a href="/blog" class="nav-link">Khám Phá</a>
-      </nav>
+        <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+          <a href="/settings/config" class="nav-link active">Cấu hình</a>
+          <a href="/jobs" class="nav-link">Làm Nhiệm Vụ</a>
+          <a href="/jobs/create" class="nav-link">Tạo Tương Tác</a>
+        </nav>
 
-      <div class="hidden md:flex items-center gap-3">
-        <div class="user-dropdown-wrap">
-          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
-            <img src="https://ui-avatars.com/api/?name={{ current_user.full_name or 'User' }}&background=1e3a5f&color=fff" alt="Avatar" />
-          </button>
-          <div class="user-dropdown-menu" id="userDropdownMenu">
-            <a href="/settings/account">Hồ sơ</a>
-            <a href="/settings/config">Cài đặt</a>
-            {% if current_user.role == 'ADMIN' %}
-            <a href="/admin">Quản trị</a>
-            {% endif %}
-            <div class="divider"></div>
-            <a href="/" class="text-danger">Đăng xuất</a>
-          </div>
-        </div>
-      </div>
-
-      <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </div>
-
-  <div class="mobile-menu md:hidden" id="mobileMenu">
-    <a href="/settings/config" style="font-weight:500;color:var(--ink)">Cấu hình</a>
-    <a href="/jobs">Làm Nhiệm Vụ</a>
-    <a href="/jobs/create">Tạo Tương Tác</a>
-    <a href="/blog">Khám Phá</a>
-    <div class="p-4 flex flex-col gap-2.5">
-      <a href="/" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
-    </div>
-  </div>
-</header>
-
-<!-- ================= PAGE ================= -->
-<div class="page">
-
-  <!-- Page head -->
-  <div class="page-head">
-    <h1 class="page-title">Cấu hình tài khoản</h1>
-    <p class="page-sub">
-      Khai báo các tài khoản mạng xã hội bạn dùng để thực hiện nhiệm vụ. Hệ thống dùng thông tin này để đối chiếu và xác minh tương tác.
-    </p>
-  </div>
-
-  <!-- Notice -->
-  <div class="notice">
-    <span class="notice-icon" aria-hidden="true">!</span>
-    <div>
-      <p class="notice-title">Không nhập mật khẩu hoặc mã xác thực</p>
-      <p class="notice-body">
-        TRAODOI chỉ cần <strong>đường dẫn hồ sơ công khai</strong> và <strong>tên hiển thị</strong>. Chúng tôi không bao giờ yêu cầu mật khẩu, mã OTP hay quyền truy cập vào tài khoản của bạn. <a href="#">Tìm hiểu thêm</a>
-      </p>
-    </div>
-  </div>
-
-  <!-- Setup grid -->
-  <div class="setup">
-
-    <!-- ---------- LEFT: FORM ---------- -->
-    <section class="form-card" aria-labelledby="formTitle">
-      <div class="form-head">
-        <h2 class="form-head-title" id="formTitle">Thêm tài khoản mới</h2>
-        <p class="form-head-desc">Chọn nền tảng và dán đường dẫn hồ sơ công khai.</p>
-      </div>
-
-      <form class="form-body" id="addForm" novalidate>
-        <div class="field">
-          <label class="field-label" for="platformSelect">Nền tảng</label>
-          <div class="select-wrap">
-            <select id="platformSelect" required>
-              <option value="">— Chọn nền tảng —</option>
-              {% for p in platforms %}
-              <option value="{{ p.id }}" data-mark="{{ p.name[:2].upper() }}" data-domain="{{ p.id }}.com">{{ p.name }}</option>
-              {% endfor %}
-            </select>
-            <svg class="select-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-              <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+        <div class="hidden md:flex items-center gap-3">
+          <div class="user-dropdown-wrap">
+            <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
+              <img
+                src="https://ui-avatars.com/api/?name={{ current_user.full_name or 'User' }}&background=1e3a5f&color=fff"
+                alt="Avatar" />
+            </button>
+            <div class="user-dropdown-menu" id="userDropdownMenu">
+              <a href="/settings/account">Hồ sơ</a>
+              <a href="/settings/config">Cài đặt</a>
+              {% if current_user.role == 'ADMIN' %}
+              <a href="/admin">Quản trị</a>
+              {% endif %}
+              <div class="divider"></div>
+              <a href="/" class="text-danger">Đăng xuất</a>
+            </div>
           </div>
         </div>
 
-        <div class="field">
-          <label class="field-label" for="profileUrl">Đường dẫn hồ sơ</label>
-          <input type="url" id="profileUrl" placeholder="https://..." required />
-          <p class="field-hint" id="urlHint">Dán đường dẫn đầy đủ, bao gồm https://</p>
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width:100%" id="submitBtn">
-          Thêm tài khoản
+        <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+          <span></span><span></span><span></span>
         </button>
-      </form>
-    </section>
-
-    <!-- ---------- RIGHT: LIST ---------- -->
-    <section aria-labelledby="listTitle">
-      <div class="list-head">
-        <h2 class="list-title" id="listTitle">Tài khoản đã cấu hình</h2>
-        <span class="list-count" id="listCount">0 tài khoản</span>
       </div>
+    </div>
 
-      <p style="font-size:.8125rem;color:var(--muted);margin:0 0 1rem;line-height:1.55">
-        Tích vào ô bên trái để chọn tài khoản dùng khi thực hiện nhiệm vụ. Chỉ tài khoản được tích mới hiển thị khi bạn nhận nhiệm vụ trên nền tảng tương ứng.
+    <div class="mobile-menu md:hidden" id="mobileMenu">
+      <a href="/settings/config" style="font-weight:500;color:var(--ink)">Cấu hình</a>
+      <a href="/jobs">Làm Nhiệm Vụ</a>
+      <a href="/jobs/create">Tạo Tương Tác</a>
+      <a href="/blog">Khám Phá</a>
+      <div class="p-4 flex flex-col gap-2.5">
+        <a href="/" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng
+          xuất</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= PAGE ================= -->
+  <div class="page">
+
+    <!-- Page head -->
+    <div class="page-head">
+      <h1 class="page-title">Cấu hình tài khoản</h1>
+      <p class="page-sub">
+        Khai báo các tài khoản mạng xã hội bạn dùng để thực hiện nhiệm vụ. Hệ thống dùng thông tin này để đối chiếu và
+        xác minh tương tác.
       </p>
+    </div>
 
-      <div class="account-list" id="accountList">
-        <!-- Rows injected by JS -->
-      </div>
-    </section>
-
-  </div>
-</div>
-
-<!-- ============ FOOTER ============ -->
-<footer class="bg-[#f4f2ee] border-t border-[#e3e0da]">
-  <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
-    <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
+    <!-- Notice -->
+    <div class="notice">
+      <span class="notice-icon" aria-hidden="true">!</span>
       <div>
-        <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]" style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
-        <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
-          Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
+        <p class="notice-title">Không nhập mật khẩu hoặc mã xác thực</p>
+        <p class="notice-body">
+          TRAMTUONGTAC chỉ cần <strong>đường dẫn hồ sơ công khai</strong> và <strong>tên hiển thị</strong>. Chúng tôi không
+          bao giờ yêu cầu mật khẩu, mã OTP hay quyền truy cập vào tài khoản của bạn. <a href="#">Tìm hiểu thêm</a>
         </p>
       </div>
-      <div>
-        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
-        <ul class="space-y-2.5 list-none p-0 m-0">
-          <li><a href="/blog" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Khám phá</a></li>
-          <li><a href="/jobs" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Nhiệm vụ</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Bảng xếp hạng</a></li>
-          <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trust Score</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
-        <ul class="space-y-2.5 list-none p-0 m-0">
-          <li><a href="/faq" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ giúp</a></li>
-          <li><a href="/terms" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều khoản</a></li>
-          <li><a href="/privacy" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách bảo mật</a></li>
-        </ul>
-      </div>
     </div>
-    <div class="mt-12 pt-6 border-t border-[#e3e0da] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-      <p class="text-[0.8125rem] text-[#6b6b6b]">© 2026 TRAMTUONGTAC. Tất cả các quyền được bảo lưu.</p>
-      <p class="text-[0.8125rem] text-[#6b6b6b]">Made with care in Vietnam</p>
+
+    <!-- Setup grid -->
+    <div class="setup">
+
+      <!-- ---------- LEFT: FORM ---------- -->
+      <section class="form-card" aria-labelledby="formTitle">
+        <div class="form-head">
+          <h2 class="form-head-title" id="formTitle">Thêm tài khoản mới</h2>
+          <p class="form-head-desc">Chọn nền tảng và dán đường dẫn hồ sơ công khai.</p>
+        </div>
+
+        <form class="form-body" id="addForm" novalidate>
+          <div class="field">
+            <label class="field-label" for="platformSelect">Nền tảng</label>
+            <div class="select-wrap">
+              <select id="platformSelect" required>
+                <option value="">— Chọn nền tảng —</option>
+                {% for p in platforms %}
+                <option value="{{ p.id }}" data-mark="{{ p.name[:2].upper() }}" data-domain="{{ p.id }}.com">{{ p.name
+                  }}</option>
+                {% endfor %}
+              </select>
+              <svg class="select-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="profileUrl">Đường dẫn hồ sơ</label>
+            <input type="url" id="profileUrl" placeholder="https://..." required />
+            <p class="field-hint" id="urlHint">Dán đường dẫn đầy đủ, bao gồm https://</p>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%" id="submitBtn">
+            Thêm tài khoản
+          </button>
+        </form>
+      </section>
+
+      <!-- ---------- RIGHT: LIST ---------- -->
+      <section aria-labelledby="listTitle">
+        <div class="list-head">
+          <h2 class="list-title" id="listTitle">Tài khoản đã cấu hình</h2>
+          <span class="list-count" id="listCount">0 tài khoản</span>
+        </div>
+
+        <p style="font-size:.8125rem;color:var(--muted);margin:0 0 1rem;line-height:1.55">
+          Tích vào ô bên trái để chọn tài khoản dùng khi thực hiện nhiệm vụ. Chỉ tài khoản được tích mới hiển thị khi
+          bạn nhận nhiệm vụ trên nền tảng tương ứng.
+        </p>
+
+        <div class="account-list" id="accountList">
+          <!-- Rows injected by JS -->
+        </div>
+      </section>
+
     </div>
   </div>
-</footer>
 
-<!-- ================= MODAL XÓA ================= -->
-<div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
-  <div class="modal-box">
-    <button class="modal-close" data-close aria-label="Đóng">×</button>
-    <h3 id="deleteTitle">Xóa tài khoản?</h3>
-    <p>Tài khoản này sẽ bị gỡ khỏi cấu hình. Các nhiệm vụ đang làm dở trên tài khoản này vẫn giữ nguyên, nhưng bạn sẽ không thể nhận nhiệm vụ mới cho đến khi thêm lại.</p>
-    <div class="modal-summary">
-      <div class="modal-summary-row">
-        <span class="k">Nền tảng</span>
-        <span class="v" id="delPlatform">—</span>
+  <!-- ============ FOOTER ============ -->
+  <footer class="bg-[#f4f2ee] border-t border-[#e3e0da]">
+    <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
+        <div>
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+          <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
+            Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
+          </p>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="/blog"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Khám phá</a>
+            </li>
+            <li><a href="/jobs"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Nhiệm vụ</a>
+            </li>
+            <li><a href="#"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Bảng xếp
+                hạng</a></li>
+            <li><a href="#"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trust
+                Score</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="/faq" target="_blank" rel="noopener noreferrer"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ
+                giúp</a></li>
+            <li><a href="/terms" target="_blank" rel="noopener noreferrer"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều
+                khoản</a></li>
+            <li><a href="/privacy" target="_blank" rel="noopener noreferrer"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách
+                bảo mật</a></li>
+            <li><a href="/api-docs" target="_blank" rel="noopener noreferrer"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Tài Liệu API</a></li>
+          </ul>
+        </div>
       </div>
-      <div class="modal-summary-row">
-        <span class="k">Đường dẫn</span>
-        <span class="v" id="delUrl">—</span>
+      <div
+        class="mt-12 pt-6 border-t border-[#e3e0da] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        <p class="text-[0.8125rem] text-[#6b6b6b]">© 2026 TRAMTUONGTAC. Tất cả các quyền được bảo lưu.</p>
+        <p class="text-[0.8125rem] text-[#6b6b6b]">Made with care in Vietnam</p>
       </div>
     </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" data-close>Hủy</button>
-      <button class="btn btn-danger" id="confirmDelete" style="background:var(--danger);color:#fff;border-color:var(--danger)">Xóa tài khoản</button>
+  </footer>
+
+  <!-- ================= MODAL XÓA ================= -->
+  <div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+    <div class="modal-box">
+      <button class="modal-close" data-close aria-label="Đóng">×</button>
+      <h3 id="deleteTitle">Xóa tài khoản?</h3>
+      <p>Tài khoản này sẽ bị gỡ khỏi cấu hình. Các nhiệm vụ đang làm dở trên tài khoản này vẫn giữ nguyên, nhưng bạn sẽ
+        không thể nhận nhiệm vụ mới cho đến khi thêm lại.</p>
+      <div class="modal-summary">
+        <div class="modal-summary-row">
+          <span class="k">Nền tảng</span>
+          <span class="v" id="delPlatform">—</span>
+        </div>
+        <div class="modal-summary-row">
+          <span class="k">Đường dẫn</span>
+          <span class="v" id="delUrl">—</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" data-close>Hủy</button>
+        <button class="btn btn-danger" id="confirmDelete"
+          style="background:var(--danger);color:#fff;border-color:var(--danger)">Xóa tài khoản</button>
+      </div>
     </div>
   </div>
-</div>
 
 
-<!-- ================= TOAST ================= -->
-<div class="toast" id="toast" role="status" aria-live="polite">
-  <span class="check">
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-      <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </span>
-  <span id="toastMsg">Đã thêm tài khoản</span>
-</div>
+  <!-- ================= TOAST ================= -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="check">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+        <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </span>
+    <span id="toastMsg">Đã thêm tài khoản</span>
+  </div>
 
-<script>
-(function(){
-  'use strict';
+  <script>
+    (function () {
+      'use strict';
 
-  /* ============ PLATFORM META ============ */
-  const PLATFORM = {
-    facebook:  { name: 'Facebook',  icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>',  domain: 'facebook.com',  hint: 'facebook.com/ten-trang' },
-    instagram: { name: 'Instagram', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>',  domain: 'instagram.com', hint: 'instagram.com/ten-tai-khoan' },
-    tiktok:    { name: 'TikTok',    icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 2.25-1.15 4.34-2.88 5.75-1.74 1.43-4.14 2.1-6.4 1.83-2.18-.27-4.18-1.42-5.48-3.15-1.29-1.72-1.72-4-1.23-6.07.48-2.07 1.83-3.82 3.66-4.8 1.84-.97 4.04-1.22 6.05-.72l.01 4.25c-.97-.24-2.02-.13-2.91.35-.87.48-1.5 1.3-1.7 2.27-.2 1.02.04 2.1.66 2.9.61.79 1.63 1.25 2.64 1.28 1.05.04 2.13-.3 2.83-1.07.72-.78 1.05-1.89 1.02-3 .05-3.92.01-7.85.03-11.78.02-1.4.03-2.8.04-4.2z"/></svg>',  domain: 'tiktok.com',    hint: 'tiktok.com/@ten-tai-khoan' },
-    youtube:   { name: 'YouTube',   icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',  domain: 'youtube.com',   hint: 'youtube.com/@ten-kenh' },
-    website:   { name: 'Website',   icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>', domain: '',              hint: 'example.com/trang' }
-  };
+      /* ============ PLATFORM META ============ */
+      const PLATFORM = {
+        facebook: { name: 'Facebook', icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>', domain: 'facebook.com', hint: 'facebook.com/ten-trang' },
+        instagram: { name: 'Instagram', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>', domain: 'instagram.com', hint: 'instagram.com/ten-tai-khoan' },
+        tiktok: { name: 'TikTok', icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 2.25-1.15 4.34-2.88 5.75-1.74 1.43-4.14 2.1-6.4 1.83-2.18-.27-4.18-1.42-5.48-3.15-1.29-1.72-1.72-4-1.23-6.07.48-2.07 1.83-3.82 3.66-4.8 1.84-.97 4.04-1.22 6.05-.72l.01 4.25c-.97-.24-2.02-.13-2.91.35-.87.48-1.5 1.3-1.7 2.27-.2 1.02.04 2.1.66 2.9.61.79 1.63 1.25 2.64 1.28 1.05.04 2.13-.3 2.83-1.07.72-.78 1.05-1.89 1.02-3 .05-3.92.01-7.85.03-11.78.02-1.4.03-2.8.04-4.2z"/></svg>', domain: 'tiktok.com', hint: 'tiktok.com/@ten-tai-khoan' },
+        youtube: { name: 'YouTube', icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>', domain: 'youtube.com', hint: 'youtube.com/@ten-kenh' },
+        website: { name: 'Website', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>', domain: '', hint: 'example.com/trang' }
+      };
 
-  /* ============ STATE ============ */
-  let accounts = {{ accounts_data | tojson | safe }} || [];
-  let pendingDelete = null;
+      /* ============ STATE ============ */
+      let accounts = {{ accounts_data | tojson | safe
+    }} || [];
+    let pendingDelete = null;
 
-  /* ============ DOM ============ */
-  const platformSelect = document.getElementById('platformSelect');
-  const profileUrl = document.getElementById('profileUrl');
-  const urlHint = document.getElementById('urlHint');
-  const addForm = document.getElementById('addForm');
-  const accountList = document.getElementById('accountList');
-  const listCount = document.getElementById('listCount');
-  const deleteModal = document.getElementById('deleteModal');
+    /* ============ DOM ============ */
+    const platformSelect = document.getElementById('platformSelect');
+    const profileUrl = document.getElementById('profileUrl');
+    const urlHint = document.getElementById('urlHint');
+    const addForm = document.getElementById('addForm');
+    const accountList = document.getElementById('accountList');
+    const listCount = document.getElementById('listCount');
+    const deleteModal = document.getElementById('deleteModal');
 
-  /* ============ PLATFORM PREVIEW ============ */
-  platformSelect.addEventListener('change', () => {
-    const val = platformSelect.value;
-    if (!val || !PLATFORM[val]) {
-      profileUrl.placeholder = 'https://...';
-      urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';
-      return;
-    }
-    const p = PLATFORM[val];
-    profileUrl.placeholder = 'https://' + p.hint;
-    urlHint.textContent = p.domain
-      ? 'Đường dẫn nên chứa ' + p.domain
-      : 'Dán đường dẫn trang web công khai';
-  });
+    /* ============ PLATFORM PREVIEW ============ */
+    platformSelect.addEventListener('change', () => {
+      const val = platformSelect.value;
+      if (!val || !PLATFORM[val]) {
+        profileUrl.placeholder = 'https://...';
+        urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';
+        return;
+      }
+      const p = PLATFORM[val];
+      profileUrl.placeholder = 'https://' + p.hint;
+      urlHint.textContent = p.domain
+        ? 'Đường dẫn nên chứa ' + p.domain
+        : 'Dán đường dẫn trang web công khai';
+    });
 
-  /* ============ PROFILE URL FORMAT ============ */
-  profileUrl.addEventListener('input', () => {
-    let val = profileUrl.value.trim();
-    if (!val) return;
-    try {
-      // Allow parsing even if user pasted without http://
-      let parseUrl = val.startsWith('http') ? val : 'https://' + val;
-      const u = new URL(parseUrl);
-      if (u.hostname.includes('facebook.com')) {
-        // If already profile.php?id=xxx, just clean it up (optional)
-        if (u.pathname.includes('profile.php') && u.searchParams.get('id')) {
-          profileUrl.value = 'https://www.facebook.com/profile.php?id=' + u.searchParams.get('id');
-        } else {
-          // If it's facebook.com/61560807310583
-          const match = u.pathname.match(/^\/(\d+)\/?$/);
-          if (match) {
-            profileUrl.value = 'https://www.facebook.com/profile.php?id=' + match[1];
+    /* ============ PROFILE URL FORMAT ============ */
+    profileUrl.addEventListener('input', () => {
+      let val = profileUrl.value.trim();
+      if (!val) return;
+      try {
+        // Allow parsing even if user pasted without http://
+        let parseUrl = val.startsWith('http') ? val : 'https://' + val;
+        const u = new URL(parseUrl);
+        if (u.hostname.includes('facebook.com')) {
+          // If already profile.php?id=xxx, just clean it up (optional)
+          if (u.pathname.includes('profile.php') && u.searchParams.get('id')) {
+            profileUrl.value = 'https://www.facebook.com/profile.php?id=' + u.searchParams.get('id');
+          } else {
+            // If it's facebook.com/61560807310583
+            const match = u.pathname.match(/^\/(\d+)\/?$/);
+            if (match) {
+              profileUrl.value = 'https://www.facebook.com/profile.php?id=' + match[1];
+            }
           }
         }
-      }
-    } catch(e) {}
-  });
+      } catch (e) { }
+    });
 
-  /* ============ RENDER LIST ============ */
-  function renderList() {
-    listCount.textContent = accounts.length + ' tài khoản';
+    /* ============ RENDER LIST ============ */
+    function renderList() {
+      listCount.textContent = accounts.length + ' tài khoản';
 
-    if (!accounts.length) {
-      accountList.innerHTML = `
+      if (!accounts.length) {
+        accountList.innerHTML = `
         <div class="empty">
           <div class="empty-title">Chưa có tài khoản nào</div>
           <p class="empty-desc">Thêm tài khoản đầu tiên ở khung bên trái để bắt đầu nhận nhiệm vụ.</p>
         </div>
       `;
-      return;
-    }
-
-    accountList.innerHTML = '';
-    accounts.forEach(acc => {
-      const p = PLATFORM[acc.platform] || { name: acc.platform, icon: '??' };
-      const row = document.createElement('div');
-      row.className = 'account-row' + (acc.active ? ' active' : '');
-      row.dataset.id = acc.id;
-
-      let verifyBadge;
-      if (acc.status === 'blocked') {
-        verifyBadge = '<span class="badge badge-pending" style="color:var(--danger);background:var(--danger-soft);border-color:var(--danger)"><span class="badge-dot" style="background:var(--danger)"></span>Đã bị vô hiệu hóa</span>';
-      } else if (acc.verified) {
-        verifyBadge = '<span class="badge badge-verified"><span class="badge-dot"></span>Đã xác minh</span>';
-      } else {
-        verifyBadge = '<span class="badge badge-pending"><span class="badge-dot"></span>Chờ xác minh</span>';
+        return;
       }
 
-      const activeBadge = acc.active
-        ? '<span class="badge badge-active"><span class="badge-dot"></span>Đang dùng</span>'
-        : '<span style="font-size:.75rem;color:var(--muted)">Không dùng</span>';
+      accountList.innerHTML = '';
+      accounts.forEach(acc => {
+        const p = PLATFORM[acc.platform] || { name: acc.platform, icon: '??' };
+        const row = document.createElement('div');
+        row.className = 'account-row' + (acc.active ? ' active' : '');
+        row.dataset.id = acc.id;
 
-      row.innerHTML = `
+        let verifyBadge;
+        if (acc.status === 'blocked') {
+          verifyBadge = '<span class="badge badge-pending" style="color:var(--danger);background:var(--danger-soft);border-color:var(--danger)"><span class="badge-dot" style="background:var(--danger)"></span>Đã bị vô hiệu hóa</span>';
+        } else if (acc.verified) {
+          verifyBadge = '<span class="badge badge-verified"><span class="badge-dot"></span>Đã xác minh</span>';
+        } else {
+          verifyBadge = '<span class="badge badge-pending"><span class="badge-dot"></span>Chờ xác minh</span>';
+        }
+
+        const activeBadge = acc.active
+          ? '<span class="badge badge-active"><span class="badge-dot"></span>Đang dùng</span>'
+          : '<span style="font-size:.75rem;color:var(--muted)">Không dùng</span>';
+
+        row.innerHTML = `
         <div class="check-cell" data-label="Dùng để làm nhiệm vụ">
           <input type="checkbox" class="check" ${acc.active ? 'checked' : ''} ${acc.status === 'blocked' ? 'disabled' : ''} aria-label="Dùng tài khoản này để làm nhiệm vụ" />
         </div>
@@ -343,206 +376,207 @@
         </div>
       `;
 
-      // checkbox toggle
-      row.querySelector('.check').addEventListener('change', async (e) => {
-        if (acc.status === 'blocked') {
+        // checkbox toggle
+        row.querySelector('.check').addEventListener('change', async (e) => {
+          if (acc.status === 'blocked') {
             e.preventDefault();
             e.target.checked = false;
             showToast('Tài khoản này đã bị vô hiệu hóa');
             return;
-        }
-        const isChecked = e.target.checked;
-        if (!isChecked) {
-           // We do not allow deselecting directly, or if we do, it just clears.
-           // Actually, let's keep it simple. If they uncheck, we just visually uncheck it.
-           // In backend, maybe we should also unselect, but the API doesn't handle deselect all yet.
-        }
+          }
+          const isChecked = e.target.checked;
+          if (!isChecked) {
+            // We do not allow deselecting directly, or if we do, it just clears.
+            // Actually, let's keep it simple. If they uncheck, we just visually uncheck it.
+            // In backend, maybe we should also unselect, but the API doesn't handle deselect all yet.
+          }
 
-        try {
+          try {
             const res = await fetch('/settings/config/select', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: acc.id })
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: acc.id })
             });
             const data = await res.json();
             if (data.success) {
-                if (isChecked) {
-                  accounts.forEach(a => {
-                    if (a.id !== acc.id) a.active = false;
-                  });
-                }
-                acc.active = isChecked;
-                renderList();
-                showToast(acc.active
-                  ? 'Đã chọn tài khoản này để làm nhiệm vụ'
-                  : 'Đã bỏ chọn tài khoản khỏi danh sách');
+              if (isChecked) {
+                accounts.forEach(a => {
+                  if (a.id !== acc.id) a.active = false;
+                });
+              }
+              acc.active = isChecked;
+              renderList();
+              showToast(acc.active
+                ? 'Đã chọn tài khoản này để làm nhiệm vụ'
+                : 'Đã bỏ chọn tài khoản khỏi danh sách');
             } else {
-                e.target.checked = !isChecked; // revert
-                showToast(data.message || 'Lỗi khi chọn tài khoản');
+              e.target.checked = !isChecked; // revert
+              showToast(data.message || 'Lỗi khi chọn tài khoản');
             }
-        } catch(err) {
+          } catch (err) {
             e.target.checked = !isChecked; // revert
             showToast('Lỗi kết nối máy chủ');
-        }
+          }
+        });
+
+        // delete
+        row.querySelector('[data-delete]').addEventListener('click', (e) => {
+          e.stopPropagation();
+          openDelete(acc);
+        });
+
+        accountList.appendChild(row);
       });
-
-      // delete
-      row.querySelector('[data-delete]').addEventListener('click', (e) => {
-        e.stopPropagation();
-        openDelete(acc);
-      });
-
-      accountList.appendChild(row);
-    });
-  }
-
-  /* ============ HELPERS ============ */
-  function shortUrl(url) {
-    return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
-  }
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-  function isValidUrl(str) {
-    try {
-      const u = new URL(str);
-      return u.protocol === 'http:' || u.protocol === 'https:';
-    } catch { return false; }
-  }
-
-  /* ============ ADD ACCOUNT ============ */
-  addForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const platform = platformSelect.value;
-    const url = profileUrl.value.trim();
-    const btn = document.getElementById('submitBtn');
-
-    if (!platform) {
-      showToast('Vui lòng chọn nền tảng');
-      platformSelect.focus();
-      return;
-    }
-    if (!url || !isValidUrl(url)) {
-      showToast('Đường dẫn không hợp lệ. Cần bắt đầu bằng http:// hoặc https://');
-      profileUrl.focus();
-      return;
     }
 
-    btn.disabled = true;
-    btn.textContent = 'Đang thêm...';
+    /* ============ HELPERS ============ */
+    function shortUrl(url) {
+      return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    }
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function isValidUrl(str) {
+      try {
+        const u = new URL(str);
+        return u.protocol === 'http:' || u.protocol === 'https:';
+      } catch { return false; }
+    }
 
-    try {
-      const res = await fetch('/settings/config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ platform, url })
-      });
-      const data = await res.json();
-      
-      if (data.success) {
-        accounts.forEach(a => a.active = false);
-        accounts.unshift(data.account);
-        
-        addForm.reset();
-        profileUrl.placeholder = 'https://...';
-        urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';
+    /* ============ ADD ACCOUNT ============ */
+    addForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const platform = platformSelect.value;
+      const url = profileUrl.value.trim();
+      const btn = document.getElementById('submitBtn');
 
-        renderList();
-        showToast('Thêm tài khoản thành công!');
-
-        if (window.innerWidth < 1024) {
-          document.getElementById('listTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      } else {
-        showToast(data.message || 'Có lỗi xảy ra');
+      if (!platform) {
+        showToast('Vui lòng chọn nền tảng');
+        platformSelect.focus();
+        return;
       }
-    } catch (err) {
-      showToast('Lỗi kết nối máy chủ');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Thêm tài khoản';
-    }
-  });
-
-  /* ============ DELETE ACCOUNT ============ */
-  function openDelete(acc) {
-    pendingDelete = acc;
-    const p = PLATFORM[acc.platform] || { name: acc.platform };
-    document.getElementById('delPlatform').textContent = p.name;
-    document.getElementById('delUrl').textContent = shortUrl(acc.url);
-    deleteModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  document.getElementById('confirmDelete').addEventListener('click', async () => {
-    if (!pendingDelete) return;
-    const btn = document.getElementById('confirmDelete');
-    btn.disabled = true;
-    btn.textContent = 'Đang xóa...';
-
-    try {
-      const res = await fetch('/settings/config', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: pendingDelete.id })
-      });
-      const data = await res.json();
-      if (data.success) {
-        accounts = accounts.filter(a => a.id !== pendingDelete.id);
-        const deletedUrl = shortUrl(pendingDelete.url);
-        pendingDelete = null;
-        closeModal('deleteModal');
-        renderList();
-        showToast('Đã xóa tài khoản: ' + deletedUrl);
-      } else {
-        showToast(data.message || 'Lỗi khi xóa');
+      if (!url || !isValidUrl(url)) {
+        showToast('Đường dẫn không hợp lệ. Cần bắt đầu bằng http:// hoặc https://');
+        profileUrl.focus();
+        return;
       }
-    } catch (err) {
-      showToast('Lỗi kết nối máy chủ');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Xóa tài khoản';
-    }
-  });
 
-  /* ============ MODAL HELPERS ============ */
-  function closeModal(id) {
-    const el = document.getElementById(id);
-    if (el) el.classList.remove('active');
-    if (!document.querySelector('.modal-overlay.active')) {
-      document.body.style.overflow = '';
-    }
-  }
-  window.closeModal = closeModal;
+      btn.disabled = true;
+      btn.textContent = 'Đang thêm...';
 
-  document.querySelectorAll('[data-close]').forEach(b => {
-    b.addEventListener('click', () => {
-      const overlay = b.closest('.modal-overlay');
-      if (overlay) closeModal(overlay.id);
+      try {
+        const res = await fetch('/settings/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ platform, url })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          accounts.forEach(a => a.active = false);
+          accounts.unshift(data.account);
+
+          addForm.reset();
+          profileUrl.placeholder = 'https://...';
+          urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';
+
+          renderList();
+          showToast('Thêm tài khoản thành công!');
+
+          if (window.innerWidth < 1024) {
+            document.getElementById('listTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        } else {
+          showToast(data.message || 'Có lỗi xảy ra');
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Thêm tài khoản';
+      }
     });
-  });
-  document.querySelectorAll('.modal-overlay').forEach(o => {
-    o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
-  });
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
+
+    /* ============ DELETE ACCOUNT ============ */
+    function openDelete(acc) {
+      pendingDelete = acc;
+      const p = PLATFORM[acc.platform] || { name: acc.platform };
+      document.getElementById('delPlatform').textContent = p.name;
+      document.getElementById('delUrl').textContent = shortUrl(acc.url);
+      deleteModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
     }
-  });
+
+    document.getElementById('confirmDelete').addEventListener('click', async () => {
+      if (!pendingDelete) return;
+      const btn = document.getElementById('confirmDelete');
+      btn.disabled = true;
+      btn.textContent = 'Đang xóa...';
+
+      try {
+        const res = await fetch('/settings/config', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: pendingDelete.id })
+        });
+        const data = await res.json();
+        if (data.success) {
+          accounts = accounts.filter(a => a.id !== pendingDelete.id);
+          const deletedUrl = shortUrl(pendingDelete.url);
+          pendingDelete = null;
+          closeModal('deleteModal');
+          renderList();
+          showToast('Đã xóa tài khoản: ' + deletedUrl);
+        } else {
+          showToast(data.message || 'Lỗi khi xóa');
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Xóa tài khoản';
+      }
+    });
+
+    /* ============ MODAL HELPERS ============ */
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+      if (!document.querySelector('.modal-overlay.active')) {
+        document.body.style.overflow = '';
+      }
+    }
+    window.closeModal = closeModal;
+
+    document.querySelectorAll('[data-close]').forEach(b => {
+      b.addEventListener('click', () => {
+        const overlay = b.closest('.modal-overlay');
+        if (overlay) closeModal(overlay.id);
+      });
+    });
+    document.querySelectorAll('.modal-overlay').forEach(o => {
+      o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
+      }
+    });
 
 
-  
 
-  
 
-  /* ============ INIT ============ */
-  renderList();
 
-})();
-</script>
+
+    /* ============ INIT ============ */
+    renderList();
+
+}) ();
+  </script>
 
   <script src="/static/js/utils.js"></script>
 </body>
+
 </html>
