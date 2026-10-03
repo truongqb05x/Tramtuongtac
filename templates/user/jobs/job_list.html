@@ -164,32 +164,6 @@
     </div>
   </div>
 
-  <!-- ================= MODAL LOGIN ================= -->
-  <div class="modal-overlay" id="modal-login" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-    <div class="modal-box">
-      <button class="modal-close" data-close aria-label="Đóng">×</button>
-      <h3 id="loginTitle">Đăng nhập</h3>
-      <p>Chào mừng trở lại. Tiếp tục xây dựng uy tín của bạn.</p>
-      <form onsubmit="event.preventDefault(); alert('Demo: Đăng nhập thành công!'); closeModal('modal-login');">
-        <div style="margin-bottom:1rem">
-          <label for="loginEmail"
-            style="display:block;font-size:.8125rem;font-weight:500;color:var(--ink-soft);margin-bottom:.375rem">Email</label>
-          <input type="email" id="loginEmail" placeholder="you@example.com" required
-            style="width:100%;padding:.625rem .75rem;font-size:.9375rem;font-family:inherit;border:1px solid var(--border-strong);border-radius:6px;background:#fff" />
-        </div>
-        <div style="margin-bottom:1rem">
-          <label for="loginPass"
-            style="display:block;font-size:.8125rem;font-weight:500;color:var(--ink-soft);margin-bottom:.375rem">Mật
-            khẩu</label>
-          <input type="password" id="loginPass" placeholder="••••••••" required
-            style="width:100%;padding:.625rem .75rem;font-size:.9375rem;font-family:inherit;border:1px solid var(--border-strong);border-radius:6px;background:#fff" />
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%">Đăng nhập</button>
-      </form>
-    </div>
-  </div>
-
-
 
   <!-- ================= TOAST ================= -->
   <div class="toast" id="toast" role="status" aria-live="polite">
@@ -369,16 +343,6 @@
         }
       });
 
-
-
-      /* ============ MODAL LOGIN ============ */
-      document.querySelectorAll('[data-modal="login"]').forEach(b => {
-        b.addEventListener('click', e => {
-          e.preventDefault();
-          document.getElementById('modal-login').classList.add('active');
-          document.body.style.overflow = 'hidden';
-        });
-      });
 
       /* ============ TOAST ============ */
       const toast = document.getElementById('toast');
