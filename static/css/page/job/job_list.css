@@ -385,55 +385,6 @@
     }
 
     /* ---------- Pagination ---------- */
-    .pagination {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-top: 1.25rem;
-      flex-wrap: wrap;
-    }
-
-    .pagination-info {
-      font-size: .8125rem;
-      color: var(--muted);
-    }
-
-    .pager {
-      display: flex;
-      gap: .25rem;
-    }
-
-    .pager button {
-      min-width: 2rem;
-      height: 2rem;
-      padding: 0 .5rem;
-      font-size: .8125rem;
-      font-weight: 500;
-      background: #fff;
-      color: var(--ink-soft);
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background .15s ease, border-color .15s ease, color .15s ease;
-    }
-
-    .pager button:hover {
-      background: var(--bg-alt);
-      color: var(--ink);
-    }
-
-    .pager button.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-
-    .pager button:disabled {
-      opacity: .4;
-      cursor: not-allowed;
-    }
-
 
 
     /* ---------- Modal confirm ---------- */

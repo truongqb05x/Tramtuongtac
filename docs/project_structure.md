@@ -39,12 +39,12 @@ Tramtuongtac/
 │       └── validators.py       # Validate email, mật khẩu
 │
 ├── instance/                   # Chứa các file dữ liệu cục bộ không lưu vào Git (database, json config)
-│   ├── system.json             # Lưu trữ cấu hình hệ thống động (không làm cứng vào code)
-│   └── platforms.json          # Lưu trữ giá cả, active/inactive nền tảng
+
 ├── static/                     # Thư mục Frontend Assets (Không thay đổi nhiều)
 │   ├── css/                    # Modular CSS (base, layout, components, pages)
 │   ├── js/
 │   │   ├── api.js              # File JS chứa các hàm call API (fetch/axios) dùng chung
+│   │   ├── utils.js            # Các hàm dùng chung (format tiền, thời gian, xử lý giao diện)
 │   │   ├── admin/              # Script riêng cho giao diện Admin
 │   │   └── user/               # Script riêng cho giao diện User
 │   └── img/

@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="../../static/css/layout/base.css" />
   <link rel="stylesheet" href="../../static/css/layout/header.css" />
   <link rel="stylesheet" href="../../static/css/layout/notice.css" />
+  <link rel="stylesheet" href="../../../static/css/layout/pagination.css" />
   <link rel="stylesheet" href="../../../static/css/page/job/job_list.css">
   <link rel="shortcut icon" href="../../../static/img/logo.png" type="image/x-icon">
 </head>
@@ -344,16 +345,7 @@
       });
 
 
-      /* ============ TOAST ============ */
-      const toast = document.getElementById('toast');
-      const toastMsg = document.getElementById('toastMsg');
-      let toastTimer;
-      function showToast(msg) {
-        toastMsg.textContent = msg;
-        toast.classList.add('on');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toast.classList.remove('on'), 2600);
-      }
+      
 
       /* ============ FILTERS ============ */
       const filters = { platform: new Set(), category: new Set() };
@@ -520,38 +512,12 @@
         showToast('Bộ lọc mobile sẽ sớm có — dùng bản desktop để trải nghiệm đầy đủ.');
       });
 
-      /* ============ HEADER USER MENU ============ */
-      const userAvatarBtn = document.getElementById('userAvatarBtn');
-      const userDropdownMenu = document.getElementById('userDropdownMenu');
-      if (userAvatarBtn && userDropdownMenu) {
-        userAvatarBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          userDropdownMenu.classList.toggle('show');
-        });
-        document.addEventListener('click', (e) => {
-          if (!userDropdownMenu.contains(e.target)) {
-            userDropdownMenu.classList.remove('show');
-          }
-        });
-      }
-
-      /* ============ HEADER MOBILE MENU ============ */
-      const hamburgerBtn = document.getElementById('hamburgerBtn');
-      const mobileMenu = document.getElementById('mobileMenu');
-      hamburgerBtn.addEventListener('click', () => {
-        const open = mobileMenu.classList.toggle('open');
-        hamburgerBtn.classList.toggle('open', open);
-        hamburgerBtn.setAttribute('aria-expanded', open);
-      });
-
-
-
       /* ============ INIT ============ */
       applyFilters();
 
     })();
   </script>
-
+  <script src="/static/js/utils.js"></script>
 </body>
 
 </html>

@@ -2120,30 +2120,13 @@
   window.addEventListener('scroll', updateActive, { passive: true });
   updateActive();
 
-  /* ============ TOAST ============ */
-  const toast = document.getElementById('toast');
-  const toastMsg = document.getElementById('toastMsg');
-  let toastTimer;
-  function showToast(msg) {
-    toastMsg.textContent = msg;
-    toast.classList.add('on');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('on'), 2200);
-  }
+  
 
-  /* ============ HEADER MOBILE MENU ============ */
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  if (hamburgerBtn && mobileMenu) {
-    hamburgerBtn.addEventListener('click', () => {
-      const open = mobileMenu.classList.toggle('open');
-      hamburgerBtn.classList.toggle('open', open);
-      hamburgerBtn.setAttribute('aria-expanded', open);
-    });
-  }
+  
 
 })();
 </script>
 
+  <script src="/static/js/utils.js"></script>
 </body>
 </html>

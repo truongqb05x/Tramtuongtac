@@ -1020,15 +1020,6 @@
   window.addEventListener('scroll', updateActiveToc, { passive: true });
   updateActiveToc();
 
-  /* ============ HEADER MOBILE MENU ============ */
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  hamburgerBtn.addEventListener('click', () => {
-    const open = mobileMenu.classList.toggle('open');
-    hamburgerBtn.classList.toggle('open', open);
-    hamburgerBtn.setAttribute('aria-expanded', open);
-  });
-
   /* ============ TOAST (không dùng nhiều trong trang này, giữ để nhất quán) ============ */
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toastMsg');
@@ -1046,5 +1037,6 @@
 })();
 </script>
 
+  <script src="/static/js/utils.js"></script>
 </body>
 </html>

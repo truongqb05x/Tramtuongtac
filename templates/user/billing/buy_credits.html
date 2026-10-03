@@ -752,40 +752,9 @@
     }
   });
 
-  /* ============ TOAST ============ */
-  const toast = document.getElementById('toast');
-  const toastMsg = document.getElementById('toastMsg');
-  let toastTimer;
-  function showToast(msg) {
-    toastMsg.textContent = msg;
-    toast.classList.add('on');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('on'), 3200);
-  }
+  
 
-  /* ============ HEADER MOBILE MENU ============ */
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  hamburgerBtn.addEventListener('click', () => {
-    const open = mobileMenu.classList.toggle('open');
-    hamburgerBtn.classList.toggle('open', open);
-    hamburgerBtn.setAttribute('aria-expanded', open);
-  });
-
-  /* ============ HEADER USER MENU ============ */
-  const userAvatarBtn = document.getElementById('userAvatarBtn');
-  const userDropdownMenu = document.getElementById('userDropdownMenu');
-  if (userAvatarBtn && userDropdownMenu) {
-    userAvatarBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      userDropdownMenu.classList.toggle('show');
-    });
-    document.addEventListener('click', (e) => {
-      if (!userDropdownMenu.contains(e.target)) {
-        userDropdownMenu.classList.remove('show');
-      }
-    });
-  }
+  
 
   /* ============ INIT ============ */
   renderPackages();
@@ -795,5 +764,6 @@
 })();
 </script>
 
+  <script src="/static/js/utils.js"></script>
 </body>
 </html>
