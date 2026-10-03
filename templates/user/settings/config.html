@@ -105,11 +105,9 @@
           <div class="select-wrap">
             <select id="platformSelect" required>
               <option value="">— Chọn nền tảng —</option>
-              <option value="facebook" data-mark="FB" data-domain="facebook.com">Facebook</option>
-              <option value="instagram" data-mark="IG" data-domain="instagram.com">Instagram</option>
-              <option value="tiktok" data-mark="TT" data-domain="tiktok.com">TikTok</option>
-              <option value="youtube" data-mark="YT" data-domain="youtube.com">YouTube</option>
-              <option value="website" data-mark="WEB" data-domain="">Website</option>
+              {% for p in platforms %}
+              <option value="{{ p.id }}" data-mark="{{ p.name[:2].upper() }}" data-domain="{{ p.id }}.com">{{ p.name }}</option>
+              {% endfor %}
             </select>
             <svg class="select-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
               <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

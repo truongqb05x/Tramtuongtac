@@ -400,6 +400,17 @@
           return label;
         }
 
+        const platformKeys = Object.keys(platformCounts);
+        const categoryKeys = Object.keys(categoryCounts);
+
+        // Auto-select if there is only 1 option
+        if (platformKeys.length === 1 && filters.platform.size === 0) {
+          filters.platform.add(platformKeys[0]);
+        }
+        if (categoryKeys.length === 1 && filters.category.size === 0) {
+          filters.category.add(categoryKeys[0]);
+        }
+
         const platformMap = { 'facebook': 'Facebook', 'instagram': 'Instagram', 'tiktok': 'TikTok', 'youtube': 'YouTube', 'website': 'Website' };
         
         for (const [p, count] of Object.entries(platformCounts)) {

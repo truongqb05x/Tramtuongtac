@@ -72,6 +72,7 @@ def user_create_job():
         d['slots'] = j.quantity
         d['type'] = j.action_type.lower()
         d['platform'] = j.platform.lower()
+        d['url'] = j.target_url
         d['createdAt'] = j.created_at.strftime('%Y-%m-%d %H:%M:%S')
         if j.status == 'RUNNING':
             d['status'] = 'active'
@@ -177,6 +178,15 @@ def user_settings_config():
         # extract social_id (just last part of URL for now)
         social_id = url.rstrip('/').split('/')[-1]
         
+        account_name = None
+        if platform == 'FACEBOOK':
+            from app.services.facebook import get_facebook_profile
+            fb_info = get_facebook_profile(url)
+            if fb_info.get('uid'):
+                social_id = fb_info['uid']
+                url = fb_info.get('url', url)
+                account_name = fb_info.get('name')
+                
         # Check if it already exists
         existing_acc = SocialAccount.query.filter_by(platform=platform, social_id=social_id).first()
         if existing_acc:
@@ -192,6 +202,7 @@ def user_settings_config():
             platform=platform,
             profile_url=url,
             social_id=social_id,
+            account_name=account_name,
             status=initial_status
         )
         db.session.add(acc)
@@ -202,7 +213,7 @@ def user_settings_config():
                 'id': acc.id,
                 'platform': acc.platform.lower(),
                 'url': acc.profile_url,
-                'name': acc.social_id,
+                'name': acc.account_name if acc.account_name else acc.social_id,
                 'verified': not is_safe_mode,
                 'status': initial_status.lower(),
                 'active': False,
@@ -228,14 +239,16 @@ def user_settings_config():
             'id': a.id,
             'platform': a.platform.lower(),
             'url': a.profile_url,
-            'name': a.social_id,
+            'name': a.account_name if a.account_name else a.social_id,
             'verified': a.status == 'ACTIVE',
             'status': a.status.lower(),
             'active': a.is_selected,
             'addedAt': a.created_at.strftime('%Y-%m-%d')
         })
         
-    return render_template('user/settings/config.html', accounts_data=accounts_data)
+    from app.services.platform_cfg import load_platforms
+    active_platforms = [p for p in load_platforms() if p.get('active')]
+    return render_template('user/settings/config.html', accounts_data=accounts_data, platforms=active_platforms)
 
 @user_bp.route('/settings/config/select', methods=['POST'])
 @login_required
@@ -265,3 +278,75 @@ from app.services.platform_cfg import load_platforms
 @login_required
 def get_platforms():
     return jsonify({'success': True, 'data': load_platforms()})
+
+
+import requests
+import re
+from urllib.parse import urlparse, parse_qs
+
+ACCESS_TOKEN = "EAAAAUaZA8jlABQZBcwm1lx2UxPnfxha9iWZBGodkjwi4EZCqa9UYsDrKICqR38IM7qxBEd3LD4kJLgiNqCyBhPAOR15y1sxotMURQdHiqWdBG6fg4AZA0yNjuW0DaSGyEuVPCAdIdtZAePI2qvWXXMYZAoMPlXmxr1e3AJd23JjrFBYhNGKYkJUcP5gHXFQdtf5mU1ZBygZDZD"
+
+@user_bp.route('/api/convert-url', methods=['POST'])
+@login_required
+def convert_url():
+    data = request.get_json()
+    url = data.get('url')
+    if not url:
+        return jsonify({'success': False, 'message': 'Missing url'}), 400
+        
+    try:
+        r = requests.get(
+            url,
+            headers={"User-Agent": "Mozilla/5.0"},
+            allow_redirects=True,
+            timeout=15
+        )
+        final_url = r.url
+        
+        extracted_id = None
+        
+        # Check Facebook
+        if 'facebook.com' in url or 'fb.watch' in url or 'fb.com' in url:
+            match = re.search(r"(?:fbid=|story_fbid=|posts/|videos/|/p/|/share/p/)([a-zA-Z0-9_-]+)", final_url)
+            if match:
+                post_id = match.group(1)
+                # Verify using Graph API
+                graph_url = f"https://graph.facebook.com/{post_id}"
+                params = {
+                    "fields": "id",
+                    "access_token": ACCESS_TOKEN
+                }
+                result = requests.get(graph_url, params=params, timeout=15).json()
+                if "id" in result:
+                    extracted_id = result["id"]
+                else:
+                    return jsonify({'success': False, 'message': 'Lỗi Graph API: ' + str(result.get('error', {}).get('message', 'Không thể xác thực bài viết FB')), 'final_url': final_url})
+            else:
+                # Alternative regex matching just numbers at the end
+                alt_match = re.search(r"(\d+)/?$", final_url)
+                if alt_match:
+                    post_id = alt_match.group(1)
+                    graph_url = f"https://graph.facebook.com/{post_id}"
+                    params = {
+                        "fields": "id",
+                        "access_token": ACCESS_TOKEN
+                    }
+                    result = requests.get(graph_url, params=params, timeout=15).json()
+                    if "id" in result:
+                        extracted_id = result["id"]
+        else:
+            tt_match = re.search(r'/video/(\d+)', final_url)
+            if tt_match:
+                extracted_id = tt_match.group(1)
+            else:
+                ig_match = re.search(r'/(?:p|reel)/([a-zA-Z0-9_-]+)', final_url)
+                if ig_match:
+                    extracted_id = ig_match.group(1)
+        
+        if extracted_id:
+            return jsonify({'success': True, 'id': extracted_id})
+        else:
+            return jsonify({'success': False, 'message': 'Không tìm thấy ID trong link.', 'final_url': final_url})
+            
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500

@@ -46,10 +46,12 @@ def create_app():
             return render_template('user/errors/503.html'), 503
 
     # We will temporarily keep the root routes here to avoid breaking everything at once
+    from flask import redirect, url_for
     @app.route('/')
     def index():
+        if current_user.is_authenticated:
+            return redirect(url_for('user_home'))
         return render_template('user/index.html')
-        
     from flask_login import login_required
     @app.route('/home')
     @login_required

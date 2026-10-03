@@ -1,5 +1,5 @@
 import requests
-import re
+from urllib.parse import urlparse, parse_qs
 
 url = "https://www.facebook.com/share/p/1EczTupFoL/?mibextid=wwXIfr"
 
@@ -14,5 +14,12 @@ r = requests.get(
     timeout=15
 )
 
-print("Final URL:")
-print(r.url)
+final_url = r.url
+
+# Lấy query parameters
+params = parse_qs(urlparse(final_url).query)
+
+post_id = params.get("story_fbid", [None])[0]
+
+print("\nPost ID:")
+print(post_id)

@@ -315,22 +315,44 @@ def api_save_system_field():
     if not key:
         return jsonify({'success': False, 'message': 'Thiếu key'}), 400
     update_system_field(key, value)
+    
+    from app.models.log import ActionLog
+    from app.extensions import db
+    log = ActionLog(
+        user_id=current_user.id,
+        type='admin',
+        action=f'Cập nhật cấu hình: {key}',
+        details=f'Giá trị mới: {value}',
+        ip_address=request.remote_addr
+    )
+    db.session.add(log)
+    db.session.commit()
+    
     return jsonify({'success': True})
 
 @admin_bp.route('/logs')
+@login_required
+@admin_required
 def admin_logs():
-    return render_template('admin/logs.html')
+    from app.models.log import ActionLog
+    logs = ActionLog.query.order_by(ActionLog.created_at.desc()).limit(100).all()
+    logs_data = [l.to_dict() for l in logs]
+    return render_template('admin/logs.html', logs_data=logs_data)
 
 @admin_bp.route('/stats')
 @login_required
 @admin_required
 def admin_stats():
     total_txs = Transaction.query.filter_by(status='SUCCESS', type='DEPOSIT').all()
-    total_revenue = sum([tx.amount for tx in total_txs])
+    total_revenue = sum([float(tx.amount) for tx in total_txs])
     
+    from app.services.system_cfg import load_system_config
+    sys_cfg = load_system_config()
+    fee_rate = float(sys_cfg.get('platform_fee', 10)) / 100.0
+
     total_jobs = Job.query.all()
-    total_reward = sum([j.total_cost for j in total_jobs])
-    total_fee = total_reward * 0.02
+    total_reward = sum([float(j.total_cost) for j in total_jobs])
+    total_fee = total_reward * fee_rate
     
     user_count = User.query.count()
     completed_tasks = Task.query.filter_by(status='VERIFIED').count()

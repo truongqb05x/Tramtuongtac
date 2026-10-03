@@ -17,7 +17,8 @@ Tramtuongtac/
 │   │   ├── __init__.py
 │   │   ├── user.py             # Model User, Role, SocialAccount
 │   │   ├── job.py              # Model Job, Task
-│   │   └── transaction.py      # Model Payment, History
+│   │   ├── transaction.py      # Model Payment, History
+│   │   └── log.py              # Model ActionLog (Nhật ký hoạt động hệ thống)
 │   │
 │   ├── controllers/            # Xử lý logic route (Blueprints)
 │   │   ├── __init__.py
@@ -25,15 +26,20 @@ Tramtuongtac/
 │   │   ├── user_ctrl.py        # Xử lý route /user/...
 │   │   └── api_ctrl.py         # Cung cấp RESTful API cho ứng dụng mobile/frontend SPA
 │   │
-│   ├── services/               # Chứa business logic phức tạp (Tách biệt khỏi controllers)
+│   ├── services/               # Chứa business logic phức tạp và cấu hình file
 │   │   ├── payment_service.py  # Xử lý gọi API ngân hàng, cộng/trừ tiền
-│   │   └── job_service.py      # Xử lý logic duyệt nhiệm vụ, tính toán phân phối
+│   │   ├── job_service.py      # Xử lý logic duyệt nhiệm vụ, tính toán phân phối
+│   │   ├── system_cfg.py       # Quản lý cấu hình hệ thống (Maintenance, Safe mode, Fee)
+│   │   └── platform_cfg.py     # Quản lý thiết lập các mạng xã hội và hoạt động tương tác
 │   │
 │   └── utils/                  # Chứa các hàm tiện ích dùng chung
 │       ├── decorators.py       # @login_required, @admin_required
 │       ├── helpers.py          # Format ngày tháng, tạo random token
 │       └── validators.py       # Validate email, mật khẩu
 │
+├── instance/                   # Chứa các file dữ liệu cục bộ không lưu vào Git (database, json config)
+│   ├── system.json             # Lưu trữ cấu hình hệ thống động (không làm cứng vào code)
+│   └── platforms.json          # Lưu trữ giá cả, active/inactive nền tảng
 ├── static/                     # Thư mục Frontend Assets (Không thay đổi nhiều)
 │   ├── css/                    # Modular CSS (base, layout, components, pages)
 │   ├── js/

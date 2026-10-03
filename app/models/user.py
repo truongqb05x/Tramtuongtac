@@ -29,6 +29,7 @@ class SocialAccount(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     platform = db.Column(db.Enum('FACEBOOK', 'TIKTOK', 'INSTAGRAM', name='platform_enum'), nullable=False)
     social_id = db.Column(db.String(255), nullable=False)
+    account_name = db.Column(db.String(255), nullable=True)
     profile_url = db.Column(db.String(500), nullable=True)
     status = db.Column(db.Enum('PENDING', 'ACTIVE', 'BLOCKED', name='status_enum'), nullable=False, default='PENDING')
     is_selected = db.Column(db.Boolean, nullable=False, default=False)

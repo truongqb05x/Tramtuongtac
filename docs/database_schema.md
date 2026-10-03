@@ -73,7 +73,19 @@ Lưu vết 100% dòng tiền ra/vào hệ thống (Nạp tiền, rút tiền, tr
 - `description`: String (Ghi chú)
 - `created_at`: DateTime
 
-## 4. Các Lưu Ý Về Database (Best Practices)
+## 4. Khối Hệ Thống (Logs & Config)
+
+### Bảng `action_logs`
+Lưu trữ nhật ký các hoạt động quan trọng trong hệ thống (như Admin sửa cấu hình, cảnh báo spam).
+- `id`: Integer (Primary Key, Auto Increment)
+- `user_id`: Integer (Có thể null nếu là log do hệ thống tự sinh)
+- `type`: Enum ('admin', 'system', 'user') - Phân loại nguồn tạo ra log
+- `action`: String (Tên hành động ngắn gọn)
+- `details`: Text (Chi tiết sự kiện, giá trị cũ/mới)
+- `ip_address`: String (IP người thực hiện)
+- `created_at`: DateTime
+
+## 5. Các Lưu Ý Về Database (Best Practices)
 
 1. **ACID Transactions**: Mọi thao tác đụng đến tiền (Ví dụ: User bấm Tạo Nhiệm Vụ -> Trừ tiền trong `users` + Tạo record trong `jobs` + Tạo record trong `transactions`) PHẢI được bọc trong một Database Transaction (`db.session.commit()` một lần duy nhất). Nếu 1 trong 3 bước lỗi, phải `db.session.rollback()` toàn bộ.
 2. **Indexing (Đánh chỉ mục)**: Cần tạo Index cho các cột thường xuyên tìm kiếm hoặc dùng làm khóa ngoại như `users.email`, `jobs.status`, `transactions.user_id`, `transactions.type`, `transactions.status`, `tasks.job_id`, `tasks.worker_id`, `tasks.social_account_id`, và `tasks.status`.

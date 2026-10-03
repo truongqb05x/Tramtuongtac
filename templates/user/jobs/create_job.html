@@ -143,7 +143,7 @@
               <label class="field-label" for="contentUrl">
                 Link hoặc ID bài viết <span class="req">*</span>
               </label>
-              <input type="url" id="contentUrl" placeholder="https://..." required />
+              <input type="text" id="contentUrl" placeholder="ID hoặc Link bài viết..." required />
               <p class="field-hint" id="urlHint">Dán đường dẫn đầy đủ, bao gồm https://</p>
             </div>
 
@@ -221,7 +221,7 @@
             <span class="v" id="sumSubtotal">160 Credits</span>
           </div>
           <div class="sum-row">
-            <span class="k">Phí nền tảng (2%)</span>
+            <span class="k">Phí nền tảng ({{ system_config.get('platform_fee', 10) }}%)</span>
             <span class="v" id="sumFee">3.2 Credits</span>
           </div>
           <div class="sum-divider"></div>
@@ -440,6 +440,58 @@
     const confirmModal = document.getElementById('confirmModal');
     const topupModal = document.getElementById('topupModal');
 
+    /* ============ URL AUTO EXTRACT ID ============ */
+    contentUrl.addEventListener('input', function() {
+      let val = this.value.trim();
+      if (!val.startsWith('http')) return;
+      let extractedId = null;
+      // Match FB fbid or story_fbid or posts/ videos/
+      const fbMatch = val.match(/(?:fbid=|story_fbid=|posts\/|videos\/)(\d+)/);
+      if (fbMatch && fbMatch[1]) {
+        extractedId = fbMatch[1];
+      } else if (val.includes('facebook.com/share/')) {
+        // Fetch to backend for resolving redirect URL
+        contentUrl.disabled = true;
+        const oldVal = contentUrl.value;
+        contentUrl.value = 'Đang chuyển đổi link...';
+        fetch('/api/convert-url', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({url: val})
+        }).then(r => r.json()).then(res => {
+          contentUrl.disabled = false;
+          if (res.success && res.id) {
+            contentUrl.value = res.id;
+            showToast('Đã tự động chuyển đường dẫn thành ID: ' + res.id);
+          } else {
+            contentUrl.value = oldVal;
+            showToast(res.message || 'Không thể chuyển đổi link, vui lòng tự trích xuất ID.');
+            if (res.final_url) console.log('Final URL from backend:', res.final_url);
+          }
+        }).catch((err) => {
+          contentUrl.disabled = false;
+          contentUrl.value = oldVal;
+          showToast('Lỗi mạng khi chuyển đổi link.');
+          console.error(err);
+        });
+        return;
+      } else {
+        // TikTok video ID
+        const ttMatch = val.match(/\/video\/(\d+)/);
+        if (ttMatch && ttMatch[1]) extractedId = ttMatch[1];
+        else {
+          // Insta or FB short link
+          const igMatch = val.match(/\/(?:p|reel)\/([a-zA-Z0-9_-]+)/);
+          if (igMatch && igMatch[1]) extractedId = igMatch[1];
+        }
+      }
+      
+      if (extractedId) {
+        this.value = extractedId;
+        showToast('Đã tự động chuyển đường dẫn thành ID: ' + extractedId);
+      }
+    });
+
     /* ============ TYPE CARDS ============ */
     let typeCards = [];
     function attachTypeEvents() {
@@ -621,7 +673,7 @@
               <span class="dot">·</span>
               <span>${TYPE_NAMES[t.type] || t.type}</span>
               <span class="dot">·</span>
-              <span>${t.createdAt}</span>
+              <span style="max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:inline-block; vertical-align:bottom;" title="${t.url}">${t.url || ''}</span>
             </div>
           </div>
         </div>
@@ -790,7 +842,7 @@
             slots: data.job?.quantity || t.slots,
             done: 0,
             status: 'active',
-            createdAt: 'vừa xong'
+            url: data.job?.target_url || t.url
           });
 
           closeModal('confirmModal');

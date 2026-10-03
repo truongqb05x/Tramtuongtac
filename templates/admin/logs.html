@@ -348,15 +348,7 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  const ALL_LOGS = [
-    { id: 'L100', time: '10:45 30/09/2026', actor: 'Admin (Bạn)', type: 'admin', typeLabel: 'Quản trị', action: 'Thay đổi cấu hình', details: 'Thay đổi giới hạn rút tiền từ 20k lên 50k Credits.', ip: '113.190.x.x' },
-    { id: 'L099', time: '10:42 30/09/2026', actor: 'Admin (Bạn)', type: 'admin', typeLabel: 'Quản trị', action: 'Khóa tài khoản liên kết', details: 'Khóa tài khoản TikTok @bot_spam_001 của Vũ Thị F', ip: '113.190.x.x' },
-    { id: 'L098', time: '10:30 30/09/2026', actor: 'Hệ thống Auto-Check', type: 'system', typeLabel: 'Hệ thống', action: 'Cảnh báo bảo mật', details: 'Phát hiện 5 tài khoản liên kết cùng chung dải IP đăng nhập.', ip: 'N/A' },
-    { id: 'L097', time: '09:15 30/09/2026', actor: 'Hệ thống Auto-Approve', type: 'system', typeLabel: 'Hệ thống', action: 'Tự động duyệt nhiệm vụ', details: 'Duyệt tự động 12 nhiệm vụ (Ngân sách < 50k)', ip: 'N/A' },
-    { id: 'L096', time: '08:50 30/09/2026', actor: 'Trần Văn A (User)', type: 'user', typeLabel: 'Cảnh báo', action: 'Nạp tiền thất bại', details: 'API ngân hàng trả về lỗi timeout 3 lần liên tiếp.', ip: '14.241.x.x' },
-    { id: 'L095', time: '22:10 29/09/2026', actor: 'Admin (Bạn)', type: 'admin', typeLabel: 'Quản trị', action: 'Khóa User', details: 'Khóa user Lê Văn C (Spam báo cáo lỗi)', ip: '113.190.x.x' },
-    { id: 'L094', time: '21:05 29/09/2026', actor: 'Hệ thống', type: 'system', typeLabel: 'Hệ thống', action: 'Sao lưu Dữ liệu', details: 'Hoàn thành sao lưu database định kỳ (2.4 GB)', ip: 'N/A' }
-  ];
+  const ALL_LOGS = {{ logs_data | tojson | safe }} || [];
 
   function renderTable() {
     const q = (document.getElementById('searchLogs').value || '').toLowerCase();
