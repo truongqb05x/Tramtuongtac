@@ -284,7 +284,37 @@ import requests
 import re
 from urllib.parse import urlparse, parse_qs
 
-ACCESS_TOKEN = "EAAAAUaZA8jlABQZBcwm1lx2UxPnfxha9iWZBGodkjwi4EZCqa9UYsDrKICqR38IM7qxBEd3LD4kJLgiNqCyBhPAOR15y1sxotMURQdHiqWdBG6fg4AZA0yNjuW0DaSGyEuVPCAdIdtZAePI2qvWXXMYZAoMPlXmxr1e3AJd23JjrFBYhNGKYkJUcP5gHXFQdtf5mU1ZBygZDZD"
+import random
+from app.models.fb_token import FbToken
+
+def verify_fb_post_id(post_id):
+    active_tokens = FbToken.query.filter_by(is_active=True).all()
+    if not active_tokens:
+        return False, "Chưa cấu hình Token hoặc Token lỗi hết. Vui lòng báo Admin để nạp Token."
+        
+    for t in active_tokens:
+        graph_url = f"https://graph.facebook.com/{post_id}"
+        params = {"fields": "id", "access_token": t.token}
+        try:
+            res = requests.get(graph_url, params=params, timeout=15).json()
+            if "id" in res:
+                return True, res["id"]
+            else:
+                error_data = res.get('error', {})
+                error_msg = error_data.get('message', '').lower()
+                error_code = error_data.get('code')
+                
+                # Check if token is invalid or expired
+                if 'access token' in error_msg or 'session has been invalidated' in error_msg or error_code in [190, 2500, 104]:
+                    t.is_active = False
+                    db.session.commit()
+                    continue
+                else:
+                    return False, "Lỗi Graph API: " + error_data.get('message', 'Không thể xác định bài viết')
+        except requests.RequestException:
+            continue
+            
+    return False, "Tất cả Token đều bị lỗi."
 
 @user_bp.route('/api/convert-url', methods=['POST'])
 @login_required
@@ -307,33 +337,31 @@ def convert_url():
         
         # Check Facebook
         if 'facebook.com' in url or 'fb.watch' in url or 'fb.com' in url:
-            match = re.search(r"(?:fbid=|story_fbid=|posts/|videos/|/p/|/share/p/)([a-zA-Z0-9_-]+)", final_url)
-            if match:
-                post_id = match.group(1)
-                # Verify using Graph API
-                graph_url = f"https://graph.facebook.com/{post_id}"
-                params = {
-                    "fields": "id",
-                    "access_token": ACCESS_TOKEN
-                }
-                result = requests.get(graph_url, params=params, timeout=15).json()
-                if "id" in result:
-                    extracted_id = result["id"]
-                else:
-                    return jsonify({'success': False, 'message': 'Lỗi Graph API: ' + str(result.get('error', {}).get('message', 'Không thể xác thực bài viết FB')), 'final_url': final_url})
+            qs_params = parse_qs(urlparse(final_url).query)
+            post_id = qs_params.get("story_fbid", [None])[0]
+            
+            if post_id:
+                extracted_id = post_id
             else:
-                # Alternative regex matching just numbers at the end
-                alt_match = re.search(r"(\d+)/?$", final_url)
-                if alt_match:
-                    post_id = alt_match.group(1)
-                    graph_url = f"https://graph.facebook.com/{post_id}"
-                    params = {
-                        "fields": "id",
-                        "access_token": ACCESS_TOKEN
-                    }
-                    result = requests.get(graph_url, params=params, timeout=15).json()
-                    if "id" in result:
-                        extracted_id = result["id"]
+                match = re.search(r"(?:fbid=|posts/|videos/|/p/|/share/p/)([a-zA-Z0-9_-]+)", final_url)
+                if match:
+                    post_id = match.group(1)
+                    # Verify using Graph API
+                    success, res_val = verify_fb_post_id(post_id)
+                    if success:
+                        extracted_id = res_val
+                    else:
+                        return jsonify({'success': False, 'message': res_val, 'final_url': final_url})
+                else:
+                    # Alternative regex matching just numbers at the end
+                    alt_match = re.search(r"(\d+)/?$", final_url)
+                    if alt_match:
+                        post_id = alt_match.group(1)
+                        success, res_val = verify_fb_post_id(post_id)
+                        if success:
+                            extracted_id = res_val
+                        else:
+                            return jsonify({'success': False, 'message': res_val, 'final_url': final_url})
         else:
             tt_match = re.search(r'/video/(\d+)', final_url)
             if tt_match:
@@ -350,3 +378,129 @@ def convert_url():
             
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
+
+from app.models.job import Job
+from app.models.task import Task
+from app.models.transaction import Transaction
+
+def extract_fbid(final_url):
+    qs_params = parse_qs(urlparse(final_url).query)
+    post_id = qs_params.get('story_fbid', [None])[0]
+    if post_id: return post_id
+    match = re.search(r"(?:fbid=|posts/|videos/|/p/|/share/p/)([a-zA-Z0-9_-]+)", final_url)
+    if match: return match.group(1)
+    alt_match = re.search(r"(\d+)/?$", final_url)
+    if alt_match: return alt_match.group(1)
+    return None
+
+def check_fb_action_status(post_id, user_uid, action_type):
+    active_tokens = FbToken.query.filter_by(is_active=True).all()
+    if not active_tokens:
+        return False, "Chưa cấu hình Token hoặc Token lỗi hết. Vui lòng báo Admin để nạp Token."
+    
+    if action_type != 'LIKE':
+        return True, "Mock: Tạm duyệt (chỉ LIKE mới check API)."
+        
+    for t in active_tokens:
+        url = f"https://graph.facebook.com/v23.0/{post_id}/reactions"
+        params = {
+            "access_token": t.token,
+            "fields": "id,type",
+            "limit": 100
+        }
+        
+        try:
+            token_failed = False
+            while url:
+                response = requests.get(url, params=params, timeout=15)
+                data = response.json()
+                
+                if response.status_code != 200:
+                    error_data = data.get('error', {})
+                    error_msg = error_data.get('message', '').lower()
+                    error_code = error_data.get('code')
+                    
+                    if 'access token' in error_msg or 'session has been invalidated' in error_msg or error_code in [190, 2500, 104, 12]:
+                        t.is_active = False
+                        db.session.commit()
+                        token_failed = True
+                        break 
+                    else:
+                        return False, f"Lỗi Graph API: {error_data.get('message')}"
+                
+                for user in data.get("data", []):
+                    if user.get("type") == "LIKE" and str(user.get("id")) == str(user_uid):
+                        return True, "Đã thực hiện"
+                
+                url = data.get("paging", {}).get("next")
+                params = None
+            
+            if not token_failed:
+                return False, "Chưa tìm thấy lượt LIKE của bạn trên bài viết này (Hoặc cấu hình sai UID)."
+                
+        except requests.RequestException:
+            continue
+            
+    return False, "Hệ thống Token đang gặp lỗi toàn bộ."
+
+@user_bp.route('/api/jobs/<int:job_id>/verify', methods=['POST'])
+@login_required
+def verify_job(job_id):
+    job = Job.query.get_or_404(job_id)
+    
+    selected_acc = SocialAccount.query.filter_by(
+        user_id=current_user.id, 
+        platform=job.platform, 
+        is_selected=True, 
+        is_deleted=False
+    ).first()
+    
+    if not selected_acc:
+        return jsonify({'success': False, 'message': f'Bạn chưa cấu hình hoặc chọn tài khoản {job.platform} đang làm việc ở góc trên phải màn hình.'}), 400
+        
+    existing_task = Task.query.filter_by(job_id=job.id, worker_id=current_user.id).first()
+    if existing_task:
+        return jsonify({'success': False, 'message': 'Bạn đã nhận thưởng cho nhiệm vụ này rồi.'}), 400
+        
+    if job.platform == 'FACEBOOK':
+        post_id = extract_fbid(job.target_url)
+        if not post_id:
+            return jsonify({'success': False, 'message': 'Không nhận diện được Facebook ID từ link nhiệm vụ.'}), 400
+            
+        success, msg = check_fb_action_status(post_id, selected_acc.social_id, job.action_type)
+        if not success:
+            return jsonify({'success': False, 'message': msg}), 400
+    else:
+        # Tạm thời duyệt nhanh các nền tảng khác
+        pass
+        
+    try:
+        new_task = Task(
+            job_id=job.id,
+            worker_id=current_user.id,
+            social_account_id=selected_acc.id,
+            reward=job.price_per_action,
+            status='VERIFIED'
+        )
+        db.session.add(new_task)
+        
+        current_user.balance += job.price_per_action
+        
+        tx = Transaction(
+            user_id=current_user.id,
+            amount=job.price_per_action,
+            type='TASK_REWARD',
+            status='SUCCESS',
+            description=f'Nhận thưởng nhiệm vụ {job.action_type} - {job.platform}'
+        )
+        db.session.add(tx)
+        
+        job.current_count += 1
+        if job.current_count >= job.quantity:
+            job.status = 'COMPLETED'
+            
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Nhận thưởng thành công!', 'reward': float(job.price_per_action)})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': 'Lỗi hệ thống khi nhận thưởng: ' + str(e)}), 500

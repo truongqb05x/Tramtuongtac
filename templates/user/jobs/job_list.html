@@ -306,16 +306,37 @@
             e.stopPropagation();
             if (isAccepted) return;
             if (IN_PROGRESS.has(t.id)) {
-              ACCEPTED.add(t.id);
-              acceptedToday++;
-              showToast('Đã nhận thành công Credit!');
-              renderTasks(getFiltered());
+              btn.disabled = true;
+              btn.innerText = 'Đang kiểm tra...';
+              fetch(`/api/jobs/${t.id}/verify`, { method: 'POST' })
+                .then(res => res.json())
+                .then(json => {
+                  if (json.success) {
+                    ACCEPTED.add(t.id);
+                    acceptedToday++;
+                    showToast('Đã nhận thành công ' + json.reward + ' Credit!');
+                    renderTasks(getFiltered());
+                  } else {
+                    btn.disabled = false;
+                    btn.innerText = 'Nhận Credit';
+                    showToast(json.message || 'Lỗi kiểm tra nhiệm vụ.');
+                  }
+                })
+                .catch(err => {
+                  btn.disabled = false;
+                  btn.innerText = 'Nhận Credit';
+                  showToast('Lỗi mạng khi kiểm tra.');
+                });
             } else {
               if (acceptedToday >= DAILY_LIMIT) {
                 showToast(`Bạn đã đạt giới hạn ${DAILY_LIMIT} nhiệm vụ/ngày. Quay lại vào ngày mai!`);
                 return;
               }
-              window.open('https://example.com/demo-task', '_blank');
+              if (t.url) {
+                window.open(t.url, '_blank');
+              } else {
+                showToast('Không tìm thấy đường link nhiệm vụ.');
+              }
               IN_PROGRESS.add(t.id);
               renderTasks(getFiltered());
             }

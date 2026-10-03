@@ -54,8 +54,10 @@ CREATE TABLE `social_accounts` (
   `user_id` int(10) UNSIGNED NOT NULL,
   `platform` enum('FACEBOOK','TIKTOK','INSTAGRAM') NOT NULL,
   `social_id` varchar(255) NOT NULL,
+  `account_name` varchar(255) DEFAULT NULL,
   `profile_url` varchar(500) DEFAULT NULL,
   `status` enum('PENDING','ACTIVE','BLOCKED') NOT NULL DEFAULT 'PENDING',
+  `is_selected` tinyint(1) NOT NULL DEFAULT 0,
   `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -114,9 +116,43 @@ CREATE TABLE `users` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `action_logs`
+--
+
+CREATE TABLE `action_logs` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED DEFAULT NULL,
+  `type` enum('admin','system','user') NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `details` text DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Cấu trúc bảng cho bảng `fb_tokens`
+--
+
+CREATE TABLE `fb_tokens` (
+  `id` int(11) NOT NULL,
+  `token` varchar(1000) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 --
 -- Chỉ mục cho các bảng đã đổ
 --
+
+--
+-- Chỉ mục cho bảng `fb_tokens`
+--
+ALTER TABLE `fb_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_fb_tokens_is_active` (`is_active`);
 
 --
 -- Chỉ mục cho bảng `jobs`
@@ -179,6 +215,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT cho các bảng đã đổ
 --
+
+--
+-- AUTO_INCREMENT cho bảng `fb_tokens`
+--
+ALTER TABLE `fb_tokens`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `jobs`

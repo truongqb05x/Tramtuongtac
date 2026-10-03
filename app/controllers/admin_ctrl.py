@@ -285,7 +285,10 @@ from app.services.platform_cfg import load_platforms, save_platforms
 def admin_config():
     platforms = load_platforms()
     system_config = load_system_config()
-    return render_template('admin/config.html', platforms=platforms, system_config=system_config)
+    from app.models.fb_token import FbToken
+    active_tokens = FbToken.query.filter_by(is_active=True).all()
+    token_count = len(active_tokens)
+    return render_template('admin/config.html', platforms=platforms, system_config=system_config, token_count=token_count)
 
 @admin_bp.route('/api/platforms', methods=['POST'])
 @login_required
@@ -396,3 +399,36 @@ def admin_stats():
         top_users=top_users,
         plat_stats=plat_stats
     )
+
+from app.models.fb_token import FbToken
+
+@admin_bp.route('/api/tokens', methods=['GET', 'POST'])
+@login_required
+def api_tokens():
+    if current_user.role != 'ADMIN':
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+        
+    if request.method == 'GET':
+        tokens = FbToken.query.filter_by(is_active=True).all()
+        return jsonify({'success': True, 'tokens': [t.token for t in tokens]})
+        
+    elif request.method == 'POST':
+        data = request.get_json()
+        token_list = data.get('tokens', [])
+        
+        try:
+            # Clear all current active tokens
+            FbToken.query.filter_by(is_active=True).update({'is_active': False})
+            
+            # Insert new ones
+            for t in token_list:
+                t_str = t.strip()
+                if t_str:
+                    new_token = FbToken(token=t_str, is_active=True)
+                    db.session.add(new_token)
+            
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'Đã lưu danh sách Token'})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'success': False, 'message': str(e)}), 500

@@ -462,7 +462,7 @@
           contentUrl.disabled = false;
           if (res.success && res.id) {
             contentUrl.value = res.id;
-            showToast('Đã tự động chuyển đường dẫn thành ID: ' + res.id);
+            showToast('Chuyển đổi thành công');
           } else {
             contentUrl.value = oldVal;
             showToast(res.message || 'Không thể chuyển đổi link, vui lòng tự trích xuất ID.');
@@ -488,7 +488,7 @@
       
       if (extractedId) {
         this.value = extractedId;
-        showToast('Đã tự động chuyển đường dẫn thành ID: ' + extractedId);
+        showToast('Chuyển đổi thành công');
       }
     });
 

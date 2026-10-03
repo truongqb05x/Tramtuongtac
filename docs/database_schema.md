@@ -24,6 +24,7 @@ Lưu trữ các tài khoản mạng xã hội (Facebook, TikTok) mà user liên 
 - `user_id`: Integer (Foreign Key -> users.id)
 - `platform`: Enum ('FACEBOOK', 'TIKTOK', 'INSTAGRAM')
 - `social_id`: String (ID UID của nền tảng)
+- `account_name`: String (Tên thật của tài khoản)
 - `profile_url`: String
 - `status`: Enum ('PENDING', 'ACTIVE', 'BLOCKED') (Chờ duyệt, đã duyệt, bị admin khóa)
 - `is_selected`: Boolean (Được user chọn làm tài khoản mặc định đi thực hiện nhiệm vụ)
@@ -83,6 +84,13 @@ Lưu trữ nhật ký các hoạt động quan trọng trong hệ thống (như 
 - `action`: String (Tên hành động ngắn gọn)
 - `details`: Text (Chi tiết sự kiện, giá trị cũ/mới)
 - `ip_address`: String (IP người thực hiện)
+- `created_at`: DateTime
+
+### Bảng `fb_tokens`
+Lưu trữ danh sách Access Token của Facebook dùng để gọi Graph API (convert URL, check live, lấy bài viết...).
+- `id`: Integer (Primary Key, Auto Increment)
+- `token`: String (1000) (Nội dung token)
+- `is_active`: Boolean (Mặc định True, tự động chuyển False nếu token bị lỗi/die)
 - `created_at`: DateTime
 
 ## 5. Các Lưu Ý Về Database (Best Practices)

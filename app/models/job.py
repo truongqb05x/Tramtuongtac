@@ -36,5 +36,6 @@ class Job(db.Model):
             'creator': self.user.full_name or self.user.email if self.user else "Khách",
             'status': 'Available',
             'statusType': 'ok',
+            'url': self.target_url,
             'desc': f'Link: {self.target_url}'
         }
