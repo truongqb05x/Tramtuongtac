@@ -139,13 +139,20 @@ def admin_tasks():
             status_label = status
             st_cls = 'pending'
 
+        cat_map = {
+            'LIKE': 'Tương tác',
+            'FOLLOW': 'Theo dõi',
+            'COMMENT': 'Bình luận',
+            'SHARE': 'Chia sẻ'
+        }
+        
         tasks_data.append({
             'raw_id': j.id,
             'id': f'#J-{j.id}',
             'creator': user.full_name if user else 'Unknown',
             'handle': user.email if user else '',
             'platform': j.platform.capitalize(),
-            'req': j.action_type,
+            'req': cat_map.get(j.action_type, j.action_type),
             'reward': str(int(j.price_per_action)),
             'qty': str(j.quantity),
             'status': st_cls,

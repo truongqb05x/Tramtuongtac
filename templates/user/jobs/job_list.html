@@ -325,7 +325,6 @@
                 .catch(err => {
                   btn.disabled = false;
                   btn.innerText = 'Nhận Credit';
-                  showToast('Lỗi mạng khi kiểm tra.');
                 });
             } else {
               if (acceptedToday >= DAILY_LIMIT) {
@@ -474,7 +473,7 @@
       };
 
       function getFiltered() {
-        let list = TASKS.slice();
+        let list = TASKS.slice().filter(t => !ACCEPTED.has(t.id));
 
         if (filters.platform.size) {
           list = list.filter(t => filters.platform.has((t.platform || '').toLowerCase()));

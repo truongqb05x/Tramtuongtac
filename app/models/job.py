@@ -22,11 +22,29 @@ class Job(db.Model):
     user = db.relationship('User', backref=db.backref('jobs', lazy=True))
 
     def to_dict(self):
+        cat_map = {
+            'LIKE': 'Tương tác',
+            'FOLLOW': 'Theo dõi',
+            'COMMENT': 'Bình luận',
+            'SHARE': 'Chia sẻ'
+        }
+        formatted_url = self.target_url
+        if formatted_url and not formatted_url.startswith('http'):
+            pf = (self.platform or '').lower()
+            if pf == 'facebook':
+                formatted_url = 'https://facebook.com/' + formatted_url
+            elif pf == 'tiktok':
+                formatted_url = 'https://tiktok.com/@user/video/' + formatted_url
+            elif pf == 'instagram':
+                formatted_url = 'https://instagram.com/p/' + formatted_url
+            else:
+                formatted_url = 'https://' + formatted_url
+                
         return {
             'id': self.id,
             'platform': self.platform,
             'mark': self.platform[:2].upper() if self.platform else '',
-            'category': self.action_type,
+            'category': cat_map.get(self.action_type, self.action_type),
             'title': f'Tạo bởi {self.user.full_name or self.user.email if self.user else "Khách"}',
             'reward': float(self.price_per_action),
             'duration': 'Tùy chọn',
@@ -36,6 +54,6 @@ class Job(db.Model):
             'creator': self.user.full_name or self.user.email if self.user else "Khách",
             'status': 'Available',
             'statusType': 'ok',
-            'url': self.target_url,
+            'url': formatted_url,
             'desc': f'Link: {self.target_url}'
         }

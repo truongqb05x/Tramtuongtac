@@ -21,7 +21,10 @@ def user_create_job():
             return jsonify({'success': False, 'message': 'No data provided'}), 400
             
         platform = data.get('platform', '').upper()
-        action_type = data.get('type', '').upper()
+        raw_type = data.get('type', '').upper()
+        action_type = raw_type.split('_')[-1] if '_' in raw_type else raw_type
+        if action_type == 'HEART': action_type = 'LIKE'
+        if action_type == 'SUB': action_type = 'FOLLOW'
         target_url = data.get('url')
         quantity = int(data.get('slots', 0))
         from decimal import Decimal
@@ -109,11 +112,58 @@ def user_toggle_job(job_id):
 @user_bp.route('/jobs')
 @login_required
 def user_job_list():
+    from app.services.system_cfg import load_system_config
+    system_config = load_system_config()
+    daily_limit = system_config.get('daily_task_limit', 200)
+    
+    from app.models.task import Task
+    from datetime import datetime, date
+    today_start = datetime.combine(date.today(), datetime.min.time())
+    completed_today = Task.query.filter(Task.worker_id == current_user.id, Task.created_at >= today_start).count()
+    if completed_today >= daily_limit:
+        return f'Bạn đã đạt giới hạn {daily_limit} nhiệm vụ/ngày. Vui lòng quay lại vào ngày mai!', 403
+
+    import time
+    from flask import session
+    now = time.time()
+    last_get = session.get('last_get_jobs', 0)
+    if now - last_get < 15:
+        return f'Vui lòng đợi {int(15 - (now - last_get))}s trước khi tải lại danh sách nhiệm vụ. Vui lòng quay lại.', 429
+    session['last_get_jobs'] = now
+    session.modified = True
+
     from app.models.user import SocialAccount
     has_accounts = SocialAccount.query.filter_by(user_id=current_user.id, is_deleted=False).first() is not None
     # Fetch running jobs that are not deleted
     db_jobs = Job.query.filter_by(status='RUNNING', is_deleted=False).all()
-    jobs_data = [job.to_dict() for job in db_jobs]
+    
+    from app.models.task import Task
+    active_accs = SocialAccount.query.filter_by(user_id=current_user.id, is_selected=True, is_deleted=False).all()
+    completed_targets = {}
+    for acc in active_accs:
+        completed_targets[acc.platform] = set()
+        tasks = Task.query.filter_by(social_account_id=acc.id).all()
+        for t in tasks:
+            if t.job:
+                completed_targets[acc.platform].add((t.job.target_url, t.job.action_type))
+                
+    filtered_jobs = []
+    seen_targets = set()
+    for job in db_jobs:
+        if job.platform in completed_targets:
+            if (job.target_url, job.action_type) in completed_targets[job.platform]:
+                continue
+        
+        # Avoid showing duplicate jobs for the same target_url and action_type
+        # so the user doesn't see 5 identical jobs
+        target_key = (job.platform, job.target_url, job.action_type)
+        if target_key in seen_targets:
+            continue
+        seen_targets.add(target_key)
+        
+        filtered_jobs.append(job)
+        
+    jobs_data = [job.to_dict() for job in filtered_jobs]
     from app.services.system_cfg import load_system_config
     system_config = load_system_config()
     return render_template('user/jobs/job_list.html', jobs_data=jobs_data, has_accounts=has_accounts, system_config=system_config)
@@ -283,38 +333,10 @@ def get_platforms():
 import requests
 import re
 from urllib.parse import urlparse, parse_qs
+from app.services.facebook import verify_fb_post_id, extract_fbid, check_fb_action_status
 
 import random
 from app.models.fb_token import FbToken
-
-def verify_fb_post_id(post_id):
-    active_tokens = FbToken.query.filter_by(is_active=True).all()
-    if not active_tokens:
-        return False, "Chưa cấu hình Token hoặc Token lỗi hết. Vui lòng báo Admin để nạp Token."
-        
-    for t in active_tokens:
-        graph_url = f"https://graph.facebook.com/{post_id}"
-        params = {"fields": "id", "access_token": t.token}
-        try:
-            res = requests.get(graph_url, params=params, timeout=15).json()
-            if "id" in res:
-                return True, res["id"]
-            else:
-                error_data = res.get('error', {})
-                error_msg = error_data.get('message', '').lower()
-                error_code = error_data.get('code')
-                
-                # Check if token is invalid or expired
-                if 'access token' in error_msg or 'session has been invalidated' in error_msg or error_code in [190, 2500, 104]:
-                    t.is_active = False
-                    db.session.commit()
-                    continue
-                else:
-                    return False, "Lỗi Graph API: " + error_data.get('message', 'Không thể xác định bài viết')
-        except requests.RequestException:
-            continue
-            
-    return False, "Tất cả Token đều bị lỗi."
 
 @user_bp.route('/api/convert-url', methods=['POST'])
 @login_required
@@ -383,69 +405,27 @@ from app.models.job import Job
 from app.models.task import Task
 from app.models.transaction import Transaction
 
-def extract_fbid(final_url):
-    qs_params = parse_qs(urlparse(final_url).query)
-    post_id = qs_params.get('story_fbid', [None])[0]
-    if post_id: return post_id
-    match = re.search(r"(?:fbid=|posts/|videos/|/p/|/share/p/)([a-zA-Z0-9_-]+)", final_url)
-    if match: return match.group(1)
-    alt_match = re.search(r"(\d+)/?$", final_url)
-    if alt_match: return alt_match.group(1)
-    return None
-
-def check_fb_action_status(post_id, user_uid, action_type):
-    active_tokens = FbToken.query.filter_by(is_active=True).all()
-    if not active_tokens:
-        return False, "Chưa cấu hình Token hoặc Token lỗi hết. Vui lòng báo Admin để nạp Token."
-    
-    if action_type != 'LIKE':
-        return True, "Mock: Tạm duyệt (chỉ LIKE mới check API)."
-        
-    for t in active_tokens:
-        url = f"https://graph.facebook.com/v23.0/{post_id}/reactions"
-        params = {
-            "access_token": t.token,
-            "fields": "id,type",
-            "limit": 100
-        }
-        
-        try:
-            token_failed = False
-            while url:
-                response = requests.get(url, params=params, timeout=15)
-                data = response.json()
-                
-                if response.status_code != 200:
-                    error_data = data.get('error', {})
-                    error_msg = error_data.get('message', '').lower()
-                    error_code = error_data.get('code')
-                    
-                    if 'access token' in error_msg or 'session has been invalidated' in error_msg or error_code in [190, 2500, 104, 12]:
-                        t.is_active = False
-                        db.session.commit()
-                        token_failed = True
-                        break 
-                    else:
-                        return False, f"Lỗi Graph API: {error_data.get('message')}"
-                
-                for user in data.get("data", []):
-                    if user.get("type") == "LIKE" and str(user.get("id")) == str(user_uid):
-                        return True, "Đã thực hiện"
-                
-                url = data.get("paging", {}).get("next")
-                params = None
-            
-            if not token_failed:
-                return False, "Chưa tìm thấy lượt LIKE của bạn trên bài viết này (Hoặc cấu hình sai UID)."
-                
-        except requests.RequestException:
-            continue
-            
-    return False, "Hệ thống Token đang gặp lỗi toàn bộ."
-
 @user_bp.route('/api/jobs/<int:job_id>/verify', methods=['POST'])
 @login_required
 def verify_job(job_id):
+    import time
+    from flask import session
+    now = time.time()
+    last_verify = session.get('last_verify', 0)
+    if now - last_verify < 5:
+        return jsonify({'success': False, 'message': f'Vui lòng đợi {int(5 - (now - last_verify))}s trước khi gửi yêu cầu tiếp.'}), 429
+    session['last_verify'] = now
+    session.modified = True
+    
+    from app.services.system_cfg import load_system_config
+    system_config = load_system_config()
+    daily_limit = system_config.get('daily_task_limit', 200)
+    from datetime import datetime, date
+    today_start = datetime.combine(date.today(), datetime.min.time())
+    completed_today = Task.query.filter(Task.worker_id == current_user.id, Task.created_at >= today_start).count()
+    if completed_today >= daily_limit:
+        return jsonify({'success': False, 'message': f'Bạn đã đạt giới hạn {daily_limit} nhiệm vụ/ngày. Vui lòng quay lại vào ngày mai!'}), 403
+
     job = Job.query.get_or_404(job_id)
     
     selected_acc = SocialAccount.query.filter_by(
@@ -462,11 +442,17 @@ def verify_job(job_id):
     if existing_task:
         return jsonify({'success': False, 'message': 'Bạn đã nhận thưởng cho nhiệm vụ này rồi.'}), 400
         
+    # Check if the selected social account has already done ANY job with the same target_url and action_type
+    duplicate_task = Task.query.join(Job).filter(
+        Task.social_account_id == selected_acc.id,
+        Job.target_url == job.target_url,
+        Job.action_type == job.action_type
+    ).first()
+    if duplicate_task:
+        return jsonify({'success': False, 'message': 'Tài khoản này đã thực hiện tương tác trên bài viết này ở một nhiệm vụ khác rồi.'}), 400
+        
     if job.platform == 'FACEBOOK':
-        post_id = extract_fbid(job.target_url)
-        if not post_id:
-            return jsonify({'success': False, 'message': 'Không nhận diện được Facebook ID từ link nhiệm vụ.'}), 400
-            
+        post_id = job.target_url
         success, msg = check_fb_action_status(post_id, selected_acc.social_id, job.action_type)
         if not success:
             return jsonify({'success': False, 'message': msg}), 400

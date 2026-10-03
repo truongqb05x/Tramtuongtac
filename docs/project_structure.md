@@ -29,6 +29,7 @@ Tramtuongtac/
 │   ├── services/               # Chứa business logic phức tạp và cấu hình file
 │   │   ├── payment_service.py  # Xử lý gọi API ngân hàng, cộng/trừ tiền
 │   │   ├── job_service.py      # Xử lý logic duyệt nhiệm vụ, tính toán phân phối
+│   │   ├── facebook.py         # Xử lý tương tác Facebook Graph API (Lấy ID, kiểm tra Like/Follow)
 │   │   ├── system_cfg.py       # Quản lý cấu hình hệ thống (Maintenance, Safe mode, Fee)
 │   │   └── platform_cfg.py     # Quản lý thiết lập các mạng xã hội và hoạt động tương tác
 │   │

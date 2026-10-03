@@ -408,7 +408,9 @@
       };
       const TYPE_NAMES = {
         follow: 'Theo dõi', like: 'Tương tác',
-        comment: 'Bình luận', visit: 'Truy cập'
+        comment: 'Bình luận', visit: 'Truy cập',
+        fb_like: 'Tăng Like Bài Viết', fb_follow: 'Tăng Follow / Sub', fb_comment: 'Tăng Bình Luận',
+        tt_heart: 'Tăng Tim Video', tt_follow: 'Tăng Follow Kênh'
       };
       const FEE_RATE = {{ system_config.get('platform_fee', 10) }} / 100;
 
@@ -765,8 +767,18 @@
         showToast('Vui lòng chọn loại nhiệm vụ');
         return false;
       }
-      if (!contentUrl.value.trim() || !/^https?:\/\/.+/.test(contentUrl.value.trim())) {
-        showToast('Đường dẫn nội dung không hợp lệ');
+      const urlVal = contentUrl.value.trim();
+      if (!urlVal) {
+        showToast('Vui lòng nhập Link hoặc ID bài viết');
+        contentUrl.focus();
+        return false;
+      }
+      
+      const isUrl = /^https?:\/\/.+/.test(urlVal);
+      const isId = /^[a-zA-Z0-9_-]+$/.test(urlVal);
+      
+      if (!isUrl && !isId) {
+        showToast('Link hoặc ID bài viết không hợp lệ');
         contentUrl.focus();
         return false;
       }
