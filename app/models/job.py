@@ -7,7 +7,7 @@ class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     platform = db.Column(db.Enum('FACEBOOK', 'TIKTOK', 'INSTAGRAM', name='job_platform_enum'), nullable=False)
-    action_type = db.Column(db.Enum('LIKE', 'FOLLOW', 'COMMENT', 'SHARE', name='action_type_enum'), nullable=False)
+    action_type = db.Column(db.Enum('LIKE', 'FOLLOW', 'COMMENT', 'SHARE', 'LOVE', 'WOW', 'HAHA', 'SAD', name='action_type_enum'), nullable=False)
     target_url = db.Column(db.String(1000), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     current_count = db.Column(db.Integer, nullable=False, default=0)
@@ -24,6 +24,10 @@ class Job(db.Model):
     def to_dict(self):
         cat_map = {
             'LIKE': 'Tương tác',
+            'LOVE': 'Tym',
+            'WOW': 'Wow',
+            'HAHA': 'Haha',
+            'SAD': 'Buồn',
             'FOLLOW': 'Theo dõi',
             'COMMENT': 'Bình luận',
             'SHARE': 'Chia sẻ'
@@ -40,11 +44,12 @@ class Job(db.Model):
             else:
                 formatted_url = 'https://' + formatted_url
                 
+        action_type_str = self.action_type.name if hasattr(self.action_type, 'name') else str(self.action_type)
         return {
             'id': self.id,
             'platform': self.platform,
             'mark': self.platform[:2].upper() if self.platform else '',
-            'category': cat_map.get(self.action_type, self.action_type),
+            'category': cat_map.get(action_type_str, action_type_str),
             'title': f'Tạo bởi {self.user.full_name or self.user.email if self.user else "Khách"}',
             'reward': float(self.price_per_action),
             'duration': 'Tùy chọn',

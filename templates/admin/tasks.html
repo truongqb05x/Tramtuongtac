@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../../static/css/layout/layout_admin/admin.css">
-
+<link rel="stylesheet" href="../../static/css/layout/pagination.css">
 </head>
 <body>
 
@@ -189,7 +189,7 @@
                 <th>Người tạo</th>
                 <th>Nền tảng</th>
                 <th>Yêu cầu (Action)</th>
-                <th>Thù lao / Số lượng</th>
+                <th>Chi phí</th>
                 <th>Trạng thái</th>
                 <th class="right">Hành động</th>
               </tr>
@@ -199,6 +199,8 @@
             </tbody>
           </table>
         </div>
+        
+        <div id="paginationContainer"></div>
       </div>
 
     </main>
@@ -355,6 +357,9 @@
 
   const ALL_TASKS = {{ tasks_data | safe }};
 
+  const ITEMS_PER_PAGE = 10;
+  let currentPage = 1;
+
   function renderTable() {
     const q = (document.getElementById('searchTasks').value || '').toLowerCase();
     const plat = document.getElementById('filterPlatform').value;
@@ -368,12 +373,25 @@
     if(stat) list = list.filter(x => x.status === stat);
 
     const tbody = document.getElementById('tasksTableBody');
+    const pgContainer = document.getElementById('paginationContainer');
+    
     if(!list.length) {
       tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8125rem">Không tìm thấy nhiệm vụ nào.</td></tr>';
+      pgContainer.innerHTML = '';
       return;
     }
 
-    tbody.innerHTML = list.map(t => {
+    const totalItems = list.length;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+    
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIdx = startIdx + ITEMS_PER_PAGE;
+    const pageData = list.slice(startIdx, endIdx);
+
+    tbody.innerHTML = pageData.map(t => {
       let stCls = 'mute';
       if(t.status === 'pending') stCls = 'warn';
       if(t.status === 'running') stCls = 'info';
@@ -408,8 +426,7 @@
           <td><span style="font-weight:500">${escapeHtml(t.platform)}</span></td>
           <td>${escapeHtml(t.req)}</td>
           <td>
-            <div style="font-weight:600;color:var(--accent)">${t.reward} <small style="color:var(--muted);font-weight:400">CR</small></div>
-            <div class="cell-mono" style="margin-top:2px">x ${t.qty}</div>
+            <div style="font-weight:600;color:var(--accent)">${t.total_cost} <small style="color:var(--muted);font-weight:400">CR</small></div>
           </td>
           <td><span class="status-pill ${stCls}">${t.statusLabel}</span></td>
           <td class="cell-right">
@@ -418,11 +435,55 @@
         </tr>
       `;
     }).join('');
+
+    const startShow = startIdx + 1;
+    const endShow = Math.min(endIdx, totalItems);
+    
+    let html = `
+      <div class="pagination">
+        <div class="pagination-info">Hiển thị ${startShow} - ${endShow} trên tổng số ${totalItems}</div>
+        <div class="pager">
+          <button ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">«</button>
+    `;
+    
+    let maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    
+    if (endPage - startPage < maxPagesToShow - 1) {
+        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+    
+    if (startPage > 1) {
+        html += `<button onclick="goToPage(1)">1</button>`;
+        if (startPage > 2) html += `<button disabled>...</button>`;
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+    }
+    
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) html += `<button disabled>...</button>`;
+        html += `<button onclick="goToPage(${totalPages})">${totalPages}</button>`;
+    }
+
+    html += `
+          <button ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">»</button>
+        </div>
+      </div>
+    `;
+    pgContainer.innerHTML = html;
   }
 
-  document.getElementById('searchTasks').addEventListener('input', renderTable);
-  document.getElementById('filterPlatform').addEventListener('change', renderTable);
-  document.getElementById('filterStatus').addEventListener('change', renderTable);
+  window.goToPage = function(p) {
+    currentPage = p;
+    renderTable();
+  };
+
+  document.getElementById('searchTasks').addEventListener('input', () => { currentPage = 1; renderTable(); });
+  document.getElementById('filterPlatform').addEventListener('change', () => { currentPage = 1; renderTable(); });
+  document.getElementById('filterStatus').addEventListener('change', () => { currentPage = 1; renderTable(); });
 
   renderTable();
 

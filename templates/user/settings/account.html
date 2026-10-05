@@ -69,9 +69,6 @@
 
 <!-- ================= PAGE ================= -->
 <div class="page">
-
-
-
   <!-- Page head -->
   <div class="page-head">
     <h1 class="page-title">Cài đặt tài khoản</h1>
@@ -82,14 +79,8 @@
 
   <!-- Settings layout -->
   <div class="settings-layout">
-
-
-
     <!-- ============ MAIN CONTENT ============ -->
     <main>
-
-
-
       <!-- ============ PASSWORD ============ -->
       <section class="section" id="password">
         <div class="section-head">
@@ -125,9 +116,6 @@
           </div>
         </div>
       </section>
-
-
-
       <!-- ============ SESSIONS ============ -->
       <section class="section" id="sessions">
         <div class="section-head">
@@ -195,16 +183,9 @@
                 <span>Hoạt động 2 ngày trước</span>
               </div>
             </div>
-
           </div>
-
-
-
         </div>
       </section>
-
-
-
     </main>
   </div>
 </div>
@@ -334,21 +315,6 @@
     }
   });
 
-
-  /* ============ TOAST ============ */
-  const toast = document.getElementById('toast');
-  const toastMsg = document.getElementById('toastMsg');
-  let toastTimer;
-  function showToast(msg) {
-    if (toastMsg) toastMsg.textContent = msg;
-    if (toast) toast.classList.add('on');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-      if (toast) toast.classList.remove('on');
-    }, 2800);
-  }
-
-  
 
 })();
 </script>

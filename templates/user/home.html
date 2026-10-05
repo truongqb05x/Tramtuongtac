@@ -17,7 +17,6 @@
   <link rel="stylesheet" href="../../static/css/page/home.css">
   <link rel="shortcut icon" href="../../static/img/logo.png" type="image/x-icon">
 </head>
-
 <body>
   <!-- ================= HEADER ================= -->
   <header class="top">
@@ -100,7 +99,7 @@
 
           <div class="quick-grid">
 
-            <a href="#" class="quick-card">
+            <a href="{{ url_for('user.user_job_list') }}" class="quick-card">
               <span class="quick-icon">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                   <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5" />
@@ -115,7 +114,7 @@
               </div>
             </a>
 
-            <a href="#" class="quick-card">
+            <a href="{{ url_for('user.user_create_job') }}" class="quick-card">
               <span class="quick-icon green">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                   <path d="M9 2V16M2 9H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
@@ -128,7 +127,7 @@
               </div>
             </a>
 
-            <a href="#" class="quick-card">
+            <a href="{{ url_for('user.user_transfer_credits') }}" class="quick-card">
               <span class="quick-icon amber">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                   <path d="M2 5H16V14H2V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
@@ -142,7 +141,7 @@
               </div>
             </a>
 
-            <a href="#" class="quick-card">
+            <a href="{{ url_for('user.user_settings_config') }}" class="quick-card">
               <span class="quick-icon purple">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                   <circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.5" />
@@ -286,16 +285,11 @@
               </span>
               <span class="support-arrow">›</span>
             </a>
-
           </div>
         </div>
-
       </aside>
-
     </div>
-
   </div>
-
   <!-- ============ FOOTER ============ -->
   <footer class="bg-[#f4f2ee] border-t border-[#e3e0da]">
     <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
@@ -372,15 +366,8 @@
           else if (action === 'history') showToast('Tính năng đang phát triển...');
         });
       });
-
-
-
-
-
     })();
   </script>
-
   <script src="/static/js/utils.js"></script>
 </body>
-
 </html>

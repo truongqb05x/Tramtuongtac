@@ -140,21 +140,27 @@ def admin_tasks():
             st_cls = 'pending'
 
         cat_map = {
-            'LIKE': 'Tương tác',
+            'LIKE': 'Tương tác (Like)',
+            'LOVE': 'Tương tác (Tym)',
+            'WOW': 'Tương tác (Wow)',
+            'HAHA': 'Tương tác (Haha)',
+            'SAD': 'Tương tác (Buồn)',
             'FOLLOW': 'Theo dõi',
             'COMMENT': 'Bình luận',
             'SHARE': 'Chia sẻ'
         }
         
+        action_type_str = j.action_type.name if hasattr(j.action_type, 'name') else str(j.action_type)
         tasks_data.append({
             'raw_id': j.id,
             'id': f'#J-{j.id}',
             'creator': user.full_name if user else 'Unknown',
             'handle': user.email if user else '',
             'platform': j.platform.capitalize(),
-            'req': cat_map.get(j.action_type, j.action_type),
-            'reward': str(int(j.price_per_action)),
+            'req': cat_map.get(action_type_str, action_type_str),
+            'reward': str(float(j.price_per_action)) if j.price_per_action else "0",
             'qty': str(j.quantity),
+            'total_cost': str(float(j.total_cost)) if j.total_cost else "0",
             'status': st_cls,
             'statusLabel': status_label
         })

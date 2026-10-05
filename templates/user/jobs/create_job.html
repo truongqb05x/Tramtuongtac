@@ -130,6 +130,35 @@
                 <!-- Vùng này sẽ được render từ API -->
               </div>
             </div>
+
+            <!-- Reaction sub-options for Facebook Like -->
+            <div class="field" id="reactionField" style="display: none; margin-top: 1.5rem;">
+              <label class="field-label">
+                Cảm xúc (Reaction) <span class="req">*</span>
+              </label>
+              <div class="reaction-grid" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg);">
+                  <input type="radio" name="reactionType" value="LIKE" checked>
+                  <span style="font-size: 1.2rem;">👍</span> <span style="font-size: 0.875rem; font-weight: 500;">Like</span>
+                </label>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg);">
+                  <input type="radio" name="reactionType" value="LOVE">
+                  <span style="font-size: 1.2rem;">❤️</span> <span style="font-size: 0.875rem; font-weight: 500;">Tym</span>
+                </label>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg);">
+                  <input type="radio" name="reactionType" value="WOW">
+                  <span style="font-size: 1.2rem;">😮</span> <span style="font-size: 0.875rem; font-weight: 500;">Wow</span>
+                </label>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg);">
+                  <input type="radio" name="reactionType" value="HAHA">
+                  <span style="font-size: 1.2rem;">😆</span> <span style="font-size: 0.875rem; font-weight: 500;">Haha</span>
+                </label>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg);">
+                  <input type="radio" name="reactionType" value="SAD">
+                  <span style="font-size: 1.2rem;">😢</span> <span style="font-size: 0.875rem; font-weight: 500;">Buồn</span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -401,6 +430,7 @@
         follow: 'Theo dõi', like: 'Tương tác',
         comment: 'Bình luận', visit: 'Truy cập',
         fb_like: 'Tăng Like Bài Viết', fb_follow: 'Tăng Follow / Sub', fb_comment: 'Tăng Bình Luận',
+        fb_love: 'Tăng Tym Bài Viết', fb_wow: 'Tăng Wow Bài Viết', fb_haha: 'Tăng Haha Bài Viết', fb_sad: 'Tăng Buồn Bài Viết',
         tt_heart: 'Tăng Tim Video', tt_follow: 'Tăng Follow Kênh'
       };
       const FEE_RATE = {{ system_config.get('platform_fee', 10) }} / 100;
@@ -440,11 +470,11 @@
       let val = this.value.trim();
       if (!val.startsWith('http')) return;
       let extractedId = null;
-      // Match FB fbid or story_fbid or posts/ videos/
-      const fbMatch = val.match(/(?:fbid=|story_fbid=|posts\/|videos\/)(\d+)/);
+      // Match FB fbid or posts/ videos/
+      const fbMatch = val.match(/(?:fbid=|posts\/|videos\/)(\d+)/);
       if (fbMatch && fbMatch[1]) {
         extractedId = fbMatch[1];
-      } else if (val.includes('facebook.com/share/')) {
+      } else if (val.includes('facebook.com/share/') || val.includes('permalink.php') || val.includes('story_fbid=')) {
         // Fetch to backend for resolving redirect URL
         contentUrl.disabled = true;
         const oldVal = contentUrl.value;
@@ -497,6 +527,18 @@
           typeCards.forEach(c => c.classList.toggle('checked', c.querySelector('input').checked));
           const p = parseFloat(card.dataset.price) || 5;
           rewardInput.value = p;
+
+          // Hiển thị chọn reaction nếu là FB Like
+          const reactionField = document.getElementById('reactionField');
+          if (reactionField) {
+            const val = input.value.toLowerCase();
+            if (val === 'fb_like' || val === 'like') {
+              reactionField.style.display = 'block';
+            } else {
+              reactionField.style.display = 'none';
+            }
+          }
+
           updateSummary();
         });
       });
@@ -848,17 +890,25 @@
       const fee = Math.round(subtotal * FEE_RATE * 100) / 100;
       const total = Math.round((subtotal + fee) * 100) / 100;
       const type = document.querySelector('input[name="taskType"]:checked');
+      let finalType = type.value;
+      if (finalType.toLowerCase() === 'fb_like' || finalType.toLowerCase() === 'like') {
+        const reaction = document.querySelector('input[name="reactionType"]:checked');
+        if (reaction && reaction.value !== 'LIKE') {
+          // Send FB_LOVE, FB_WOW, etc. instead of FB_LIKE
+          finalType = 'FB_' + reaction.value;
+        }
+      }
 
       pendingCreate = {
         platform: platformSelect.value,
-        type: type.value,
+        type: finalType,
         desc: taskDesc.value.trim(),
         url: contentUrl.value.trim(),
         slots, reward, total
       };
 
       document.getElementById('mTitle').textContent =
-        PLATFORM_NAMES[pendingCreate.platform] + ' · ' + TYPE_NAMES[pendingCreate.type];
+        (PLATFORM_NAMES[(pendingCreate.platform || '').toLowerCase()] || pendingCreate.platform) + ' · ' + (TYPE_NAMES[(pendingCreate.type || '').toLowerCase()] || pendingCreate.type);
       document.getElementById('mPlatform').textContent = pendingCreate.url;
       document.getElementById('mSlots').textContent = slots;
       document.getElementById('mReward').textContent = reward + ' Credits';
@@ -983,10 +1033,6 @@
         document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
       }
     });
-
-
-
-    
     /* ============ INIT ============ */
     renderCreated();
     updateSummary();

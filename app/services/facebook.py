@@ -133,8 +133,8 @@ def check_fb_action_status(post_id, user_uid, action_type):
     if not active_tokens:
         return False, "Chưa cấu hình Token hoặc Token lỗi hết. Vui lòng báo Admin để nạp Token."
     
-    if action_type != 'LIKE':
-        return True, "Mock: Tạm duyệt (chỉ LIKE mới check API)."
+    if action_type not in ['LIKE', 'LOVE', 'WOW', 'HAHA', 'SAD']:
+        return True, "Mock: Tạm duyệt (chỉ LIKE/REACTION mới check API)."
         
     for t in active_tokens:
         url = f"https://graph.facebook.com/v23.0/{post_id}/reactions"
@@ -160,14 +160,14 @@ def check_fb_action_status(post_id, user_uid, action_type):
                         return False, f"Lỗi Graph API: {error_data.get('message')}"
                 
                 for user in data.get("data", []):
-                    if user.get("type") == "LIKE" and str(user.get("id")) == str(user_uid):
+                    if user.get("type") == action_type and str(user.get("id")) == str(user_uid):
                         return True, "Đã thực hiện"
                 
                 url = data.get("paging", {}).get("next")
                 params = None
             
             if not token_failed:
-                return False, "Chưa tìm thấy lượt LIKE của bạn trên bài viết này (Hoặc cấu hình sai UID)."
+                return False, f"Chưa tìm thấy lượt {action_type} của bạn trên bài viết này (Hoặc cấu hình sai UID)."
                 
         except requests.RequestException:
             continue
