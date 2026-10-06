@@ -389,10 +389,10 @@
 
       /* ============ GOOGLE OAUTH ============ */
       document.getElementById('googleLogin').addEventListener('click', () => {
-        showToast('Đang mở cửa sổ đăng nhập Google…');
+        window.location.href = '/auth/google/login';
       });
       document.getElementById('googleRegister').addEventListener('click', () => {
-        showToast('Đang mở cửa sổ đăng ký Google…');
+        window.location.href = '/auth/google/login';
       });
 
       /* ============ TOAST ============ */
