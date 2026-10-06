@@ -109,7 +109,7 @@ def admin_dashboard():
             'statusLabel': 'Ổn định' if total_jobs > 0 else 'Chưa có'
         })
         
-    return render_template('admin/Admin.html', 
+    return render_template('admin/dashboard.html', 
         kpi=kpi,
         recent_jobs_data=recent_jobs_data,
         recent_txs_data=recent_txs_data,

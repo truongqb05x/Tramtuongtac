@@ -282,17 +282,7 @@
     }
   });
 
-  /* ============ TOAST ============ */
-  const toast = document.getElementById('toast');
-  const toastMsg = document.getElementById('toastMsg');
-  let toastTimer;
-  window.showToast = function(msg) {
-    if (!toast) return;
-    toastMsg.textContent = msg;
-    toast.classList.add('on');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('on'), 2800);
-  };
+
 
 })();
 </script>

@@ -1,41 +1,41 @@
 /* ============ TOAST ============ */
 window.toastTimer = null;
-window.showToast = function(msg) {
-  const toast = document.getElementById('toast');
-  const toastMsg = document.getElementById('toastMsg');
-  if (!toast || !toastMsg) return;
-  toastMsg.textContent = msg;
-  toast.classList.add('on');
-  clearTimeout(window.toastTimer);
-  window.toastTimer = setTimeout(() => toast.classList.remove('on'), 2800);
+window.showToast = function (msg) {
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    if (!toast || !toastMsg) return;
+    toastMsg.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => toast.classList.remove('on'), 2800);
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  /* ============ HEADER USER MENU ============ */
-  const userAvatarBtn = document.getElementById('userAvatarBtn');
-  const userDropdownMenu = document.getElementById('userDropdownMenu');
-  if (userAvatarBtn && userDropdownMenu) {
-    userAvatarBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      userDropdownMenu.classList.toggle('show');
-    });
-    document.addEventListener('click', (e) => {
-      if (!userDropdownMenu.contains(e.target)) {
-        userDropdownMenu.classList.remove('show');
-      }
-    });
-  }
+    /* ============ HEADER USER MENU ============ */
+    const userAvatarBtn = document.getElementById('userAvatarBtn');
+    const userDropdownMenu = document.getElementById('userDropdownMenu');
+    if (userAvatarBtn && userDropdownMenu) {
+        userAvatarBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdownMenu.classList.toggle('show');
+        });
+        document.addEventListener('click', (e) => {
+            if (!userDropdownMenu.contains(e.target)) {
+                userDropdownMenu.classList.remove('show');
+            }
+        });
+    }
 
-  /* ============ HEADER MOBILE MENU ============ */
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  if (hamburgerBtn && mobileMenu) {
-    hamburgerBtn.addEventListener('click', () => {
-      const open = mobileMenu.classList.toggle('open');
-      hamburgerBtn.classList.toggle('open', open);
-      hamburgerBtn.setAttribute('aria-expanded', open);
-    });
-  }
+    /* ============ HEADER MOBILE MENU ============ */
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener('click', () => {
+            const open = mobileMenu.classList.toggle('open');
+            hamburgerBtn.classList.toggle('open', open);
+            hamburgerBtn.setAttribute('aria-expanded', open);
+        });
+    }
 });
 
 const SecurityConfig = {
@@ -162,3 +162,113 @@ window.SecurityConfig = SecurityConfig;
 // Auto-initialize DevTools blocking
 const securityManager = new window.SecurityManager();
 securityManager.init();
+
+/* ============ GIAO DIỆN VÀ ĐIỀU HƯỚNG ADMIN ============ */
+document.addEventListener("DOMContentLoaded", () => {
+  const PAGE_TITLES = {
+    dashboard: 'Dashboard',
+    tasks: 'Quản lý nhiệm vụ',
+    transactions: 'Giao dịch nạp tiền',
+    users: 'Danh sách users',
+    reports: 'Xử lý vi phạm',
+    'user-config': 'Cấu hình tài khoản',
+    config: 'Cấu hình chung',
+    logs: 'Nhật ký hoạt động',
+    stats: 'Thống kê hệ thống'
+  };
+
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', () => {
+      const view = link.dataset.view;
+      if (view === 'stats') {
+        window.location.href = '/admin/stats';
+        return;
+      } else if (view === 'tasks') {
+        window.location.href = '/admin/tasks';
+        return;
+      } else if (view === 'transactions') {
+        window.location.href = '/admin/transactions';
+        return;
+      } else if (view === 'users') {
+        window.location.href = '/admin/users';
+        return;
+      } else if (view === 'reports') {
+        window.location.href = '/admin/reports';
+        return;
+      } else if (view === 'user-config') {
+        window.location.href = '/admin/user-config';
+        return;
+      } else if (view === 'config') {
+        window.location.href = '/admin/config';
+        return;
+      } else if (view === 'logs') {
+        window.location.href = '/admin/logs';
+        return;
+      } else if (view === 'dashboard') {
+        window.location.href = '/admin';
+        return;
+      }
+      
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      const titleEl = document.getElementById('pageTitle');
+      if (titleEl) titleEl.textContent = PAGE_TITLES[view] || 'Admin';
+      closeSidebar();
+    });
+  });
+
+  const sidebar = document.getElementById('sidebar');
+  const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+  const menuToggle = document.getElementById('menuToggle');
+
+  function openSidebar() {
+    if (sidebar) sidebar.classList.add('open');
+    if (sidebarBackdrop) sidebarBackdrop.classList.add('on');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    if (sidebar) sidebar.classList.remove('open');
+    if (sidebarBackdrop) sidebarBackdrop.classList.remove('on');
+    document.body.style.overflow = '';
+  }
+  if (menuToggle) menuToggle.addEventListener('click', openSidebar);
+  if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', closeSidebar);
+
+  const refreshBtn = document.getElementById('refreshBtn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', function() {
+      this.style.transform = 'rotate(360deg)';
+      this.style.transition = 'transform .6s ease';
+      setTimeout(() => {
+        this.style.transform = '';
+        this.style.transition = '';
+      }, 600);
+      showToast('Đã làm mới dữ liệu.');
+    });
+  }
+
+  function closeModal(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+    if (!document.querySelector('.modal-overlay.active')) {
+      document.body.style.overflow = '';
+    }
+  }
+  window.closeModal = closeModal;
+
+  document.querySelectorAll('[data-close]').forEach(b => {
+    b.addEventListener('click', () => {
+      const overlay = b.closest('.modal-overlay');
+      if (overlay) closeModal(overlay.id);
+    });
+  });
+  document.querySelectorAll('.modal-overlay').forEach(o => {
+    o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
+      if (typeof closeSidebar === 'function') closeSidebar();
+    }
+  });
+});
