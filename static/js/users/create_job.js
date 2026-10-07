@@ -17,14 +17,14 @@
         fb_love: 'Tăng Tym Bài Viết', fb_wow: 'Tăng Wow Bài Viết', fb_haha: 'Tăng Haha Bài Viết', fb_sad: 'Tăng Buồn Bài Viết',
         tt_heart: 'Tăng Tim Video', tt_follow: 'Tăng Follow Kênh'
       };
-      const FEE_RATE = {{ system_config.get('platform_fee', 10) }} / 100;
+      const FEE_RATE = window.FEE_RATE || 0.1;
 
       const ITEMS_PER_PAGE = 10;
       let currentPage = 1;
 
-      let balance = {{ current_user.balance | int }};
+      let balance = window.USER_BALANCE || 0;
 
-    let createdTasks = {{ my_jobs | tojson | safe }} || [];
+    let createdTasks = window.CREATED_TASKS || [];
 
     let nextId = createdTasks.length > 0 ? Math.max(...createdTasks.map(t => t.id)) + 1 : 100;
     let pendingCreate = null;
@@ -510,6 +510,8 @@
       const originalText = btn.textContent;
       btn.disabled = true;
       btn.textContent = 'Đang xử lý...';
+      
+      showLoading(true);
 
       try {
         const response = await fetch('/jobs/create', {
@@ -521,6 +523,7 @@
         });
         
         const data = await response.json();
+        showLoading(false);
         
         if (data.success) {
           balance = data.new_balance;
@@ -551,6 +554,7 @@
         }
       } catch (err) {
         console.error(err);
+        showLoading(false);
         alert('Có lỗi xảy ra, vui lòng thử lại.');
       } finally {
         btn.disabled = false;

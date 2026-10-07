@@ -86,6 +86,8 @@
 
         if (!ok) return;
 
+        showLoading(true);
+
         fetch('/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -93,6 +95,7 @@
         })
           .then(res => res.json())
           .then(data => {
+            showLoading(false);
             if (data.success) {
               showToast(data.message);
               setTimeout(() => { window.location.href = data.redirect_url || '/home'; }, 1000);
@@ -103,6 +106,7 @@
             }
           })
           .catch(err => {
+            showLoading(false);
             showToast('Đã xảy ra lỗi hệ thống, vui lòng thử lại.');
           });
       });
@@ -132,6 +136,8 @@
 
         if (!ok) return;
 
+        showLoading(true);
+
         fetch('/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -144,6 +150,7 @@
         })
           .then(res => res.json())
           .then(data => {
+            showLoading(false);
             if (data.success) {
               showToast(data.message);
               setTimeout(() => { switchTab('login'); }, 1400);
@@ -154,6 +161,7 @@
             }
           })
           .catch(err => {
+            showLoading(false);
             showToast('Đã xảy ra lỗi hệ thống, vui lòng thử lại.');
           });
       });

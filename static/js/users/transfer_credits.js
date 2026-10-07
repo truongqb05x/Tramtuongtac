@@ -2,14 +2,14 @@
   'use strict';
 
   /* ============ STATE ============ */
-  let currentBalance = parseFloat('{{ current_user.balance }}');
+  let currentBalance = window.CURRENT_BALANCE || 0;
   let selectedUser = null;
   let currentHistoryTab = 'all';
 
   let currentSearchResults = [];
 
   /* ============ HISTORY ============ */
-  const HISTORY = {{ history_data_json | safe }};
+  const HISTORY = window.HISTORY || [];
 
   /* ============ HELPERS ============ */
   function escapeHtml(s) {
@@ -232,6 +232,8 @@
 
     confirmSubmit.disabled = true;
     confirmSubmit.textContent = 'Đang xử lý...';
+    
+    showLoading(true);
 
     fetch('/api/transfer', {
       method: 'POST',
@@ -245,6 +247,7 @@
     })
     .then(res => res.json())
     .then(data => {
+      showLoading(false);
       confirmSubmit.textContent = 'Xác nhận chuyển';
       confirmModal.classList.remove('active');
       document.body.style.overflow = '';
@@ -287,6 +290,7 @@
       }
     })
     .catch(err => {
+      showLoading(false);
       confirmSubmit.textContent = 'Xác nhận chuyển';
       confirmSubmit.disabled = false;
       alert('Lỗi kết nối máy chủ');

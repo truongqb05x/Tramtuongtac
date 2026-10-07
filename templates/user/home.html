@@ -37,7 +37,7 @@
         <div class="hidden md:flex items-center gap-3">
           <div class="user-dropdown-wrap">
             <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
-              <img src="https://ui-avatars.com/api/?name=User&background=1e3a5f&color=fff" alt="Avatar" />
+              <img src="https://api.dicebear.com/9.x/avataaars/svg?seed={{ current_user.email }}&backgroundColor=b6e3f4&radius=50" alt="Avatar" />
             </button>
             <div class="user-dropdown-menu" id="userDropdownMenu">
               <a href="/settings/account">Hồ sơ</a>
@@ -110,7 +110,7 @@
               <p class="quick-desc">Duyệt sổ nhiệm vụ và chọn việc phù hợp</p>
               <div class="quick-stat">
                 <span class="up">●</span>
-                <span><strong>{{ open_jobs_count }}</strong> đang mở</span>
+                <span><strong>{% if open_jobs_count > 99 %}99+{% else %}{{ open_jobs_count }}{% endif %}</strong> đang mở</span>
               </div>
             </a>
 
@@ -171,7 +171,7 @@
 
           <div class="guide-list">
 
-            <a href="#" class="guide-item">
+            <a href="/settings/config" class="guide-item">
               <span class="guide-num">01</span>
               <div class="guide-body">
                 <h3 class="guide-title">Cấu hình tài khoản mạng xã hội</p>
@@ -179,14 +179,20 @@
                     làm nhiệm vụ.</p>
               </div>
               <span class="guide-arrow">
+                {% if has_accounts %}
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="color: #10b981;">
+                  <path d="M3 7.5L6 10.5L11 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {% else %}
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                   <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                     stroke-linejoin="round" />
                 </svg>
+                {% endif %}
               </span>
             </a>
 
-            <a href="#" class="guide-item">
+            <a href="/jobs" class="guide-item">
               <span class="guide-num">02</span>
               <div class="guide-body">
                 <h3 class="guide-title">Nhận và hoàn thành nhiệm vụ đầu tiên</p>
@@ -194,14 +200,20 @@
                     xác minh.</p>
               </div>
               <span class="guide-arrow">
+                {% if has_done_task %}
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="color: #10b981;">
+                  <path d="M3 7.5L6 10.5L11 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {% else %}
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                   <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                     stroke-linejoin="round" />
                 </svg>
+                {% endif %}
               </span>
             </a>
 
-            <a href="#" class="guide-item">
+            <a href="/jobs/create" class="guide-item">
               <span class="guide-num">03</span>
               <div class="guide-body">
                 <h3 class="guide-title">Dùng Credits để mở nhiệm vụ của bạn</p>
@@ -209,10 +221,16 @@
                     tương tác.</p>
               </div>
               <span class="guide-arrow">
+                {% if has_created_job %}
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="color: #10b981;">
+                  <path d="M3 7.5L6 10.5L11 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {% else %}
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                   <path d="M3 7H11M7 3L11 7L7 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                     stroke-linejoin="round" />
                 </svg>
+                {% endif %}
               </span>
             </a>
 

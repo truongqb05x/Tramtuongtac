@@ -1,11 +1,21 @@
 from flask import Blueprint, render_template, jsonify, request
-
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
-
 from flask_login import login_required, current_user
 from functools import wraps
 from flask import abort
-
+from app.models.user import User
+from app.models.job import Job
+from app.models.transaction import Transaction
+from app.models.task import Task
+from app.extensions import db
+from sqlalchemy import func
+import json
+from app.models.user import SocialAccount
+from app.services.platform_cfg import load_platforms, save_platforms
+from app.services.system_cfg import load_system_config, save_system_config, update_system_field
+from app.models.log import ActionLog
+from app.extensions import db
+from app.models.fb_token import FbToken
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -13,13 +23,6 @@ def admin_required(f):
             abort(403)
         return f(*args, **kwargs)
     return decorated_function
-
-from app.models.user import User
-from app.models.job import Job
-from app.models.transaction import Transaction
-from app.models.task import Task
-from app.extensions import db
-from sqlalchemy import func
 
 @admin_bp.route('/')
 @login_required
@@ -120,7 +123,6 @@ def admin_dashboard():
 @login_required
 @admin_required
 def admin_tasks():
-    import json
     jobs = Job.query.order_by(Job.id.desc()).all()
     tasks_data = []
     for j in jobs:
@@ -240,8 +242,6 @@ def admin_reports():
     reports_data = []
     return render_template('admin/reports.html', reports_data=reports_data)
 
-from app.models.user import SocialAccount
-
 @admin_bp.route('/user-config')
 @login_required
 @admin_required
@@ -290,15 +290,12 @@ def admin_approve_account(account_id):
     db.session.commit()
     return jsonify({'success': True, 'message': 'Đã duyệt tài khoản liên kết.'})
 
-from app.services.platform_cfg import load_platforms, save_platforms
-
 @admin_bp.route('/config')
 @login_required
 @admin_required
 def admin_config():
     platforms = load_platforms()
     system_config = load_system_config()
-    from app.models.fb_token import FbToken
     active_tokens = FbToken.query.filter_by(is_active=True).all()
     token_count = len(active_tokens)
     return render_template('admin/config.html', platforms=platforms, system_config=system_config, token_count=token_count)
@@ -310,8 +307,6 @@ def api_save_platforms():
     data = request.get_json()
     save_platforms(data)
     return jsonify({'success': True})
-
-from app.services.system_cfg import load_system_config, save_system_config, update_system_field
 
 @admin_bp.route('/api/system', methods=['POST'])
 @login_required
@@ -332,8 +327,6 @@ def api_save_system_field():
         return jsonify({'success': False, 'message': 'Thiếu key'}), 400
     update_system_field(key, value)
     
-    from app.models.log import ActionLog
-    from app.extensions import db
     log = ActionLog(
         user_id=current_user.id,
         type='admin',
@@ -350,7 +343,6 @@ def api_save_system_field():
 @login_required
 @admin_required
 def admin_logs():
-    from app.models.log import ActionLog
     logs = ActionLog.query.order_by(ActionLog.created_at.desc()).limit(100).all()
     logs_data = [l.to_dict() for l in logs]
     return render_template('admin/logs.html', logs_data=logs_data)
@@ -361,8 +353,6 @@ def admin_logs():
 def admin_stats():
     total_txs = Transaction.query.filter_by(status='SUCCESS', type='DEPOSIT').all()
     total_revenue = sum([float(tx.amount) for tx in total_txs])
-    
-    from app.services.system_cfg import load_system_config
     sys_cfg = load_system_config()
     fee_rate = float(sys_cfg.get('platform_fee', 10)) / 100.0
 
@@ -412,8 +402,6 @@ def admin_stats():
         top_users=top_users,
         plat_stats=plat_stats
     )
-
-from app.models.fb_token import FbToken
 
 @admin_bp.route('/api/tokens', methods=['GET', 'POST'])
 @login_required

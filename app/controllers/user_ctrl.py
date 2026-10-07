@@ -1,6 +1,24 @@
-from flask import Blueprint, render_template
-from flask_login import login_required, current_user
+import json
+import re
+import time
+import urllib.parse
+from datetime import date, datetime
+from decimal import Decimal
+from urllib.parse import parse_qs, urlparse
+import requests
+from flask import Blueprint, jsonify, render_template, request, session
+from flask_bcrypt import check_password_hash, generate_password_hash
+from flask_login import current_user, login_required
+from sqlalchemy import or_
+from app.extensions import db
 from app.models.job import Job
+from app.models.task import Task
+from app.models.transaction import Transaction
+from app.models.user import SocialAccount, User
+from app.services.facebook import check_fb_action_status, get_facebook_profile, verify_fb_post_id
+from app.services.platform_cfg import load_platforms
+from app.services.system_cfg import load_system_config
+
 
 user_bp = Blueprint('user', __name__)
 
@@ -9,12 +27,9 @@ user_bp = Blueprint('user', __name__)
 def user_buy_credits():
     return render_template('user/billing/buy_credits.html')
 
-from sqlalchemy import or_
-
 @user_bp.route('/billing/transfer-credits')
 @login_required
 def user_transfer_credits():
-    from app.models.transaction import Transaction
     
     # Get transfer history for this user
     # A transaction where type is TRANSFER_OUT (user sent to someone) or TRANSFER_IN (user received from someone)
@@ -26,14 +41,12 @@ def user_transfer_credits():
     history_data = []
     # We need to know who the other party was. We can parse it from description or add a column.
     # To keep schema changes minimal, let's parse from description which can be "Chuyển tiền cho abc@xyz.com"
-    import re
     for tx in db_history:
         other_email = "Unknown"
         match = re.search(r'([\w\.-]+@[\w\.-]+)', tx.description or '')
         if match:
             other_email = match.group(1)
             
-        import time
         history_data.append({
             'id': f'TX-{tx.id}',
             'type': 'out' if tx.type == 'TRANSFER_OUT' else 'in',
@@ -44,13 +57,11 @@ def user_transfer_credits():
             'ts': int(tx.created_at.timestamp() * 1000)
         })
     
-    import json
     return render_template('user/billing/transfer_credits.html', history_data_json=json.dumps(history_data))
 
 @user_bp.route('/api/users/search')
 @login_required
 def api_search_users():
-    from app.models.user import User
     query = request.args.get('q', '').strip()
     if not query:
         return jsonify({'success': True, 'data': []})
@@ -88,9 +99,6 @@ def api_transfer_credits():
         
     if current_user.balance < amount:
         return jsonify({'success': False, 'message': 'Số dư không đủ'}), 400
-        
-    from app.models.user import User
-    from app.models.transaction import Transaction
     
     recipient = User.query.get(recipient_id)
     if not recipient:
@@ -129,9 +137,6 @@ def api_transfer_credits():
         db.session.rollback()
         return jsonify({'success': False, 'message': 'Lỗi hệ thống khi chuyển tiền: ' + str(e)}), 500
 
-from flask import request, jsonify
-from app.extensions import db
-
 @user_bp.route('/jobs/create', methods=['GET', 'POST'])
 @login_required
 def user_create_job():
@@ -147,7 +152,6 @@ def user_create_job():
         if action_type == 'SUB': action_type = 'FOLLOW'
         target_url = data.get('url')
         quantity = int(data.get('slots', 0))
-        from decimal import Decimal
         price_per_action = Decimal(str(data.get('reward', 0)))
         total_cost = Decimal(str(data.get('total', 0)))
         
@@ -157,7 +161,6 @@ def user_create_job():
         if current_user.balance < total_cost:
             return jsonify({'success': False, 'message': 'Không đủ Credits'}), 400
             
-        from app.services.system_cfg import load_system_config
         config = load_system_config()
         initial_status = 'PAUSED' if config.get('safe_mode', False) else 'RUNNING'
 
@@ -207,7 +210,6 @@ def user_create_job():
             d['status'] = 'paused'
         my_jobs_data.append(d)
         
-    from app.services.system_cfg import load_system_config
     system_config = load_system_config()
     return render_template('user/jobs/create_job.html', my_jobs=my_jobs_data, system_config=system_config)
 
@@ -232,19 +234,14 @@ def user_toggle_job(job_id):
 @user_bp.route('/jobs')
 @login_required
 def user_job_list():
-    from app.services.system_cfg import load_system_config
     system_config = load_system_config()
     daily_limit = system_config.get('daily_task_limit', 200)
     
-    from app.models.task import Task
-    from datetime import datetime, date
     today_start = datetime.combine(date.today(), datetime.min.time())
     completed_today = Task.query.filter(Task.worker_id == current_user.id, Task.created_at >= today_start).count()
     if completed_today >= daily_limit:
         return f'Bạn đã đạt giới hạn {daily_limit} nhiệm vụ/ngày. Vui lòng quay lại vào ngày mai!', 403
 
-    import time
-    from flask import session
     now = time.time()
     last_get = session.get('last_get_jobs', 0)
     if now - last_get < 15:
@@ -252,12 +249,10 @@ def user_job_list():
     session['last_get_jobs'] = now
     session.modified = True
 
-    from app.models.user import SocialAccount
     has_accounts = SocialAccount.query.filter_by(user_id=current_user.id, is_deleted=False).first() is not None
     # Fetch running jobs that are not deleted
     db_jobs = Job.query.filter_by(status='RUNNING', is_deleted=False).all()
     
-    from app.models.task import Task
     active_accs = SocialAccount.query.filter_by(user_id=current_user.id, is_selected=True, is_deleted=False).all()
     completed_targets = {}
     for acc in active_accs:
@@ -282,9 +277,12 @@ def user_job_list():
         seen_targets.add(target_key)
         
         filtered_jobs.append(job)
-        
+
+    # Sắp xếp: ưu tiên job có current_count thấp hơn (tiến trình ít hơn)
+    # Nếu cùng current_count thì ưu tiên job được tạo muộn hơn (created_at lớn hơn)
+    filtered_jobs.sort(key=lambda j: (j.current_count, -(j.created_at.timestamp() if j.created_at else 0)))
+
     jobs_data = [job.to_dict() for job in filtered_jobs]
-    from app.services.system_cfg import load_system_config
     system_config = load_system_config()
     return render_template('user/jobs/job_list.html', jobs_data=jobs_data, has_accounts=has_accounts, system_config=system_config)
 
@@ -307,8 +305,6 @@ def user_privacy_policy():
 @user_bp.route('/terms')
 def user_terms():
     return render_template('user/pages/terms.html')
-
-from flask_bcrypt import check_password_hash, generate_password_hash
 
 @user_bp.route('/settings/account', methods=['GET', 'POST'])
 @login_required
@@ -333,7 +329,6 @@ def user_settings_account():
         
     return render_template('user/settings/account.html')
 
-from app.models.user import SocialAccount
 
 @user_bp.route('/settings/config', methods=['GET', 'POST', 'DELETE'])
 @login_required
@@ -347,9 +342,6 @@ def user_settings_config():
             
         # extract social_id (just last part of URL for now)
         social_id = url.rstrip('/').split('/')[-1]
-        
-        import urllib.parse
-        import re
         parsed_url = urllib.parse.urlparse(url)
         if 'profile.php' in parsed_url.path:
             qs = urllib.parse.parse_qs(parsed_url.query)
@@ -362,11 +354,8 @@ def user_settings_config():
         
         account_name = None
         if platform == 'FACEBOOK':
-            from app.services.facebook import get_facebook_profile
             fb_info = get_facebook_profile(url)
             account_name = fb_info.get('name')
-                
-        from app.services.system_cfg import load_system_config
         config = load_system_config()
         is_safe_mode = config.get('safe_mode', False)
         initial_status = 'PENDING' if is_safe_mode else 'ACTIVE'
@@ -440,7 +429,6 @@ def user_settings_config():
             'addedAt': a.created_at.strftime('%Y-%m-%d')
         })
         
-    from app.services.platform_cfg import load_platforms
     active_platforms = [p for p in load_platforms() if p.get('active')]
     return render_template('user/settings/config.html', accounts_data=accounts_data, platforms=active_platforms)
 
@@ -466,21 +454,10 @@ def user_settings_config_select():
     
     return jsonify({'success': True})
 
-from app.services.platform_cfg import load_platforms
-
 @user_bp.route('/api/platforms', methods=['GET'])
 @login_required
 def get_platforms():
     return jsonify({'success': True, 'data': load_platforms()})
-
-
-import requests
-import re
-from urllib.parse import urlparse, parse_qs
-from app.services.facebook import verify_fb_post_id, extract_fbid, check_fb_action_status
-
-import random
-from app.models.fb_token import FbToken
 
 @user_bp.route('/api/convert-url', methods=['POST'])
 @login_required
@@ -545,15 +522,10 @@ def convert_url():
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
-from app.models.job import Job
-from app.models.task import Task
-from app.models.transaction import Transaction
 
 @user_bp.route('/api/jobs/<int:job_id>/verify', methods=['POST'])
 @login_required
 def verify_job(job_id):
-    import time
-    from flask import session
     now = time.time()
     last_verify = session.get('last_verify', 0)
     if now - last_verify < 5:
@@ -561,10 +533,8 @@ def verify_job(job_id):
     session['last_verify'] = now
     session.modified = True
     
-    from app.services.system_cfg import load_system_config
     system_config = load_system_config()
     daily_limit = system_config.get('daily_task_limit', 200)
-    from datetime import datetime, date
     today_start = datetime.combine(date.today(), datetime.min.time())
     completed_today = Task.query.filter(Task.worker_id == current_user.id, Task.created_at >= today_start).count()
     if completed_today >= daily_limit:

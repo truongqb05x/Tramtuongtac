@@ -10,6 +10,14 @@ window.showToast = function (msg) {
     window.toastTimer = setTimeout(() => toast.classList.remove('on'), 2800);
 };
 
+window.showLoading = function(show) {
+    const loader = document.getElementById('globalLoading');
+    if (loader) {
+      if (show) loader.classList.add('active');
+      else loader.classList.remove('active');
+    }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     /* ============ HEADER USER MENU ============ */
     const userAvatarBtn = document.getElementById('userAvatarBtn');
@@ -165,57 +173,6 @@ securityManager.init();
 
 /* ============ GIAO DIỆN VÀ ĐIỀU HƯỚNG ADMIN ============ */
 document.addEventListener("DOMContentLoaded", () => {
-  const PAGE_TITLES = {
-    dashboard: 'Dashboard',
-    tasks: 'Quản lý nhiệm vụ',
-    transactions: 'Giao dịch nạp tiền',
-    users: 'Danh sách users',
-    reports: 'Xử lý vi phạm',
-    'user-config': 'Cấu hình tài khoản',
-    config: 'Cấu hình chung',
-    logs: 'Nhật ký hoạt động',
-    stats: 'Thống kê hệ thống'
-  };
-
-  document.querySelectorAll('.sidebar-link').forEach(link => {
-    link.addEventListener('click', () => {
-      const view = link.dataset.view;
-      if (view === 'stats') {
-        window.location.href = '/admin/stats';
-        return;
-      } else if (view === 'tasks') {
-        window.location.href = '/admin/tasks';
-        return;
-      } else if (view === 'transactions') {
-        window.location.href = '/admin/transactions';
-        return;
-      } else if (view === 'users') {
-        window.location.href = '/admin/users';
-        return;
-      } else if (view === 'reports') {
-        window.location.href = '/admin/reports';
-        return;
-      } else if (view === 'user-config') {
-        window.location.href = '/admin/user-config';
-        return;
-      } else if (view === 'config') {
-        window.location.href = '/admin/config';
-        return;
-      } else if (view === 'logs') {
-        window.location.href = '/admin/logs';
-        return;
-      } else if (view === 'dashboard') {
-        window.location.href = '/admin';
-        return;
-      }
-      
-      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
-      const titleEl = document.getElementById('pageTitle');
-      if (titleEl) titleEl.textContent = PAGE_TITLES[view] || 'Admin';
-      closeSidebar();
-    });
-  });
 
   const sidebar = document.getElementById('sidebar');
   const sidebarBackdrop = document.getElementById('sidebarBackdrop');

@@ -1,7 +1,6 @@
 (function(){
   'use strict';
 
-
   /* ============ PASSWORD STRENGTH ============ */
   const newPass = document.getElementById('newPass');
   const bars = document.querySelectorAll('#strengthBars .strength-bar');
@@ -45,6 +44,8 @@
     btn.disabled = true;
     btn.textContent = 'Đang xử lý...';
     
+    showLoading(true);
+
     try {
       const res = await fetch('/settings/account', {
         method: 'POST',
@@ -65,6 +66,7 @@
     } catch (err) {
       showToast('Lỗi kết nối máy chủ.');
     } finally {
+      showLoading(false);
       btn.disabled = false;
       btn.textContent = 'Đổi mật khẩu';
     }

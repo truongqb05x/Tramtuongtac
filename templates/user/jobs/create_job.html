@@ -13,6 +13,7 @@
     rel="stylesheet" />
   <link rel="shortcut icon" href="../../../static/img/logo.png" type="image/x-icon">
   <link rel="stylesheet" href="../../../static/css/layout/base.css">
+  <link rel="stylesheet" href="../../../static/css/layout/loading.css">
   <link rel="stylesheet" href="../../../static/css/layout/header.css" />
   <link rel="stylesheet" href="../../../static/css/layout/notice.css" />
   <link rel="stylesheet" href="../../../static/css/layout/page-layout.css" />
@@ -42,7 +43,7 @@
         <div class="hidden md:flex items-center gap-3">
           <div class="user-dropdown-wrap">
             <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
-              <img src="https://ui-avatars.com/api/?name=User&background=1e3a5f&color=fff" alt="Avatar" />
+              <img src="https://api.dicebear.com/9.x/avataaars/svg?seed={{ current_user.email }}&backgroundColor=b6e3f4&radius=50" alt="Avatar" />
             </button>
             <div class="user-dropdown-menu" id="userDropdownMenu">
               <a href="/settings/account">Hồ sơ</a>
@@ -413,8 +414,19 @@
     </div>
   </footer>
 
+  <!-- ================= GLOBAL LOADING ================= -->
+  <div class="global-loading-overlay" id="globalLoading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Đang tải...</div>
+  </div>
+
+<script>
+  window.FEE_RATE = {{ system_config.get('platform_fee', 10) }} / 100;
+  window.USER_BALANCE = {{ current_user.balance | int }};
+  window.CREATED_TASKS = {{ my_jobs | tojson | safe }} || [];
+</script>
 <script src="../../../static/js/users/create_job.js"></script>
-  <script src="/static/js/utils.js"></script>
+<script src="/static/js/utils.js"></script>
 </body>
 
 </html>

@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="../../static/css/layout/notice.css" />
   <link rel="stylesheet" href="../../../static/css/layout/pagination.css" />
   <link rel="stylesheet" href="../../../static/css/page/job/job_list.css">
+  <link rel="stylesheet" href="../../../static/css/layout/loading.css">
   <link rel="shortcut icon" href="../../../static/img/logo.png" type="image/x-icon">
 </head>
 
@@ -40,7 +41,7 @@
         <div class="hidden md:flex items-center gap-3">
           <div class="user-dropdown-wrap">
             <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
-              <img src="https://ui-avatars.com/api/?name=User&background=1e3a5f&color=fff" alt="Avatar" />
+              <img src="https://api.dicebear.com/9.x/avataaars/svg?seed={{ current_user.email }}&backgroundColor=b6e3f4&radius=50" alt="Avatar" />
             </button>
             <div class="user-dropdown-menu" id="userDropdownMenu">
               <a href="/settings/account">Hồ sơ</a>
@@ -166,6 +167,12 @@
   </div>
 
 
+  <!-- ================= GLOBAL LOADING ================= -->
+  <div class="global-loading-overlay" id="globalLoading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Đang kiểm tra...</div>
+  </div>
+
   <!-- ================= TOAST ================= -->
   <div class="toast" id="toast" role="status" aria-live="polite">
     <span class="check">
@@ -229,6 +236,10 @@
     </div>
   </footer>
 
+<script>
+  window.TASKS = {{ jobs_data | tojson | safe }} || [];
+  window.DAILY_LIMIT = {{ system_config.get('daily_task_limit', 200) }};
+</script>
 <script src="../../../static/js/users/job_list.js"></script>
 <script src="/static/js/utils.js"></script>
 </body>

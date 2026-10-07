@@ -2,7 +2,17 @@ from flask import Flask, render_template
 from app.extensions import db, bcrypt, login_manager
 from dotenv import load_dotenv
 import os
-
+from app.controllers.auth_ctrl import auth_bp
+from app.controllers.user_ctrl import user_bp
+from app.controllers.admin_ctrl import admin_bp
+from flask import request
+from flask_login import current_user
+from app.services.system_cfg import load_system_config
+from flask import redirect, url_for
+from app.models.job import Job
+from app.models.user import SocialAccount
+from app.models.task import Task
+from flask_login import login_required
 load_dotenv()
 
 def create_app():
@@ -17,20 +27,10 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
-    
-    # Register Blueprints
-    from app.controllers.auth_ctrl import auth_bp
-    from app.controllers.user_ctrl import user_bp
-    from app.controllers.admin_ctrl import admin_bp
-    
+        
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(admin_bp)
-    app.register_blueprint(user_bp)
-    
-    from flask import request
-    from flask_login import current_user
-    from app.services.system_cfg import load_system_config
-    
+    app.register_blueprint(user_bp)    
     @app.before_request
     def check_maintenance():
         if request.path.startswith('/static') or request.path.startswith('/admin'):
@@ -46,19 +46,19 @@ def create_app():
             return render_template('user/errors/503.html'), 503
 
     # We will temporarily keep the root routes here to avoid breaking everything at once
-    from flask import redirect, url_for
     @app.route('/')
     def index():
         if current_user.is_authenticated:
             return redirect(url_for('user_home'))
         return render_template('user/index.html')
-    from flask_login import login_required
     @app.route('/home')
     @login_required
     def user_home():
-        from app.models.job import Job
         open_jobs_count = Job.query.filter_by(status='RUNNING', is_deleted=False).count()
-        return render_template('user/home.html', open_jobs_count=open_jobs_count)
+        has_accounts = SocialAccount.query.filter_by(user_id=current_user.id, is_deleted=False).first() is not None
+        has_done_task = Task.query.filter_by(worker_id=current_user.id).first() is not None
+        has_created_job = Job.query.filter_by(user_id=current_user.id).first() is not None
+        return render_template('user/home.html', open_jobs_count=open_jobs_count, has_accounts=has_accounts, has_done_task=has_done_task, has_created_job=has_created_job)
         
     from flask import redirect, url_for
     @app.route('/login')

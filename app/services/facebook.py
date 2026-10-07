@@ -1,7 +1,9 @@
 import requests
 import re
 import html
-
+from urllib.parse import urlparse, parse_qs
+from app.models.fb_token import FbToken
+from app.extensions import db
 def get_facebook_profile(url):
     headers = {
         "User-Agent": (
@@ -85,10 +87,6 @@ def get_facebook_profile(url):
             "status": None,
             "error": str(e)
         }
-
-from urllib.parse import urlparse, parse_qs
-from app.models.fb_token import FbToken
-from app.extensions import db
 
 def verify_fb_post_id(post_id):
     active_tokens = FbToken.query.filter_by(is_active=True).all()
