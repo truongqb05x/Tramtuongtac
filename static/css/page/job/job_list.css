@@ -46,12 +46,24 @@
         grid-template-columns: 240px minmax(0, 1fr);
         gap: 2.5rem;
         align-items: start;
+        transition: grid-template-columns 0.3s ease, gap 0.3s ease;
+      }
+      .workspace.collapsed {
+        grid-template-columns: 0px minmax(0, 1fr);
+        gap: 2.5rem;
+      }
+      .workspace.collapsed #filterContent {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .workspace.collapsed #desktopToggleFilter {
+        transform: rotate(180deg);
       }
     }
 
     @media (min-width: 1280px) {
       .workspace {
-        grid-template-columns: 260px minmax(0, 1fr);
+        grid-template-columns: 240px minmax(0, 1fr);
         gap: 3rem;
       }
     }

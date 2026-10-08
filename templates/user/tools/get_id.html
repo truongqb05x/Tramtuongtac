@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tăng like tương tác chéo, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="shortcut icon" href="../../../static/img/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../../static/css/layout/base.css">
+  <link rel="stylesheet" href="../../../static/css/layout/loading.css">
+  <link rel="stylesheet" href="../../../static/css/layout/header.css" />
+  <link rel="stylesheet" href="../../../static/css/layout/notice.css" />
+  <link rel="stylesheet" href="../../../static/css/layout/page-layout.css" />
+  <link rel="stylesheet" href="../../../static/css/layout/form.css" />
+
+  <style>
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .result-box {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      display: none;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .result-box.show {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-id {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #166534;
+      font-family: 'IBM Plex Mono', monospace;
+      margin: 0.5rem 0;
+      word-break: break-all;
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+    }
+
+    .copy-btn.copied {
+      background: #f0fdf4;
+      border-color: #166534;
+      color: #166534;
+    }
+
+    .instruction-steps {
+      background: var(--bg-alt);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .instruction-steps h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      color: var(--ink);
+    }
+
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .step-number {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .step-content {
+      font-size: 0.9375rem;
+      color: var(--text);
+      line-height: 1.5;
+      padding-top: 0.25rem;
+    }
+  </style>
+
+  <meta name="description" content="Hệ thống tăng like, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội an toàn tuyệt đối. Mọi người tự nguyện trao đổi và công bằng"/>
+  <meta name="keywords" content="tang like, tăng like, tăng tương tác, tang tuong tac cheo, tuongtaccheo, trao đổi sub, traodoisub, trao doi sub, tăng sub, tang theo doi, tang follow, danh gia page, tang danh gia, tang thanh vien nhom, tang cam xuc bai viet, tang like binh luan, tang theo doi fanpage, tang like fanpage, tang member nhom"/>
+  <meta property="og:description" content="Hệ thống tăng like, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội an toàn tuyệt đối. Mọi người tự nguyện trao đổi và công bằng"/>
+  <meta name="copyright" content=""/>
+  <meta name="robots" content="index, follow"/>
+  <meta name='revisit-after' content='1 days'/>
+  <meta http-equiv="content-language" content="vi"/>
+  <meta property="og:url" content="https://tramtuongtac.xyz/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Tăng like tương tác chéo, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội"/>
+  <meta property="og:locale" content="vi_VN"/>
+  <meta property="og:image" content="https://tramtuongtac.xyz/static/img/logo.png">
+  <meta property="fb:app_id" content=""/>
+  <meta name="twitter:title" content="Tăng like tương tác chéo, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội">
+  <meta name="twitter:description" content="Hệ thống tăng like, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội an toàn tuyệt đối. Mọi người tự nguyện trao đổi và công bằng">
+
+  <link rel="canonical" href="https://tramtuongtac.xyz{{ request.path }}" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "TRAMTUONGTAC",
+  "url": "https://tramtuongtac.xyz/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://tramtuongtac.xyz/blog?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header class="top">
+    <div class="wrap">
+      <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+        <a href="/" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+          <a href="/settings/config" class="nav-link">Trang chủ</a>
+          <a href="/jobs" class="nav-link">Làm Nhiệm Vụ</a>
+          <a href="/jobs/create" class="nav-link">Tạo Tương Tác</a>
+          <a href="/tools/get-id" class="nav-link active">Lấy ID</a>
+        </nav>
+
+        <div class="hidden md:flex items-center gap-3">
+          <div class="user-dropdown-wrap">
+            <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
+              <img src="https://api.dicebear.com/9.x/avataaars/svg?seed={{ current_user.email }}&backgroundColor=b6e3f4&radius=50" alt="Avatar" />
+            </button>
+            <div class="user-dropdown-menu" id="userDropdownMenu">
+              <a href="/settings/account">Hồ sơ</a>
+              <a href="/settings/config">Cài đặt</a>
+              {% if current_user.role == 'ADMIN' %}
+              <a href="/admin">Quản trị</a>
+              {% endif %}
+              <div class="divider"></div>
+              <a href="/login" class="text-danger">Đăng xuất</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-menu md:hidden" id="mobileMenu">
+      <a href="/settings/config">Cấu hình</a>
+      <a href="/jobs">Làm Nhiệm Vụ</a>
+      <a href="/jobs/create">Tạo Tương Tác</a>
+      <a href="/tools/get-id" style="font-weight:500;color:var(--ink)">Lấy ID</a>
+      <a href="/api-docs">Tài liệu API</a>
+      <div class="p-4 flex flex-col gap-2.5">
+        <a href="/login" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng
+          xuất</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= PAGE ================= -->
+  <div class="page">
+
+    <!-- Page head -->
+    <div class="page-head" style="max-width: 800px; margin: 0 auto 2rem;">
+      <h1 class="page-title">Công cụ lấy ID bài viết</h1>
+      <p class="page-sub">
+        Chuyển đổi đường dẫn (link) bài viết thành ID số để sử dụng trong việc tạo nhiệm vụ. Nhanh chóng và chính xác.
+      </p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="tools-grid">
+      
+      <!-- Form Section -->
+      <div class="form-section" style="margin-bottom: 0;">
+        <div class="form-section-body">
+          <form id="getIdForm" onsubmit="event.preventDefault(); handleGetId();">
+            <div class="field">
+              <label class="field-label" for="urlInput">
+                Đường dẫn bài viết (Link) <span class="req">*</span>
+              </label>
+              <input type="text" id="urlInput" placeholder="Dán link bài viết vào đây..." required />
+              <p class="field-hint">Ví dụ: https://www.facebook.com/photo/?fbid=123456...</p>
+            </div>
+            <button type="submit" class="btn btn-primary w-full" id="submitBtn">
+              Lấy ID ngay
+            </button>
+          </form>
+
+          <!-- Result Area -->
+          <div class="result-box" id="resultBox">
+            <div class="text-[0.875rem] text-[#15803d] font-medium mb-1 flex items-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              Lấy ID thành công!
+            </div>
+            <div class="text-[0.875rem] text-[#166534] mb-2">ID của nội dung là:</div>
+            <div class="result-id" id="resultId"></div>
+            <button class="copy-btn" onclick="copyId()" id="copyBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span id="copyText">Sao chép ID</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instructions Section -->
+      <div class="instruction-steps">
+        <h3>Hướng dẫn sử dụng</h3>
+        <ul class="step-list">
+          <li class="step-item">
+            <div class="step-number">1</div>
+            <div class="step-content">Mở ứng dụng hoặc trang web chứa bài viết bạn muốn thao tác (VD: Facebook, TikTok...).</div>
+          </li>
+          <li class="step-item">
+            <div class="step-number">2</div>
+            <div class="step-content">Tìm nút <strong>Chia sẻ (Share)</strong> ở bài viết và chọn <strong>Sao chép liên kết (Copy link)</strong>.</div>
+          </li>
+          <li class="step-item">
+            <div class="step-number">3</div>
+            <div class="step-content">Dán liên kết vừa sao chép vào ô "Đường dẫn bài viết" ở phía trên và nhấn nút <strong>Lấy ID ngay</strong>.</div>
+          </li>
+          <li class="step-item">
+            <div class="step-number">4</div>
+            <div class="step-content">Hệ thống sẽ phân tích và trả về dãy số ID tương ứng. Bạn nhấn <strong>Sao chép ID</strong> để sử dụng ID này khi tạo nhiệm vụ.</div>
+          </li>
+        </ul>
+
+        <div style="margin-top: 2rem;">
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+            <h4 style="font-size: 1rem; font-weight: 600; color: var(--ink); margin: 0;">Video Hướng Dẫn</h4>
+            <div class="select-wrap" style="max-width: 300px; position: relative;">
+              <select id="videoSelect" onchange="changeVideoTutorial()" style="width: 100%; padding: 0.5rem 2rem 0.5rem 0.75rem; border-radius: 6px; border: 1px solid var(--border); font-size: 0.875rem; background-color: var(--bg); color: var(--text); appearance: none; cursor: pointer;">
+                <option value="https://www.youtube.com/embed/dQw4w9WgXcQ">Hướng dẫn lấy ID Bài viết</option>
+                <option value="https://www.youtube.com/embed/tgbNymZ7vqY">Hướng dẫn lấy ID Profile (Pro5)</option>
+              </select>
+              <svg class="select-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 8px; border: 1px solid var(--border); background: #000;">
+            <!-- Cập nhật link video Youtube thực tế của bạn vào thuộc tính value của option phía trên -->
+            <iframe 
+              id="tutorialVideo"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+              style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= GLOBAL LOADING ================= -->
+  <div class="global-loading-overlay" id="globalLoading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Đang phân tích link...</div>
+  </div>
+
+  <!-- ================= TOAST ================= -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="check">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+        <path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </span>
+    <span id="toastMsg">Thành công</span>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="bg-[#f4f2ee] border-t border-[#e3e0da] mt-16">
+    <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
+        <div>
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+          <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
+            Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
+          </p>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="/jobs"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Nhiệm vụ</a>
+            </li>
+            <li><a href="/tools/get-id"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Lấy ID</a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="/faq" target="_blank"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ
+                giúp</a></li>
+            <li><a href="/terms" target="_blank"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều
+                khoản</a></li>
+            <li><a href="/privacy" target="_blank"
+                class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Chính sách
+                bảo mật</a></li>
+          </ul>
+        </div>
+      </div>
+      <div
+        class="mt-12 pt-6 border-t border-[#e3e0da] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        <p class="text-[0.8125rem] text-[#6b6b6b]">© 2026 TRAMTUONGTAC. Tất cả các quyền được bảo lưu.</p>
+        <p class="text-[0.8125rem] text-[#6b6b6b]">Made with care in Vietnam</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/utils.js"></script>
+  <script>
+    function changeVideoTutorial() {
+      const videoSrc = document.getElementById('videoSelect').value;
+      const iframe = document.getElementById('tutorialVideo');
+      if(iframe) {
+        iframe.src = videoSrc;
+      }
+    }
+
+    // Hàm mô phỏng lấy ID từ link
+    function extractIdFromUrl(url) {
+      // Mock logic: Lấy chuỗi số dài nhất từ URL làm ID
+      const matches = url.match(/\d{8,}/g);
+      if (matches && matches.length > 0) {
+        return matches[0];
+      }
+      
+      // Hoặc hash tạm một chuỗi ngẫu nhiên
+      return Math.floor(Math.random() * 1000000000000000).toString();
+    }
+
+    function showToastMsg(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      if (!toast || !toastMsg) return;
+      
+      toastMsg.textContent = msg;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function handleGetId() {
+      const urlInput = document.getElementById('urlInput');
+      const url = urlInput.value.trim();
+      
+      if (!url) return;
+
+      // Show loading
+      const loading = document.getElementById('globalLoading');
+      if(loading) loading.style.display = 'flex';
+
+      // Giả lập gọi API lấy ID (delay 800ms)
+      setTimeout(() => {
+        if(loading) loading.style.display = 'none';
+        
+        const id = extractIdFromUrl(url);
+        
+        // Hiện kết quả
+        const resultBox = document.getElementById('resultBox');
+        const resultId = document.getElementById('resultId');
+        
+        resultId.textContent = id;
+        resultBox.classList.add('show');
+        
+        // Reset copy button
+        const copyBtn = document.getElementById('copyBtn');
+        const copyText = document.getElementById('copyText');
+        copyBtn.classList.remove('copied');
+        copyText.textContent = 'Sao chép ID';
+        
+        showToastMsg('Phân tích link thành công!');
+        
+      }, 800);
+    }
+
+    function copyId() {
+      const resultId = document.getElementById('resultId').textContent;
+      if (!resultId) return;
+
+      navigator.clipboard.writeText(resultId).then(() => {
+        const copyBtn = document.getElementById('copyBtn');
+        const copyText = document.getElementById('copyText');
+        
+        copyBtn.classList.add('copied');
+        copyText.textContent = 'Đã sao chép';
+        
+        showToastMsg('Đã sao chép ID vào khay nhớ tạm!');
+      }).catch(err => {
+        console.error('Không thể sao chép', err);
+        showToastMsg('Lỗi sao chép ID');
+      });
+    }
+  </script>
+</body>
+
+</html>

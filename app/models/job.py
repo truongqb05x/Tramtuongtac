@@ -23,7 +23,7 @@ class Job(db.Model):
 
     def to_dict(self):
         cat_map = {
-            'LIKE': 'Tương tác',
+            'LIKE': 'Like',
             'LOVE': 'Tym',
             'WOW': 'Wow',
             'HAHA': 'Haha',

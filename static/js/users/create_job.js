@@ -191,7 +191,7 @@
     platformSelect.addEventListener('change', () => {
       const v = platformSelect.value;
       if (v) {
-        urlHint.textContent = 'Đường dẫn liên quan đến nền tảng ' + v + ' — bao gồm https://';
+        urlHint.innerHTML = 'Nếu bạn không biết lấy link thì xem <a href="/tools/get-id" target="_blank" style="color:var(--primary); text-decoration:underline;">hướng dẫn tại đây</a>';
         renderActivities(v);
       } else {
         urlHint.textContent = 'Dán đường dẫn đầy đủ, bao gồm https://';

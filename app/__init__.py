@@ -13,6 +13,7 @@ from app.models.job import Job
 from app.models.user import SocialAccount
 from app.models.task import Task
 from flask_login import login_required
+from flask import send_from_directory
 load_dotenv()
 
 def create_app():
@@ -69,6 +70,14 @@ def create_app():
     def user_register():
         # Because we only have /auth/login rendering the html in auth_bp and switching via JS hash or we can just redirect to login
         return redirect(url_for('auth.login', _anchor='register'))
+
+    @app.route('/robots.txt')
+    def robots_txt():
+        return send_from_directory(app.static_folder, 'robots.txt')
+
+    @app.route('/sitemap.xml')
+    def sitemap_xml():
+        return send_from_directory(app.static_folder, 'sitemap.xml')
         
     @app.errorhandler(404)
     def page_not_found(e):

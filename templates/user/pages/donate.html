@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tăng like tương tác chéo, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="shortcut icon" href="/static/img/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="/static/css/layout/base.css">
+  <link rel="stylesheet" href="/static/css/layout/loading.css">
+  <link rel="stylesheet" href="/static/css/layout/header.css" />
+  <link rel="stylesheet" href="/static/css/layout/notice.css" />
+  <link rel="stylesheet" href="/static/css/layout/page-layout.css" />
+  <style>
+    .donate-container {
+      max-width: 600px;
+      margin: 3rem auto;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+    }
+    .donate-container h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+    .donate-container p {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .bank-info {
+      background: var(--bg-alt);
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: left;
+      margin-top: 1rem;
+    }
+    .bank-info strong {
+      display: inline-block;
+      width: 120px;
+      color: var(--ink);
+    }
+    .bank-info p {
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+  </style>
+
+  <meta name="description" content="Hệ thống tăng like, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội an toàn tuyệt đối. Mọi người tự nguyện trao đổi và công bằng"/>
+  <meta name="keywords" content="tang like, tăng like, tăng tương tác, tang tuong tac cheo, tuongtaccheo, trao đổi sub, traodoisub, trao doi sub, tăng sub, tang theo doi, tang follow, danh gia page, tang danh gia, tang thanh vien nhom, tang cam xuc bai viet, tang like binh luan, tang theo doi fanpage, tang like fanpage, tang member nhom"/>
+  <meta property="og:description" content="Hệ thống tăng like, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội an toàn tuyệt đối. Mọi người tự nguyện trao đổi và công bằng"/>
+  <meta name="copyright" content=""/>
+  <meta name="robots" content="index, follow"/>
+  <meta name='revisit-after' content='1 days'/>
+  <meta http-equiv="content-language" content="vi"/>
+  <meta property="og:url" content="https://tramtuongtac.xyz/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Tăng like tương tác chéo, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội"/>
+  <meta property="og:locale" content="vi_VN"/>
+  <meta property="og:image" content="https://tramtuongtac.xyz/static/img/logo.png">
+  <meta property="fb:app_id" content=""/>
+  <meta name="twitter:title" content="Tăng like tương tác chéo, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội">
+  <meta name="twitter:description" content="Hệ thống tăng like, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội an toàn tuyệt đối. Mọi người tự nguyện trao đổi và công bằng">
+
+  <link rel="canonical" href="https://tramtuongtac.xyz{{ request.path }}" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "TRAMTUONGTAC",
+  "url": "https://tramtuongtac.xyz/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://tramtuongtac.xyz/blog?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header class="top">
+    <div class="wrap">
+      <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+        <a href="/" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+          <a href="/settings/config" class="nav-link">Trang chủ</a>
+          <a href="/jobs" class="nav-link">Làm Nhiệm Vụ</a>
+          <a href="/jobs/create" class="nav-link">Tạo Tương Tác</a>
+          <a href="/tools/get-id" class="nav-link">Lấy ID</a>
+        </nav>
+
+        <div class="hidden md:flex items-center gap-3">
+          {% if current_user.is_authenticated %}
+          <div class="user-dropdown-wrap">
+            <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
+              <img src="https://api.dicebear.com/9.x/avataaars/svg?seed={{ current_user.email }}&backgroundColor=b6e3f4&radius=50" alt="Avatar" />
+            </button>
+            <div class="user-dropdown-menu" id="userDropdownMenu">
+              <a href="/settings/account">Hồ sơ</a>
+              <a href="/settings/config">Cài đặt</a>
+              {% if current_user.role == 'ADMIN' %}
+              <a href="/admin">Quản trị</a>
+              {% endif %}
+              <div class="divider"></div>
+              <a href="/logout" class="text-danger">Đăng xuất</a>
+            </div>
+          </div>
+          {% else %}
+          <a href="/login" class="btn btn-primary" style="padding: 6px 16px;">Đăng nhập</a>
+          {% endif %}
+        </div>
+
+        <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-menu md:hidden" id="mobileMenu">
+      <a href="/settings/config">Cấu hình</a>
+      <a href="/jobs">Làm Nhiệm Vụ</a>
+      <a href="/jobs/create">Tạo Tương Tác</a>
+      <a href="/tools/get-id">Lấy ID</a>
+      <div class="p-4 flex flex-col gap-2.5">
+        {% if current_user.is_authenticated %}
+        <a href="/logout" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng xuất</a>
+        {% else %}
+        <a href="/login" class="btn btn-primary w-full">Đăng nhập</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="page">
+    <div class="donate-container">
+      <h1>Ủng hộ TRAMTUONGTAC</h1>
+      <p>Cảm ơn bạn đã đồng hành và sử dụng TRAMTUONGTAC. Mọi đóng góp của bạn đều giúp hệ thống duy trì server và phát triển thêm các tính năng mới.</p>
+      
+      <div class="bank-info" style="text-align: center; background: transparent; padding: 0;">
+        <img src="/static/img/qr-bank-donet.jpg" alt="Mã QR Ủng hộ" style="max-width: 100%; max-height: 400px; height: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 0 auto; display: block;">
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-[#f4f2ee] border-t border-[#e3e0da]">
+    <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
+        <div>
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+          <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
+            Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
+          </p>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="/blog" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Khám phá</a></li>
+            <li><a href="/jobs" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Nhiệm vụ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="/faq" target="_blank" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Trung tâm trợ giúp</a></li>
+            <li><a href="/terms" target="_blank" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e] transition-colors">Điều khoản</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/utils.js"></script>
+</body>
+</html>

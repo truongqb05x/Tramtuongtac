@@ -22,6 +22,15 @@ from app.services.system_cfg import load_system_config
 
 user_bp = Blueprint('user', __name__)
 
+@user_bp.route('/tools/get-id')
+@login_required
+def tools_get_id():
+    return render_template('user/tools/get_id.html')
+
+@user_bp.route('/donate')
+def user_donate():
+    return render_template('user/pages/donate.html')
+
 @user_bp.route('/billing/buy-credits')
 @login_required
 def user_buy_credits():
