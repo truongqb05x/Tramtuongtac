@@ -68,12 +68,24 @@ def admin_dashboard():
     recent_jobs_data = []
     for j in recent_jobs:
         user = User.query.get(j.user_id)
+        cat_map = {
+            'LIKE': 'Tương tác (Like)',
+            'LOVE': 'Tương tác (Tym)',
+            'WOW': 'Tương tác (Wow)',
+            'HAHA': 'Tương tác (Haha)',
+            'SAD': 'Tương tác (Buồn)',
+            'FOLLOW': 'Theo dõi',
+            'COMMENT': 'Bình luận',
+            'SHARE': 'Chia sẻ'
+        }
+        action_type_str = j.action_type.name if hasattr(j.action_type, 'name') else str(j.action_type)
+        
         recent_jobs_data.append({
             'id': f'#J-{j.id}',
             'creator': user.full_name if user else 'Unknown',
             'platform': j.platform,
-            'req': j.action_type,
-            'reward': f'{int(j.price_per_action)} Credits',
+            'req': cat_map.get(action_type_str, action_type_str),
+            'reward': f'{float(j.price_per_action or 0):g} Credits',
             'status': j.status.lower(),
             'statusLabel': 'Đang chạy' if j.status == 'RUNNING' else ('Hoàn thành' if j.status == 'COMPLETED' else 'Đã hủy')
         })
@@ -174,7 +186,7 @@ def admin_tasks():
 def admin_cancel_job(job_id):
     job = Job.query.get_or_404(job_id)
     if job.status == 'CANCELED':
-        return jsonify({'success': False, 'message': 'Nhiệm vụ đã bị hủy trước đó.'}), 400
+        return jsonify({'success': False, 'message': 'Nhiệm vụ đã bị hủy trước đó.'})
         
     job.status = 'CANCELED'
     db.session.commit()
@@ -186,11 +198,23 @@ def admin_cancel_job(job_id):
 def admin_restore_job(job_id):
     job = Job.query.get_or_404(job_id)
     if job.status != 'CANCELED':
-        return jsonify({'success': False, 'message': 'Chỉ có thể khôi phục nhiệm vụ đã hủy.'}), 400
+        return jsonify({'success': False, 'message': 'Chỉ có thể khôi phục nhiệm vụ đã hủy.'})
         
     job.status = 'RUNNING'
     db.session.commit()
     return jsonify({'success': True, 'message': 'Đã khôi phục nhiệm vụ.'})
+
+@admin_bp.route('/api/jobs/<int:job_id>/complete', methods=['POST'])
+@login_required
+@admin_required
+def admin_complete_job(job_id):
+    job = Job.query.get_or_404(job_id)
+    if job.status == 'COMPLETED':
+        return jsonify({'success': False, 'message': 'Nhiệm vụ đã hoàn thành trước đó.'})
+        
+    job.status = 'COMPLETED'
+    db.session.commit()
+    return jsonify({'success': True, 'message': 'Đã hoàn thành nhiệm vụ.'})
 
 @admin_bp.route('/transactions')
 @login_required

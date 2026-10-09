@@ -1,5 +1,15 @@
-
-
+if (typeof window.showToast !== 'function') {
+    window.toastTimer = null;
+    window.showToast = function (msg) {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMsg');
+        if (!toast || !toastMsg) return;
+        toastMsg.textContent = msg;
+        toast.classList.add('on');
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => toast.classList.remove('on'), 2800);
+    };
+}
 
 /* ============ TASKS DATA RENDERING ============ */
 function escapeHtml(s) {
@@ -63,9 +73,13 @@ function initTasks(ALL_TASKS) {
         actions += `<button class="btn btn-secondary btn-sm" onclick="showToast('Đang xem chi tiết ${t.id}')">Chi tiết</button>`;
       }
 
-      if(t.status !== 'rejected') {
+      if(t.status === 'pending' || t.status === 'running') {
+          actions += `<button class="btn btn-primary btn-sm" style="margin-left:5px" onclick="completeJob(${t.raw_id})">Hoàn thành</button>`;
+      }
+
+      if(t.status !== 'rejected' && t.status !== 'completed') {
           actions += `<button class="btn btn-danger btn-sm" style="margin-left:5px" onclick="cancelJob(${t.raw_id})">Hủy</button>`;
-      } else {
+      } else if (t.status === 'rejected') {
           actions += `<button class="btn btn-success btn-sm" style="margin-left:5px" onclick="restoreJob(${t.raw_id})">Khôi phục</button>`;
       }
 
@@ -183,5 +197,23 @@ function initTasks(ALL_TASKS) {
           }
       })
       .catch(err => alert("Lỗi kết nối!"));
+  }
+  
+  window.completeJob = function(jobId) {
+      if(!confirm("Bạn có chắc muốn hoàn thành nhiệm vụ này không?")) return;
+      fetch(`/admin/api/jobs/${jobId}/complete`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => res.json())
+      .then(data => {
+          if(data.success) {
+              showToast("Đã hoàn thành nhiệm vụ thành công!");
+              setTimeout(() => location.reload(), 1000);
+          } else {
+              alert("Lỗi: " + data.message);
+          }
+      })
+      .catch(err => alert("Lỗi hệ thống: " + err.message));
   }
 }
