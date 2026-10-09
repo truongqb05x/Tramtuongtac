@@ -36,6 +36,38 @@ def user_donate():
 def user_buy_credits():
     return render_template('user/billing/buy_credits.html')
 
+@user_bp.route('/billing/history')
+@login_required
+def user_billing_history():
+    filter_type = request.args.get('filter', 'all')
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    
+    query = Transaction.query.filter_by(user_id=current_user.id)
+    
+    if filter_type == 'earn':
+        query = query.filter_by(type='TASK_REWARD')
+    elif filter_type == 'spend':
+        query = query.filter_by(type='CREATE_JOB')
+    elif filter_type == 'transfer':
+        query = query.filter(Transaction.type.in_(['TRANSFER_IN', 'TRANSFER_OUT']))
+        
+    pagination = query.order_by(Transaction.id.desc()).paginate(page=page, per_page=per_page, error_out=False)
+    
+    # Determine which filters to show based on actual data
+    existing_types_query = db.session.query(Transaction.type).filter_by(user_id=current_user.id).distinct().all()
+    existing_types = [t[0] for t in existing_types_query]
+    
+    filter_options = [{'value': 'all', 'label': 'Tất cả giao dịch'}]
+    if 'TASK_REWARD' in existing_types:
+        filter_options.append({'value': 'earn', 'label': 'Nhận từ nhiệm vụ'})
+    if 'CREATE_JOB' in existing_types:
+        filter_options.append({'value': 'spend', 'label': 'Tiêu để tạo nhiệm vụ'})
+    if 'TRANSFER_IN' in existing_types or 'TRANSFER_OUT' in existing_types:
+        filter_options.append({'value': 'transfer', 'label': 'Giao dịch Credit'})
+    
+    return render_template('user/billing/history.html', pagination=pagination, current_filter=filter_type, filter_options=filter_options)
+
 @user_bp.route('/billing/transfer-credits')
 @login_required
 def user_transfer_credits():
@@ -49,7 +81,7 @@ def user_transfer_credits():
     
     history_data = []
     # We need to know who the other party was. We can parse it from description or add a column.
-    # To keep schema changes minimal, let's parse from description which can be "Chuyển tiền cho abc@xyz.com"
+    # To keep schema changes minimal, let's parse from description which can be "Chuyển Credit cho abc@xyz.com"
     for tx in db_history:
         other_email = "Unknown"
         match = re.search(r'([\w\.-]+@[\w\.-]+)', tx.description or '')
@@ -121,7 +153,7 @@ def api_transfer_credits():
             amount=amount,
             type='TRANSFER_OUT',
             status='SUCCESS',
-            description=f'Chuyển tiền cho {recipient.email}'
+            description=f'Chuyển Credit cho {recipient.email}'
         )
         db.session.add(tx_out)
         
@@ -132,7 +164,7 @@ def api_transfer_credits():
             amount=amount,
             type='TRANSFER_IN',
             status='SUCCESS',
-            description=f'Nhận tiền từ {current_user.email}'
+            description=f'Nhận Credit từ {current_user.email}'
         )
         db.session.add(tx_in)
         
@@ -144,7 +176,7 @@ def api_transfer_credits():
         })
     except Exception as e:
         db.session.rollback()
-        return jsonify({'success': False, 'message': 'Lỗi hệ thống khi chuyển tiền: ' + str(e)}), 500
+        return jsonify({'success': False, 'message': 'Lỗi hệ thống khi chuyển Credit: ' + str(e)}), 500
 
 @user_bp.route('/jobs/create', methods=['GET', 'POST'])
 @login_required
@@ -187,6 +219,15 @@ def user_create_job():
         
         # Deduct balance
         current_user.balance -= total_cost
+        
+        tx = Transaction(
+            user_id=current_user.id,
+            amount=total_cost,
+            type='CREATE_JOB',
+            status='SUCCESS',
+            description=f'Tạo chiến dịch {action_type} {platform}'
+        )
+        db.session.add(tx)
         
         db.session.add(new_job)
         db.session.commit()
@@ -339,6 +380,8 @@ def user_settings_account():
     return render_template('user/settings/account.html')
 
 
+from app.utils.validators import is_vietnamese_name
+
 @user_bp.route('/settings/config', methods=['GET', 'POST', 'DELETE'])
 @login_required
 def user_settings_config():
@@ -349,6 +392,15 @@ def user_settings_config():
         if not platform or not url:
             return jsonify({'success': False, 'message': 'Thiếu thông tin'}), 400
             
+        if not url.lower().startswith(('http://', 'https://')):
+            if url.isdigit():
+                if platform == 'FACEBOOK':
+                    url = f'https://www.facebook.com/profile.php?id={url}'
+                else:
+                    url = f'https://www.{platform.lower()}.com/{url}'
+            else:
+                url = 'https://' + url
+            
         # extract social_id (just last part of URL for now)
         social_id = url.rstrip('/').split('/')[-1]
         parsed_url = urllib.parse.urlparse(url)
@@ -357,6 +409,9 @@ def user_settings_config():
             if 'id' in qs:
                 social_id = qs['id'][0]
         else:
+            # We can just extract digits from path if we want, but doing it safely without re:
+            # Alternatively import re at the top or locally, let's just import re locally for this match
+            import re
             match = re.search(r'/(\d+)/?$', parsed_url.path)
             if match:
                 social_id = match.group(1)
@@ -365,17 +420,25 @@ def user_settings_config():
         if platform == 'FACEBOOK':
             fb_info = get_facebook_profile(url)
             account_name = fb_info.get('name')
+            real_uid = fb_info.get('uid')
+            if real_uid:
+                social_id = real_uid
+            
+        if account_name and not is_vietnamese_name(account_name):
+            return jsonify({'success': False, 'message': 'Tên tài khoản không hợp lệ. Vui lòng sử dụng tài khoản có tên người Việt (chỉ chứa chữ cái tiếng Việt và dấu cách).'}), 400
+
         config = load_system_config()
         is_safe_mode = config.get('safe_mode', False)
         initial_status = 'PENDING' if is_safe_mode else 'ACTIVE'
 
-        # Check if user has other accounts for this platform
-        has_other = SocialAccount.query.filter(
+        # Check if user has any active account for this platform
+        has_active = SocialAccount.query.filter(
             SocialAccount.user_id == current_user.id,
             SocialAccount.platform == platform,
-            SocialAccount.social_id != social_id
+            SocialAccount.is_selected == True,
+            SocialAccount.is_deleted == False
         ).first()
-        is_first = (has_other is None)
+        is_first = (has_active is None)
 
         # Check if it already exists
         existing_acc = SocialAccount.query.filter_by(platform=platform, social_id=social_id).first()
@@ -405,6 +468,7 @@ def user_settings_config():
                 'id': acc.id,
                 'platform': acc.platform.lower(),
                 'url': acc.profile_url,
+                'uid': acc.social_id,
                 'name': acc.account_name if acc.account_name else acc.social_id,
                 'verified': not is_safe_mode,
                 'status': initial_status.lower(),
@@ -431,6 +495,7 @@ def user_settings_config():
             'id': a.id,
             'platform': a.platform.lower(),
             'url': a.profile_url,
+            'uid': a.social_id,
             'name': a.account_name if a.account_name else a.social_id,
             'verified': a.status == 'ACTIVE',
             'status': a.status.lower(),

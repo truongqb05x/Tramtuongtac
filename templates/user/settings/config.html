@@ -257,8 +257,8 @@
           <span class="v" id="delPlatform">—</span>
         </div>
         <div class="modal-summary-row">
-          <span class="k">Đường dẫn</span>
-          <span class="v" id="delUrl">—</span>
+          <span class="k">Tài khoản</span>
+          <span class="v" id="delName">—</span>
         </div>
       </div>
       <div class="modal-actions">
@@ -393,9 +393,9 @@
         <div class="acc-info">
           <span class="platform-mark">${p.icon}</span>
           <div class="acc-info-text">
-            <div class="acc-name">${escapeHtml(acc.name || 'Đang cập nhật...')}</div>
+            <a href="${escapeHtml(acc.url)}" target="_blank" rel="noopener noreferrer" class="acc-name">${escapeHtml(acc.name || 'Đang cập nhật...')}</a>
             <div style="font-size: .75rem; color: var(--muted); margin-top: .125rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-              ${escapeHtml(shortUrl(acc.url))}
+              UID: ${escapeHtml(acc.uid || shortUrl(acc.url))}
             </div>
           </div>
         </div>
@@ -478,17 +478,15 @@
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
     function isValidUrl(str) {
-      try {
-        const u = new URL(str);
-        return u.protocol === 'http:' || u.protocol === 'https:';
-      } catch { return false; }
+      // Bỏ qua check chuẩn URL, chỉ để tương thích nếu cần
+      return true;
     }
 
     /* ============ ADD ACCOUNT ============ */
     addForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const platform = platformSelect.value;
-      const url = profileUrl.value.trim();
+      let url = profileUrl.value.trim();
       const btn = document.getElementById('submitBtn');
 
       if (!platform) {
@@ -496,8 +494,25 @@
         platformSelect.focus();
         return;
       }
-      if (!url || !isValidUrl(url)) {
-        showToast('Đường dẫn không hợp lệ. Cần bắt đầu bằng http:// hoặc https://');
+
+      if (!url) {
+        showToast('Vui lòng nhập đường dẫn');
+        profileUrl.focus();
+        return;
+      }
+
+      const p = PLATFORM[platform];
+      
+      // Nếu nhập vào là chuỗi số nguyên (UID), tự động chuyển thành link chuẩn
+      if (p && /^\d+$/.test(url)) {
+        if (platform === 'facebook') {
+          url = 'https://www.facebook.com/profile.php?id=' + url;
+        } else {
+          url = 'https://www.' + p.domain + '/' + url;
+        }
+        profileUrl.value = url;
+      } else if (p && p.domain && !url.includes(p.domain)) {
+        showToast('Đường dẫn không hợp lệ. Cần chứa ' + p.domain);
         profileUrl.focus();
         return;
       }
@@ -516,7 +531,13 @@
         const data = await res.json();
 
         if (data.success) {
-          accounts.forEach(a => a.active = false);
+          if (data.account.active) {
+            accounts.forEach(a => {
+              if (a.platform === data.account.platform) {
+                a.active = false;
+              }
+            });
+          }
           accounts.unshift(data.account);
 
           addForm.reset();
@@ -546,7 +567,7 @@
       pendingDelete = acc;
       const p = PLATFORM[acc.platform] || { name: acc.platform };
       document.getElementById('delPlatform').textContent = p.name;
-      document.getElementById('delUrl').textContent = shortUrl(acc.url);
+      document.getElementById('delName').textContent = acc.name || shortUrl(acc.url);
       deleteModal.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
@@ -566,11 +587,11 @@
         const data = await res.json();
         if (data.success) {
           accounts = accounts.filter(a => a.id !== pendingDelete.id);
-          const deletedUrl = shortUrl(pendingDelete.url);
+          const deletedName = pendingDelete.name || shortUrl(pendingDelete.url);
           pendingDelete = null;
           closeModal('deleteModal');
           renderList();
-          showToast('Đã xóa tài khoản: ' + deletedUrl);
+          showToast('Đã xóa tài khoản: ' + deletedName);
         } else {
           showToast(data.message || 'Lỗi khi xóa');
         }

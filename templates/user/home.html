@@ -304,8 +304,8 @@
             <div class="balance-label">Số dư hiện tại</div>
             <div class="balance-value">{{ current_user.balance | int }}<small>Credits</small></div>
             <div class="balance-actions">
-              <button class="balance-btn" type="button" data-action="topup">Nạp Credits</button>
-              <button class="balance-btn" type="button" data-action="history">Xem lịch sử</button>
+              <button class="balance-btn" type="button" data-action="topup" onclick="window.location.href='/billing/buy-credits'">Nạp Credits</button>
+              <button class="balance-btn" type="button" data-action="history" onclick="window.location.href='/billing/history'">Xem lịch sử</button>
             </div>
           </div>
         </div>
@@ -441,13 +441,7 @@
       'use strict';
 
       /* ============ BALANCE ACTIONS ============ */
-      document.querySelectorAll('[data-action]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const action = btn.dataset.action;
-          if (action === 'topup') showToast('Tính năng đang phát triển...');
-          else if (action === 'history') showToast('Tính năng đang phát triển...');
-        });
-      });
+      // Handled via onclick handlers in HTML
     })();
   </script>
   <script src="/static/js/utils.js"></script>

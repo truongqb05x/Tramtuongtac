@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lịch sử giao dịch Credits - TRAMTUONGTAC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../../static/css/layout/base.css" />
+  <link rel="stylesheet" href="../../static/css/layout/header.css" />
+  <link rel="stylesheet" href="../../static/css/layout/page-layout.css" />
+  <link rel="stylesheet" href="../../static/css/page/billing/history.css" />
+  <link rel="shortcut icon" href="../../static/img/logo.png" type="image/x-icon">
+
+  <meta name="description" content="Hệ thống tăng like, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội an toàn tuyệt đối. Mọi người tự nguyện trao đổi và công bằng"/>
+  <meta name="keywords" content="tang like, tăng like, tăng tương tác, tang tuong tac cheo, tuongtaccheo, trao đổi sub, traodoisub, trao doi sub, tăng sub, tang theo doi, tang follow, danh gia page, tang danh gia, tang thanh vien nhom, tang cam xuc bai viet, tang like binh luan, tang theo doi fanpage, tang like fanpage, tang member nhom"/>
+  <meta property="og:description" content="Hệ thống tăng like, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội an toàn tuyệt đối. Mọi người tự nguyện trao đổi và công bằng"/>
+  <meta name="copyright" content=""/>
+  <meta name="robots" content="index, follow"/>
+  <meta name='revisit-after' content='1 days'/>
+  <meta http-equiv="content-language" content="vi"/>
+  <meta property="og:url" content="https://tramtuongtac.xyz/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Lịch sử giao dịch Credits - TRAMTUONGTAC"/>
+  <meta property="og:locale" content="vi_VN"/>
+  <meta property="og:image" content="https://tramtuongtac.xyz/static/img/logo.png">
+  <meta property="fb:app_id" content=""/>
+  <meta name="twitter:title" content="Lịch sử giao dịch Credits - TRAMTUONGTAC">
+  <meta name="twitter:description" content="Hệ thống tăng like, tăng comment, tăng sub, tăng tương tác chéo mạng xã hội an toàn tuyệt đối. Mọi người tự nguyện trao đổi và công bằng">
+
+  <link rel="canonical" href="https://tramtuongtac.xyz{{ request.path }}" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Trạm Tương Tác",
+  "url": "https://tramtuongtac.xyz/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://tramtuongtac.xyz/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+</head>
+
+<body>
+  <!-- ================= HEADER ================= -->
+  <header class="top">
+    <div class="wrap">
+      <div class="flex items-center justify-between h-[64px] md:h-[72px]">
+        <a href="/home" class="flex items-center gap-2.5 no-underline" aria-label="TRAMTUONGTAC trang chủ">
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8" aria-label="Chính">
+          <a href="/home" class="nav-link">Trang chủ</a>
+          <a href="/jobs" class="nav-link">Làm Nhiệm Vụ</a>
+          <a href="/jobs/create" class="nav-link">Tạo Tương Tác</a>
+          <a href="/billing/transfer-credits" class="nav-link">Chuyển Credits</a>
+        </nav>
+
+        <div class="hidden md:flex items-center gap-3">
+          <div class="user-dropdown-wrap">
+            <button class="user-avatar-btn" id="userAvatarBtn" aria-label="Mở menu người dùng">
+              <img src="https://api.dicebear.com/9.x/avataaars/svg?seed={{ current_user.email }}&backgroundColor=b6e3f4&radius=50" alt="Avatar" />
+            </button>
+            <div class="user-dropdown-menu" id="userDropdownMenu">
+              <a href="/settings/account">Hồ sơ</a>
+              <a href="/settings/config">Cài đặt</a>
+              <div class="divider"></div>
+              <a href="/auth/logout" class="text-danger">Đăng xuất</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="hamburger md:hidden" id="hamburgerBtn" aria-label="Mở menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-menu md:hidden" id="mobileMenu">
+      <a href="/home">Trang chủ</a>
+      <a href="/jobs">Làm Nhiệm Vụ</a>
+      <a href="/jobs/create">Tạo Tương Tác</a>
+      <a href="/billing/history" style="font-weight:500;color:var(--ink)">Lịch sử giao dịch</a>
+      <div class="p-4 flex flex-col gap-2.5">
+        <a href="/auth/logout" class="btn btn-secondary w-full" style="color:var(--danger); border-color:var(--danger)">Đăng
+          xuất</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= PAGE ================= -->
+  <div class="page">
+    <!-- Page head -->
+    <div class="page-head with-actions">
+      <div>
+        <h1 class="page-title">Lịch sử giao dịch</h1>
+        <p class="page-sub">
+          Theo dõi chi tiết biến động số dư Credits của bạn từ các hoạt động trên hệ thống.
+        </p>
+      </div>
+      <div class="header-actions">
+        <select id="transactionFilter" class="form-select">
+          {% for opt in filter_options %}
+          <option value="{{ opt.value }}">{{ opt.label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <!-- History Content -->
+    <div class="history-content">
+      <!-- Main List -->
+      <main class="history-main">
+        <div class="history-list">
+          {% for tx in pagination.items %}
+          <div class="history-item">
+            {% if tx.type == 'TASK_REWARD' %}
+            <div class="h-icon earn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            {% elif tx.type == 'CREATE_JOB' %}
+            <div class="h-icon spend">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            {% elif tx.type == 'TRANSFER_IN' %}
+            <div class="h-icon transfer-in">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 0 0 4 4h12"/></svg>
+            </div>
+            {% else %}
+            <div class="h-icon transfer-out">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </div>
+            {% endif %}
+
+            <div class="h-details">
+              <div class="h-title">{{ tx.description | replace('tiền', 'Credit') }}</div>
+              <div class="h-meta">
+                <span class="h-time">{{ tx.created_at.strftime('%d/%m/%Y, %H:%M') }}</span>
+                <span class="h-ref">#TX-{{ tx.id }}</span>
+              </div>
+            </div>
+
+            {% if tx.type in ['TASK_REWARD', 'TRANSFER_IN'] %}
+            <div class="h-amount positive">
+              + {{ tx.amount | int }}<small>C</small>
+            </div>
+            {% else %}
+            <div class="h-amount negative">
+              - {{ tx.amount | int }}<small>C</small>
+            </div>
+            {% endif %}
+          </div>
+          {% else %}
+          <div style="padding: 3rem; text-align: center; color: var(--muted);">
+            Không có giao dịch nào.
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if pagination.pages > 1 %}
+        <div class="pagination">
+          <div class="pagination-info">
+            Hiển thị {{ (pagination.page - 1) * pagination.per_page + 1 }}–{{ (pagination.page - 1) * pagination.per_page + pagination.items|length }} trong {{ pagination.total }} giao dịch
+          </div>
+          <div class="pagination-buttons">
+            {% if pagination.has_prev %}
+            <a href="{{ url_for('user.user_billing_history', filter=current_filter, page=pagination.prev_num) }}" class="page-btn">&laquo; Trước</a>
+            {% else %}
+            <button class="page-btn" disabled>&laquo; Trước</button>
+            {% endif %}
+
+            {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+              {% if p %}
+                {% if p == pagination.page %}
+                <button class="page-btn active">{{ p }}</button>
+                {% else %}
+                <a href="{{ url_for('user.user_billing_history', filter=current_filter, page=p) }}" class="page-btn">{{ p }}</a>
+                {% endif %}
+              {% else %}
+                <span class="page-dots">...</span>
+              {% endif %}
+            {% endfor %}
+
+            {% if pagination.has_next %}
+            <a href="{{ url_for('user.user_billing_history', filter=current_filter, page=pagination.next_num) }}" class="page-btn">Sau &raquo;</a>
+            {% else %}
+            <button class="page-btn" disabled>Sau &raquo;</button>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="bg-[#f4f2ee] border-t border-[#e3e0da] mt-12">
+    <div class="max-w-[1200px] mx-auto px-6 md:px-10 py-12 md:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-10 md:gap-16">
+        <div>
+          <span class="text-[1.25rem] font-semibold tracking-[-0.02em] text-[#1e1e1e]"
+            style="font-family: 'Inter', sans-serif;">TRAMTUONGTAC</span>
+          <p class="mt-3 text-[0.875rem] leading-[1.6] text-[#6b6b6b] max-w-[320px]">
+            Nền tảng trao đổi tương tác minh bạch, nơi uy tín được xây dựng bằng hành động thực tế.
+          </p>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Sản phẩm</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e]">Khám phá</a></li>
+            <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e]">Nhiệm vụ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-[0.8125rem] font-semibold tracking-[0.04em] uppercase text-[#1e1e1e] mb-4">Hỗ trợ</h4>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e]">Trung tâm trợ giúp</a></li>
+            <li><a href="#" class="text-[0.875rem] text-[#6b6b6b] no-underline hover:text-[#1e1e1e]">Điều khoản</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-12 pt-6 border-t border-[#e3e0da] flex justify-between">
+        <p class="text-[0.8125rem] text-[#6b6b6b]">© 2026 TRAMTUONGTAC. Tất cả các quyền được bảo lưu.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/utils.js"></script>
+  <script>
+    document.getElementById('transactionFilter').value = "{{ current_filter }}";
+    document.getElementById('transactionFilter').addEventListener('change', function(e) {
+      const selected = e.target.value;
+      window.location.href = "{{ url_for('user.user_billing_history') }}?filter=" + selected;
+    });
+  </script>
+</body>
+</html>
