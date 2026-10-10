@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+function initHeader() {
     /* ============ HEADER USER MENU ============ */
     const userAvatarBtn = document.getElementById('userAvatarBtn');
     const userDropdownMenu = document.getElementById('userDropdownMenu');
@@ -24,4 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
             hamburgerBtn.setAttribute('aria-expanded', open);
         });
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", initHeader);
+} else {
+    initHeader();
+}

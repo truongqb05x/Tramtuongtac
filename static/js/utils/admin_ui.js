@@ -1,6 +1,5 @@
 /* ============ GIAO DIỆN VÀ ĐIỀU HƯỚNG ADMIN ============ */
-document.addEventListener("DOMContentLoaded", () => {
-
+function initAdminUI() {
   const sidebar = document.getElementById('sidebar');
   const sidebarBackdrop = document.getElementById('sidebarBackdrop');
   const menuToggle = document.getElementById('menuToggle');
@@ -55,4 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (typeof closeSidebar === 'function') closeSidebar();
     }
   });
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener("DOMContentLoaded", initAdminUI);
+} else {
+  initAdminUI();
+}

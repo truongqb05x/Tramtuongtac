@@ -332,6 +332,8 @@ def user_job_list():
     # Nếu cùng current_count thì ưu tiên job được tạo muộn hơn (created_at lớn hơn)
     filtered_jobs.sort(key=lambda j: (j.current_count, -(j.created_at.timestamp() if j.created_at else 0)))
 
+    filtered_jobs = filtered_jobs[:20]
+
     jobs_data = [job.to_dict() for job in filtered_jobs]
     system_config = load_system_config()
     return render_template('user/jobs/job_list.html', jobs_data=jobs_data, has_accounts=has_accounts, system_config=system_config)
@@ -554,31 +556,70 @@ def convert_url():
         
         # Check Facebook
         if 'facebook.com' in url or 'fb.watch' in url or 'fb.com' in url:
-            qs_params = parse_qs(urlparse(final_url).query)
-            post_id = qs_params.get("story_fbid", [None])[0]
-            
-            if post_id:
-                extracted_id = post_id
-            else:
-                match = re.search(r"(?:fbid=|posts/|videos/|/p/|/share/p/)([a-zA-Z0-9_-]+)", final_url)
-                if match:
-                    post_id = match.group(1)
-                    # Verify using Graph API
-                    success, res_val = verify_fb_post_id(post_id)
-                    if success:
-                        extracted_id = res_val
-                    else:
-                        return jsonify({'success': False, 'message': res_val, 'final_url': final_url})
+            try:
+                session = requests.Session()
+                headers = {
+                    "Accept": "application/json",
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36"
+                }
+                page = session.get("https://linktoid.com/", headers=headers, timeout=20)
+                
+                csrf_token = session.cookies.get("XSRF-TOKEN")
+                if csrf_token:
+                    from urllib.parse import unquote
+                    csrf_token = unquote(csrf_token)
                 else:
-                    # Alternative regex matching just numbers at the end
-                    alt_match = re.search(r"(\d+)/?$", final_url)
-                    if alt_match:
-                        post_id = alt_match.group(1)
+                    match = re.search(r'<meta[^>]+name=["\']csrf-token["\'][^>]+content=["\']([^"\']+)', page.text, re.IGNORECASE)
+                    csrf_token = match.group(1) if match else None
+
+                req_headers = {
+                    **headers,
+                    "Content-Type": "application/json",
+                    "Origin": "https://linktoid.com",
+                    "Referer": "https://linktoid.com/",
+                }
+                if csrf_token:
+                    req_headers["X-CSRF-TOKEN"] = csrf_token
+
+                resp = session.post(
+                    "https://linktoid.com/api/convert-id",
+                    headers=req_headers,
+                    json={"link": url.strip()},
+                    timeout=30
+                )
+                
+                if resp.status_code == 200:
+                    result = resp.json()
+                    if result.get("success") and result.get("id"):
+                        extracted_id = str(result["id"])
+            except Exception:
+                pass
+
+            if not extracted_id:
+                # Fallback regex
+                qs_params = parse_qs(urlparse(final_url).query)
+                post_id = qs_params.get("story_fbid", [None])[0]
+                
+                if post_id:
+                    extracted_id = post_id
+                else:
+                    match = re.search(r"(?:fbid=|posts/|videos/|/p/|/share/p/)([a-zA-Z0-9_-]+)", final_url)
+                    if match:
+                        post_id = match.group(1)
                         success, res_val = verify_fb_post_id(post_id)
                         if success:
                             extracted_id = res_val
                         else:
                             return jsonify({'success': False, 'message': res_val, 'final_url': final_url})
+                    else:
+                        alt_match = re.search(r"(\d+)/?$", final_url)
+                        if alt_match:
+                            post_id = alt_match.group(1)
+                            success, res_val = verify_fb_post_id(post_id)
+                            if success:
+                                extracted_id = res_val
+                            else:
+                                return jsonify({'success': False, 'message': res_val, 'final_url': final_url})
         else:
             tt_match = re.search(r'/video/(\d+)', final_url)
             if tt_match:

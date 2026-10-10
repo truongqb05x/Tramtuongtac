@@ -5,88 +5,91 @@ from urllib.parse import urlparse, parse_qs
 from app.models.fb_token import FbToken
 from app.extensions import db
 def get_facebook_profile(url):
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/154.0.0.0 Safari/537.36"
-        ),
-        "Accept": (
-            "text/html,application/xhtml+xml,application/xml;"
-            "q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8"
-        ),
-        "Accept-Language": "vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7",
-        "Cache-Control": "no-cache",
-        "Pragma": "no-cache",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-        "Upgrade-Insecure-Requests": "1",
-    }
-
+    uid = None
+    name = None
+    
+    # Bước 1: Dùng linktoid.com API để lấy UID dạng số (vượt rào chặn IP)
     try:
-        response = requests.get(
-            url,
-            headers=headers,
-            allow_redirects=True,
+        session = requests.Session()
+        headers = {
+            "Accept": "application/json",
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/154.0.0.0 Safari/537.36"
+            ),
+        }
+        page = session.get("https://linktoid.com/", headers=headers, timeout=20)
+        
+        csrf_token = session.cookies.get("XSRF-TOKEN")
+        if csrf_token:
+            from urllib.parse import unquote
+            csrf_token = unquote(csrf_token)
+        else:
+            match = re.search(r'<meta[^>]+name=["\']csrf-token["\'][^>]+content=["\']([^"\']+)', page.text, re.IGNORECASE)
+            csrf_token = match.group(1) if match else None
+
+        req_headers = {
+            **headers,
+            "Content-Type": "application/json",
+            "Origin": "https://linktoid.com",
+            "Referer": "https://linktoid.com/",
+        }
+        if csrf_token:
+            req_headers["X-CSRF-TOKEN"] = csrf_token
+
+        resp = session.post(
+            "https://linktoid.com/api/convert-id",
+            headers=req_headers,
+            json={"link": url.strip()},
             timeout=30
         )
+        
+        if resp.status_code == 200:
+            result = resp.json()
+            if result.get("success") and result.get("id"):
+                uid = str(result["id"])
+    except Exception:
+        pass
+        
+    # Bước 2: Nếu lấy được uid, kết hợp dùng FbToken gọi Graph API để lấy name (vì linktoid không có name)
+    if uid:
+        active_tokens = FbToken.query.filter_by(is_active=True).all()
+        if active_tokens:
+            for t in active_tokens:
+                graph_url = f"https://graph.facebook.com/{uid}"
+                params = {"fields": "id,name", "access_token": t.token}
+                try:
+                    res = requests.get(graph_url, params=params, timeout=10).json()
+                    if "name" in res:
+                        name = res["name"]
+                        break
+                    else:
+                        error_data = res.get('error', {})
+                        error_msg = error_data.get('message', '').lower()
+                        error_code = error_data.get('code')
+                        if 'access token' in error_msg or 'session has been invalidated' in error_msg or error_code in [190, 2500, 104, 12]:
+                            t.is_active = False
+                            db.session.commit()
+                except Exception:
+                    continue
 
-        source = response.text
+    if not uid:
+        # Bước 3: Fallback lấy phần cuối URL làm uid nếu linktoid bị lỗi
+        parsed_url = urlparse(url)
+        social_id = url.rstrip('/').split('/')[-1]
+        if 'profile.php' in parsed_url.path:
+            qs = parse_qs(parsed_url.query)
+            if 'id' in qs:
+                social_id = qs['id'][0]
+        uid = social_id
 
-        # =========================
-        # LẤY UID
-        # =========================
-
-        uid_patterns = [
-            r'fb://profile/(\d+)',
-            r'"profile_id"\s*:\s*"(\d+)"',
-            r'"userID"\s*:\s*"(\d+)"',
-            r'"user_id"\s*:\s*"(\d+)"',
-            r'"entity_id"\s*:\s*"(\d+)"',
-        ]
-
-        uid = None
-
-        for pattern in uid_patterns:
-            match = re.search(pattern, source, re.I)
-            if match:
-                uid = match.group(1)
-                break
-
-        # =========================
-        # LẤY NAME
-        # =========================
-
-        name = None
-        name_patterns = [
-            r'<meta[^>]+property=["\']og:title["\'][^>]+content=["\']([^"\']+)["\']',
-            r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:title["\']',
-            r'<meta[^>]+name=["\']twitter:title["\'][^>]+content=["\']([^"\']+)["\']',
-        ]
-
-        for pattern in name_patterns:
-            match = re.search(pattern, source, re.I)
-            if match:
-                name = html.unescape(match.group(1)).strip()
-                break
-
-        return {
-            "uid": uid,
-            "name": name,
-            "url": response.url,
-            "status": response.status_code
-        }
-
-    except requests.RequestException as e:
-        return {
-            "uid": None,
-            "name": None,
-            "url": url,
-            "status": None,
-            "error": str(e)
-        }
+    return {
+        "uid": uid,
+        "name": name,
+        "url": url,
+        "status": 200 if uid else 500
+    }
 
 def verify_fb_post_id(post_id):
     active_tokens = FbToken.query.filter_by(is_active=True).all()
